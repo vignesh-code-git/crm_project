@@ -12,7 +12,7 @@ import useEntities from "@/hooks/useEntities";
 import Drawer from "@/components/crm-drawer/Drawer/Drawer";
 import DetailsSkeleton from "@/components/ui/Skeleton/DetailsSkeleton";
 
-import { LuPanelLeft, LuPanelRight } from "react-icons/lu";
+import { HiOutlineIdentification, HiOutlineChartBar } from "react-icons/hi2";
 import CallOverlay from "@/components/ui/CallOverlay/CallOverlay";
 import { showSuccess, showError } from "@/services/toastService";
 import { API_BASE_URL } from "@/config/apiConfig";
@@ -356,16 +356,14 @@ useEffect(() => {
           className={`${styles.iconBtn} ${styles.leftBtn}`}
           onClick={() => setLeftOpen(true)}
         >
-          <LuPanelLeft />
+          <HiOutlineIdentification />
         </button>
-
-        <div className={styles.title}>Entity Details</div>
 
         <button
           className={`${styles.iconBtn} ${styles.rightBtn}`}
           onClick={() => setRightOpen(true)}
         >
-          <LuPanelRight />
+          <HiOutlineChartBar />
         </button>
       </div>
 
