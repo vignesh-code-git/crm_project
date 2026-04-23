@@ -31,12 +31,30 @@ app.use(express.json());
 //   credentials: true
 // }));
 
+// app.use(cors({
+//   origin: [
+//     process.env.FRONTEND_URL
+//   ],
+//   credentials: true
+// }));
+
 app.use(cors({
-  origin: [
-    process.env.FRONTEND_URL
-  ],
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      "http://localhost:3000",
+      process.env.FRONTEND_URL
+    ];
+
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log("❌ CORS blocked:", origin);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true
 }));
+
 
 app.use(cookieParser());
 
