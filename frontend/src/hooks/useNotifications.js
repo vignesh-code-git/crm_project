@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 
-const API = "http://localhost:5000/api/notifications";
+const API = "https://crm-project-enz1.onrender.com/api/notifications";
 
 export default function useNotificationApi() {
   const [notifications, setNotifications] = useState([]);

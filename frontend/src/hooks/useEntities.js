@@ -4,7 +4,7 @@ import { showError } from "@/services/toastService";
 
 export default function useApiEntity(entity) {
 
-  const API = `http://localhost:5000/api/${entity}`;
+  const API = `https://crm-project-enz1.onrender.com/api/${entity}`;
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 

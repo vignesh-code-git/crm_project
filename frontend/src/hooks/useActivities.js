@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 export default function useActivities(entityId, entityType) {
-  const BASE_URL = "http://localhost:5000/api";
+  const BASE_URL = "https://crm-project-enz1.onrender.com/api";
   const [data, setData] = useState([]);
 
   const safeJson = async (res) => {
