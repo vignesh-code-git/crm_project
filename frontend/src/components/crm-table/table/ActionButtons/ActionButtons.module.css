@@ -1,0 +1,13 @@
+.actions {
+  display: flex;
+  gap: 16px;
+  cursor: pointer;
+}
+
+.edit {
+  color: #5b4bd6;
+}
+
+.delete {
+  color: #ef4444;
+}

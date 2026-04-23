@@ -1,0 +1,411 @@
+.wrapper {
+  position: relative;
+}
+
+.bell {
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 999px;
+  font-weight: 600;
+  border: 2px solid white;
+  flex-shrink: 0;
+}
+
+/* PANEL STYLES (Match Screenshot) */
+.panel {
+  position: absolute;
+  right: -36px;
+  /* Moved even further right as requested */
+  top: 50px;
+  /* Moved further up as requested */
+  width: 480px;
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #cbd5e1;
+  /* Very subtle increase in visibility */
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  z-index: 9999;
+  /* ✅ Increased to ensure it's on top */
+  animation: slideInDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.header {
+  padding: 18px 24px;
+  font-weight: 700;
+  font-size: 18px;
+  background: white;
+  border-bottom: 1px solid #cbd5e1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.list {
+  max-height: 460px;
+  /* Shorter panel as requested */
+  min-height: 100px;
+  /* Pre-emptively prevent collapse */
+  overflow-y: auto;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.groupTitle {
+  font-size: 13px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #475569;
+  letter-spacing: 0.12em;
+  margin: 14px 0 8px 0;
+  text-align: center;
+}
+
+.empty {
+  padding: 80px 40px;
+  /* Increased padding slightly */
+  text-align: center;
+  color: #64748b;
+  /* Slightly darker for better readability */
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+}
+
+.markAll {
+  font-size: 14px;
+  color: #3b82f6;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.markAll:hover {
+  text-decoration: underline;
+}
+
+/* CARD STYLES (100% EXACT MOCKUP) */
+.card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #cbd5e1;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  width: 100%;
+  flex-shrink: 0;
+  /* CRITICAL: Prevent squashing in flex list */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  /* ADDED for absolute positioning of children */
+  user-select: none;
+  /* Prevent selection from blocking events */
+}
+
+.card:hover {
+  border-color: #5b4ce0;
+  /* Add hover border effect */
+  box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.15);
+}
+
+.toastCard {
+  width: 420px;
+  margin: 16px;
+}
+
+.cardHeader {
+  padding: 8px 16px;
+  background: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 40px;
+}
+
+.titleArea {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.cardTitle {
+  font-weight: 600;
+  /* Sophisticated semi-bold */
+  font-size: 16px;
+  color: #1e293b;
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+.actionArea {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  /* Reduced from 8px to make icons closer */
+  flex-shrink: 0;
+}
+
+.iconSuccess {
+  color: #22c55e;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.iconWarning {
+  color: #f59e0b;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.iconError {
+  color: #ef4444;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.iconInfo {
+  color: #6366f1;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.closeBtn,
+.chevronBtn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  position: relative;
+  pointer-events: auto;
+}
+
+.closeBtnToast {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  /* Increased hit area */
+  border-radius: 8px;
+  transition: all 0.2s;
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+}
+
+.closeBtn,
+.closeBtnToast {
+  font-size: 20px;
+}
+
+.chevronBtn {
+  font-size: 22px;
+}
+
+.closeBtn:hover,
+.closeBtnToast:hover,
+.chevronBtn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.cardBody {
+  padding: 4px 16px 6px 48px;
+  background: #fcfcfc;
+  border-top: 1px solid #f8fafc;
+  min-height: 24px;
+}
+
+.bodyTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.cardMessage {
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 400;
+  flex: 1;
+  text-align: left;
+}
+
+.cardMessage.success {
+  color: #16a34a;
+}
+
+.cardMessage.info {
+  color: #4f46e5;
+}
+
+.cardMessage.error {
+  color: #dc2626;
+}
+
+.cardMessage.warning {
+  color: #d97706;
+}
+
+.cardMessage strong {
+  font-weight: 700;
+}
+
+.cardTime {
+  font-size: 11px;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.expandedContent {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid #eeeeee;
+  font-size: 13.5px;
+  color: #475569;
+  text-align: left;
+}
+
+.metaRow {
+  margin-bottom: 10px;
+}
+
+.bodyText {
+  margin: 16px 0;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  color: #334155;
+  text-align: left;
+}
+
+/* ============================================================
+   CUSTOM TOAST SYSTEM (Replacement for Toastify)
+   ============================================================ */
+.customToastWrapper {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 2147483647;
+  /* MAXIMUM POSSIBLE Z-INDEX */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 420px;
+  /* Match toast width */
+  pointer-events: auto;
+  /* Ensure events work normally */
+}
+
+/* No longer needed but keeping structure simple */
+.customToastWrapper>* {
+  pointer-events: auto;
+}
+
+.toastAnimationWrapper {
+  animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Scrollbar Overrides */
+.list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.list::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+
+/* SMART HYDRATION STYLES */
+.loadingSkeleton {
+  padding: 20px;
+  text-align: center;
+  color: #6366f1;
+  font-style: italic;
+  font-weight: 500;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.dataGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 12px;
+  margin: 12px 0;
+  border: 1px solid #e2e8f0;
+}
+
+.gridItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gridLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.gridValue {
+  font-size: 13px;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.placeholder {
+  color: #94a3b8;
+  font-size: 13px;
+}

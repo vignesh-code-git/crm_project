@@ -1,0 +1,302 @@
+/* =========================
+   WRAPPER
+========================= */
+
+.wrapper {
+  position: relative;
+  width: 200px;
+}
+
+/* =========================
+   FILTER BOX
+========================= */
+
+.filterBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px 14px;
+
+  border-radius: 12px;
+  border: 1px solid #cbd5e1; /* more visible */
+
+  background: white;
+
+  font-size: 14px;
+  color: #6b7280;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filterBox:hover {
+  border-color: #9ca3af;
+}
+
+.label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================
+   ICONS
+========================= */
+
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon {
+  font-size: 18px;
+  color: #7c8b98;
+}
+
+.clear {
+  font-size: 18px;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+.clear:hover {
+  color: #ef4444;
+}
+
+/* =========================
+   CALENDAR DROPDOWN
+========================= */
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+
+  z-index: 100;
+
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+
+  padding-top: 6px;
+
+  opacity: 0;
+  animation: dropdownFade 0.18s ease forwards;
+}
+
+/* right alignment when near edge */
+
+.alignRight {
+  left: auto;
+  right: 0;
+  transform: translateY(-6px);
+}
+
+/* animation */
+
+@keyframes dropdownFade {
+
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+}
+
+/* =========================
+   WEEKDAY HEADER
+========================= */
+
+:global(.react-datepicker__day-name) {
+  font-size: 12px;
+  color: #6b7280;
+  width: 30px;
+  font-weight: 500;
+}
+
+/* Sunday */
+
+:global(.react-datepicker__day-name:first-child) {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+/* TODAY DATE */
+
+:global(.react-datepicker__day--today) {
+  border: 1px solid #3b82f6;
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+/* TODAY COLUMN (header + dates) */
+
+:global(.react-datepicker__day--today),
+:global(.react-datepicker__day--today ~ .react-datepicker__day),
+:global(.react-datepicker__day-name) {
+  position: relative;
+}
+
+
+/* dates from other months */
+
+:global(.react-datepicker__day--outside-month) {
+  color: #cbd5e1;   /* light grey */
+}
+
+
+
+
+.dropdown::before {
+  content: "";
+  position: absolute;
+
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+
+  width: 14px;
+  height: 14px;
+
+  background: white;
+
+  border-left: 1px solid #cbd5e1;
+  border-top: 1px solid #cbd5e1;
+
+  z-index: 2;
+}
+
+/* =========================
+   REACT DATEPICKER
+========================= */
+
+:global(.react-datepicker) {
+  border: none;
+  background: transparent;
+  font-family: inherit;
+}
+
+/* header */
+
+:global(.react-datepicker__header) {
+  background: white;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+/* month */
+
+:global(.react-datepicker__current-month) {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* navigation */
+
+:global(.react-datepicker__navigation-icon::before) {
+  border-color: #6b7280;
+}
+
+/* =========================
+   WEEKDAY (MON–SUN)
+========================= */
+
+:global(.react-datepicker__day-name) {
+  font-size: 12px;
+  color: #6b7280;
+  width: 30px;
+  font-weight: 500;
+}
+
+/* =========================
+   DAYS
+========================= */
+
+:global(.react-datepicker__day) {
+  width: 30px;
+  line-height: 30px;
+  border-radius: 8px;
+  font-size: 13px;
+
+  border: 1px solid transparent;
+
+  transition: all 0.2s ease;
+}
+
+/* hover */
+
+:global(.react-datepicker__day:hover) {
+  background: #f3f4f6;
+}
+
+/* selected */
+
+:global(.react-datepicker__day--selected) {
+  background: #3b82f6;
+  color: white;
+  border: 1px solid #3b82f6;
+}
+
+/* TODAY → BORDER ONLY */
+
+:global(.react-datepicker__day--today) {
+  border: 1px solid #3b82f6;
+  background: transparent;
+  color: #111827;
+  font-weight: 600;
+}
+
+/* hide default triangle */
+
+:global(.react-datepicker__triangle) {
+  display: none;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 768px) {
+
+  .wrapper {
+    width: 180px;
+  }
+
+  .dropdown {
+    max-width: 95vw;
+  }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 480px) {
+
+  .wrapper {
+    width: 100%;
+  }
+
+  .dropdown {
+
+    position: fixed;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: 60vw;
+
+  }
+
+}

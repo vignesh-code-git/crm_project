@@ -1,0 +1,74 @@
+.panel {
+    width: 100%;
+    padding: 20px;
+    background: #fff;
+    /* border-right:1px solid #eee; */
+    border-radius: 0;
+
+    height: 100%;
+    overflow-y: auto;
+
+    scroll-behavior: smooth;
+    box-sizing: border-box;
+    margin: 0 auto;
+
+    /* prevents content shift */
+    scrollbar-gutter: stable;
+}
+
+.stickyHeader {
+    position: sticky;
+    top: -20px;
+    background: #ffffff;
+    z-index: 10;
+    margin: -20px -20px 0 -20px;
+    padding: 20px 20px 0 20px;
+}
+
+/* scrollbar width reserved */
+
+.panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+/* hide thumb initially */
+
+.panel::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 10px;
+}
+
+/* show thumb on hover */
+
+.panel:hover::-webkit-scrollbar-thumb {
+    background: #cfd6e4;
+}
+
+.panel:hover::-webkit-scrollbar-thumb:hover {
+    background: #aab3c5;
+}
+
+/* Firefox support */
+
+.panel {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+
+.panel:hover {
+    scrollbar-color: #8A8A8A transparent;
+}
+
+/* responsive */
+
+@media(max-width:1024px) {
+    .panel {
+        max-width: 100%;
+    }
+}
+
+@media(max-width:768px) {
+    .panel {
+        padding: 16px;
+    }
+}

@@ -1,0 +1,76 @@
+/* Main white container */
+.container {
+  background: white;
+  border-radius: 10px 10px 0 0;
+  padding: 24px 20px;
+
+  margin-bottom: 2px;
+}
+
+/* Header layout */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Title */
+.title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Buttons container */
+.actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* Import button */
+.importBtn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #5b4cf0;
+  background: white;
+  color: #5b4cf0;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.importBtn:hover {
+  background: rgba(91, 76, 240, 0.05);
+}
+
+/* Export button */
+.exportBtn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #10b981;
+  background: white;
+  color: #10b981;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.exportBtn:hover {
+  background: #ecfdf5;
+}
+
+/* Create button */
+.createBtn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #5b4cf0;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.createBtn:hover {
+  background: #4a38d6;
+}

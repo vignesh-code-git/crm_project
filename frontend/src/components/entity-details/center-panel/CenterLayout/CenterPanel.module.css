@@ -1,0 +1,67 @@
+.panel{
+width:100%;
+padding:20px;
+background:#fff;
+/* border-right:1px solid #eee; */
+/* border-radius:10px; */
+
+height:calc(100vh - 120px);
+overflow-y:auto;
+
+scroll-behavior:smooth;
+box-sizing:border-box;
+margin:0 auto;
+
+/* prevents content shift */
+scrollbar-gutter:stable;
+}
+
+/* scrollbar width reserved */
+
+.panel::-webkit-scrollbar{
+width:6px;
+}
+
+/* hide thumb initially */
+
+.panel::-webkit-scrollbar-thumb{
+background:transparent;
+border-radius:10px;
+}
+
+/* show thumb on hover */
+
+.panel:hover::-webkit-scrollbar-thumb{
+background:#cfd6e4;
+border-radius:10px;
+}
+
+.panel:hover::-webkit-scrollbar-thumb:hover{
+background:#aab3c5;
+}
+
+/* Firefox support */
+
+.panel{
+scrollbar-width:thin;
+scrollbar-color:transparent transparent;
+}
+
+.panel:hover{
+scrollbar-width: thin;
+scrollbar-color:#cfd6e4 transparent;
+}
+
+/* responsive */
+
+@media(max-width:1024px){
+.panel{
+max-width:100%;
+}
+}
+
+@media(max-width:768px){ 
+.panel{
+padding:16px;
+}
+}

@@ -1,0 +1,45 @@
+:root {
+  /* MEDIUM DARK PROFESSIONAL THEME */
+  --skel-base: #cbd5e1;       /* slate-300 */
+  --skel-shimmer: #e2e8f0;    /* slate-200 */
+  --skel-highlight: rgba(255, 255, 255, 0.2);
+  --skel-border: #94a3b8;     /* slate-400 */
+  --skel-radius: 12px;
+  --skel-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --skel-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.shimmer {
+  background: var(--skel-base);
+  background-image: linear-gradient(
+    110deg,
+    var(--skel-base) 0%,
+    var(--skel-base) 35%,
+    var(--skel-shimmer) 50%,
+    var(--skel-base) 65%,
+    var(--skel-base) 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 200% 100%;
+  display: inline-block;
+  position: relative;
+  animation: 
+    shimmerEffect 2s infinite var(--skel-easing);
+  border-radius: 6px;
+}
+
+@keyframes shimmerEffect {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.box {
+  background: #f1f5f9; /* Slate-100 for a soft professional look */
+  border-radius: var(--skel-radius);
+  border: 1px solid var(--skel-border);
+  box-shadow: var(--skel-shadow);
+}

@@ -1,0 +1,571 @@
+.item {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.item:hover {
+  background: #f8faff;
+  border-color: #c7d2fe;
+}
+
+::selection {
+  background: #4f46e5;
+  color: white;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+.centeredHeader {
+  justify-content: center !important;
+}
+
+.left {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  min-width: 0;
+  flex: 1;
+}
+
+.centeredLeft {
+  flex: none !important;
+}
+
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.centeredTextBlock {
+  align-items: center;
+  text-align: center;
+}
+
+.arrow {
+  color: #6b7280;
+  margin-top: 3px;
+  transition: 0.2s ease;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.rotate {
+  transform: rotate(180deg);
+  color: #6b7280;
+  margin-top: 3px;
+  transition: 0.2s ease;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* preview */
+
+.preview {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
+.previewActive {
+  font-size: 13px;
+  color: #4f46e5;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.date {
+  font-size: 12px;
+  color: #6b7280;
+  white-space: nowrap;
+  margin-left: 20px;
+}
+
+/* BODY */
+
+.body {
+  padding: 8px 24px 20px 50px;
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.centeredBody {
+  text-align: center;
+}
+
+.creationBody {
+  padding: 16px 20px;
+  font-size: 13.5px;
+  color: #4b5563;
+  line-height: 1.35;
+  white-space: pre-wrap;
+}
+
+.creationRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.creationTextBlue {
+  color: #4b5563;
+  font-size: 13.5px;
+}
+
+.creationDateRight {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.body p {
+  margin: 0;
+}
+
+/* META BOX */
+
+.metaBox {
+  background: #eef2f6;
+  border-radius: 6px;
+  padding: 14px 16px;
+  display: flex;
+  gap: 40px;
+  margin-bottom: 12px;
+}
+
+.metaBox span {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.metaBox p {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  margin-top: 4px;
+}
+
+/* TASK ROW */
+
+.taskRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+/* CHECKBOX */
+
+.checkbox,
+.checkboxActive {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.checkbox {
+  color: #49454F;
+}
+
+.checkboxActive {
+  color: #4f46e5;
+}
+
+/* MEETING */
+
+.organized {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 24px;
+  margin-left: 16px;
+}
+
+/* OVERDUE */
+
+.overdueRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.calendar {
+  color: #64748b; /* Neutral Gray */
+}
+
+.overdue {
+  color: #64748b; /* Neutral Gray */
+  font-weight: 500;
+}
+
+.dateText {
+  color: #6A6A6A;
+}
+
+.calendarRed {
+  color: #ef4444;
+}
+
+.overdueRed {
+  color: #ef4444;
+  font-weight: 500;
+}
+
+.redText {
+  color: #ef4444 !important;
+}
+
+/* CALL FORM */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 200px;
+}
+
+.required {
+  color: #ef4444 !important;
+  margin-left: 2px;
+}
+
+.textInput {
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #374151;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.textInput:focus {
+  border-color: #6366f1;
+}
+
+.textInput:disabled {
+  background: #f9fafb;
+  color: #6b7280;
+  cursor: not-allowed;
+  border-color: #e5e7eb;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputWrapper .textInput {
+  padding-right: 36px;
+}
+
+.clockIcon {
+  position: absolute;
+  right: 12px;
+  color: #9ca3af;
+  font-size: 16px;
+}
+
+.selectBox:hover {
+  border-color: #9ca3af;
+}
+
+.label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon {
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+.rotate {
+  transform: rotate(180deg);
+}
+
+/* DROPDOWN MENU */
+
+.dropdown {
+  position: absolute;
+  bottom: 110%;
+  left: 0;
+  width: 100%;
+
+  background: white;
+
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+
+  overflow: hidden;
+  z-index: 100;
+}
+
+.option {
+  padding: 10px 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.option:hover {
+  background: #f3f4f6;
+}
+
+/* NOTE TEXT */
+
+.noteText {
+  font-size: 13.5px;
+  color: #4b5563;
+  margin: 0;
+  margin-left: 16px;
+}
+
+.clock {
+  font-size: 18px;
+  color: #6b7280;
+}
+
+/* EMAIL RENDERING */
+
+.emailContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 5px;
+}
+
+.emailHeaders {
+  background: #f8fafc;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border-left: 4px solid #5b4cf0;
+  font-size: 13px;
+  color: #475569;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.emailHeaders p {
+  margin: 0;
+}
+
+.emailContent {
+  color: #1e293b;
+  font-size: 14.5px;
+  line-height: 1.7;
+  padding: 8px 5px;
+}
+
+.emailContent img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin: 15px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: block;
+}
+
+.emailContent a {
+  color: #5b4cf0;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+/* ATTACHMENTS FOOTER */
+
+.attachmentsSection {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.attachmentsFooter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.attachmentCard {
+  width: 130px;
+  background: #fdfdfd;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.attachmentCard:hover {
+  border-color: #5b4cf0;
+  box-shadow: 0 6px 16px rgba(91, 76, 240, 0.08);
+}
+
+.attachmentPreview {
+  width: 100%;
+  height: 80px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.hoverActionsOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 5;
+}
+
+.attachmentCard:hover .hoverActionsOverlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+.actionIcon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.actionIcon:hover {
+  color: #1e293b;
+  border-color: #94a3b8;
+}
+
+.attachmentPreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fileIcon {
+  font-size: 28px;
+  color: #94a3b8;
+}
+
+.attachmentInfo {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.fileName {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.meetingDetails {
+  font-size: 13.5px;
+  color: #334155;
+  background: #f8fafc;
+  padding: 12px 16px;
+  border-left: 4px solid #5b4cf0;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.attendeesList {
+  font-size: 13.5px;
+  color: #334155;
+  margin: 0;
+}
+
+.activityIcon {
+  font-size: 18px;
+  color: #4f46e5;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.activityBody {
+  padding: 0;
+  margin: 6px 0;
+}

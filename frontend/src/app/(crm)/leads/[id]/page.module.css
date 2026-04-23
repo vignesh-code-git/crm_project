@@ -1,0 +1,278 @@
+/* ================= WRAPPER ================= */
+
+.wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+
+/* ================= TOP BAR ================= */
+
+.topBar {
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    display: none;
+
+    padding: 10px 16px;
+
+    border-bottom: 1px solid #eee;
+
+    background: white;
+
+}
+
+.title {
+    font-weight: 600;
+    display: none;
+}
+
+
+/* hide drawer buttons on desktop */
+
+.iconBtn {
+    display: none;
+
+    border: none;
+    background: #f3f4f6;
+
+    width: 36px;
+    height: 36px;
+
+    border-radius: 8px;
+
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    font-size: 18px;
+}
+
+
+/* ================= GRID ================= */
+
+.container {
+
+    display: grid;
+
+    grid-template-columns:
+        328px minmax(0, 1fr) 320px;
+
+    gap: 0;
+
+    padding: 20px;
+
+    background: #f6f7fb;
+
+    height: calc(100vh - 80px);
+    min-height: 0;
+    overflow: hidden;
+    background: #f6f7fb;
+}
+
+/* prevent panel overflow */
+
+.container>* {
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+
+/* ================= TABLET ================= */
+
+@media (max-width:1200px) {
+
+    .topBar {
+        display: flex;
+    }
+
+    .title {
+        display: block;
+        flex: 1;
+        text-align: center;
+    }
+
+    .container {
+        grid-template-columns:
+            328px minmax(0, 1fr)
+    }
+
+    .rightDesktop {
+        display: none;
+    }
+
+    .rightBtn {
+        display: flex;
+    }
+
+    .leftBtn {
+        display: none;
+    }
+
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width:768px) {
+
+    .topBar {
+        display: flex;
+    }
+
+    .title {
+        display: block;
+        flex: 1;
+        text-align: center;
+    }
+
+    .container {
+        grid-template-columns: 1fr;
+        padding: 12px;
+    }
+
+    .leftDesktop,
+    .rightDesktop {
+        display: none;
+    }
+
+    .leftBtn,
+    .rightBtn {
+        display: flex;
+    }
+
+}
+
+/* ================= OVERLAY ================= */
+
+.overlay {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    background: rgba(0, 0, 0, 0.35);
+
+    display: flex;
+
+    z-index: 9999;
+
+}
+
+
+/* ================= LEFT DRAWER ================= */
+
+.leftDrawer {
+
+    position: absolute;
+
+    top: 90px;
+    left: 0;
+
+    border-radius: 10px;
+
+    width: 320px;
+    max-width: 90%;
+
+    height: 91%;
+
+    background: #F7F7FA;
+
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
+
+    padding: 16px;
+
+    overflow: auto;
+
+    animation: slideLeft .25s ease;
+
+}
+
+
+/* ================= RIGHT DRAWER ================= */
+
+.rightDrawer {
+
+    position: absolute;
+
+    top: 90px;
+    right: 0;
+
+    width: 320px;
+
+    height: 91%;
+
+    background: #F7F7FA;
+
+    border-radius: 10px;
+
+    box-shadow: -6px 0 24px rgba(0, 0, 0, 0.12);
+
+    padding: 16px;
+
+    overflow: auto;
+
+    animation: slideRight .25s ease;
+
+}
+
+
+/* ================= CLOSE BUTTON ================= */
+
+.close {
+
+    position: absolute;
+
+    top: 16px;
+    right: 22px;
+
+    border: none;
+
+    background: none;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    z-index: 10;
+
+    color: #5948DB;
+
+    font-weight: 400;
+
+}
+
+
+/* ================= ANIMATIONS ================= */
+
+@keyframes slideLeft {
+
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+
+}
+
+@keyframes slideRight {
+
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+
+}

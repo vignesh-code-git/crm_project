@@ -1,0 +1,283 @@
+.container {
+  min-height: 100vh;
+  background: #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  width: 900px;
+  background: #ffffff;
+  padding: 32px 40px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 28px;
+  color: #111827;
+  font-weight: bold;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field label {
+  font-size: 14px;
+  color: #181E25;
+  margin-bottom: 8px;
+  font-weight: 400;
+}
+
+/* Inputs */
+.field input {
+  height: 42px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  padding: 0 12px;
+  font-size: 14px;
+  outline: none;
+  margin-top: 5px;
+
+  transition: 0.2s;
+}
+
+.field input::placeholder {
+  color: #94a3b8;
+}
+
+.field input:focus {
+  border-color: #6366f1;
+  background: #ffffff;
+}
+
+.field input:disabled {
+  background-color: transparent !important;
+  cursor: not-allowed !important;
+  color: #111827 !important;
+  opacity: 1 !important;
+}
+
+/* ===== MODERN DROPDOWN (YOUR STYLE) ===== */
+
+.dropdown {
+  position: relative;
+}
+
+.control {
+  height: 42px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  padding: 0 12px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.control:hover {
+  border-color: #5948DB;
+}
+
+.control:focus-within {
+  border-color: #5948DB;
+  box-shadow: 0 0 0 2px rgba(89, 72, 219, 0.1);
+}
+
+.arrow {
+  font-size: 18px;
+  transition: 0.2s;
+  color: #64748b;
+}
+
+.rotate {
+  transform: rotate(180deg);
+}
+
+/* Dropdown menu */
+.menu {
+  position: absolute;
+  top: 48px;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  z-index: 100;
+  padding: 4px;
+}
+
+/* Options */
+.option {
+  padding: 10px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+  color: #475569;
+}
+
+.option:hover {
+  background: #f1f5f9;
+  color: #5948DB;
+}
+
+.activeOption {
+  background: #f0f7ff;
+  color: #5948DB;
+  font-weight: 500;
+}
+
+/* BUTTON */
+.button {
+  margin-top: 26px;
+  width: 100%;
+  height: 44px;
+  border: none;
+  border-radius: 6px;
+  background: #5b4cf0;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.button:hover {
+  background: #4a3fc9;
+}
+
+/* .button { 
+  display: block;
+  margin: 26px auto 0;
+  width: 400px;
+  height: 44px;
+  border: none;
+  border-radius: 6px;
+  background: #5948DB;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+} */
+
+.button:hover {
+  opacity: 0.95;
+}
+
+/* LOGIN */
+.login {
+  margin-top: 18px;
+  font-size: 14px;
+  color: #181E25;
+}
+
+.login span {
+  color: #4f46e5;
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    width: 95%;
+    padding: 24px;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .button {
+    width: 100%;
+  }
+}
+
+.errorAlert {
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #b91c1c;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+
+.errorMessage {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* Phone Input Custom Styling */
+.phoneContainer {
+  width: 100%;
+  margin-top: 5px;
+}
+
+.phoneInput {
+  width: 100% !important;
+  height: 42px !important;
+  border-radius: 6px !important;
+  border: 1px solid #d1d5db !important;
+  font-size: 14px !important;
+  padding-left: 50px !important;
+  transition: 0.2s !important;
+  background: #f9fafb !important;
+  outline: none !important;
+}
+
+.phoneInput:focus {
+  border-color: #5b4cf0 !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 0 2px rgba(91, 76, 240, 0.1) !important;
+}
+
+/* SYNC HOVER FOR REGISTRATION PHONE */
+.phoneContainer:hover .phoneInput,
+.phoneContainer:hover .flagButton {
+  border-color: #5b4cf0 !important;
+}
+
+.phoneContainer:focus-within .phoneInput,
+.phoneContainer:focus-within .flagButton {
+  border-color: #5b4cf0 !important;
+  box-shadow: 0 0 0 2px rgba(91, 76, 240, 0.1) !important;
+}
+
+.flagButton {
+  border-radius: 6px 0 0 6px !important;
+  border: 1px solid #d1d5db !important;
+  border-right: none !important;
+  background: #f9fafb !important;
+  transition: 0.2s !important;
+}
+
+.flagButton:hover,
+.flagButton:focus {
+  border-color: #9ca3af !important;
+}
+
+.flagDropdown {
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06) !important;
+  border: 1px solid #e5e7eb !important;
+}

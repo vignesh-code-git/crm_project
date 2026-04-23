@@ -1,0 +1,205 @@
+/* ================= OVERLAY ================= */
+
+.overlay {
+
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+
+  z-index: 999;
+
+}
+
+
+/* ================= RIGHT DRAWER ================= */
+
+.drawer {
+
+  position: fixed;
+
+  right: 0;
+  top: 0;
+
+  padding: 0 5px 5px 5px; /* Removed top padding to stabilize sticky header */
+
+  width: 440px;
+  height: 100vh;
+
+  background: white;
+
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-y: auto;
+
+}
+
+/* Custom Tiny Dark Scrollbar */
+.drawer::-webkit-scrollbar {
+  width: 5px;
+}
+
+.drawer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.drawer::-webkit-scrollbar-thumb {
+  background: #777;
+  border-radius: 10px;
+}
+
+.drawer::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+
+/* ================= DRAWER HEADER ================= */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0; /* Flush with the top for a solid sticky behavior */
+  background: white;
+  z-index: 100;
+}
+
+.header h3 {
+
+  font-size: 18px;
+  font-weight: 600;
+
+}
+
+
+/* ================= CLOSE BUTTON ================= */
+
+.closeBtn {
+
+  font-size: 26px;
+  cursor: pointer;
+
+  color: #555;
+
+  transition: all .2s ease;
+
+  padding: 4px;
+
+  border-radius: 6px;
+
+}
+
+.closeBtn:hover {
+  color: #ef4444;
+  background-color: #f3f4f6;
+}
+
+
+/* ================= EMAIL MODAL ================= */
+
+.emailModal {
+
+  position: fixed;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  width: 550px;
+  height: auto;
+  min-height: 400px;
+  max-height: 90vh;
+
+  background: white;
+
+  border-radius: 6px;
+
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+}
+
+
+/* ================= EMAIL HEADER ================= */
+
+.emailHeader {
+
+  background: linear-gradient(90deg, #6a5cff, #7c6cff);
+
+  color: white;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 8px 12px;
+
+  font-size: 13px;
+  font-weight: 500;
+
+}
+
+
+/* ================= EMAIL BODY ================= */
+
+.emailModal form {
+
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+
+}
+
+
+.emailModal textarea {
+
+  flex: 1;
+
+  border: none;
+
+  resize: none;
+
+  padding: 5px;
+
+  font-size: 13px;
+
+
+}
+
+
+.emailModal textarea:focus {
+
+  outline: none;
+
+}
+
+
+.emailHeader .closeBtn {
+  color: white;
+  background: transparent !important;
+  border: none;
+  font-size: 20px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.emailHeader .closeBtn:hover {
+  color: #f3f4f6;
+  background: rgba(255, 255, 255, 0.15);
+}

@@ -1,0 +1,35 @@
+.button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+  animation: smoothAppear 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button:hover {
+  background-color: #dc2626;
+}
+
+.button:disabled {
+  background-color: #ef4444;
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@keyframes smoothAppear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

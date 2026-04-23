@@ -1,0 +1,72 @@
+.wrapper{
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+/* HEADER (Notes / Emails / Calls etc) */
+
+.sectionHeader{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:10px;
+margin-bottom:10px;
+}
+
+.title{
+font-size:16px;
+font-weight:600;
+color:#111827;
+}
+
+/* CREATE BUTTON */
+
+.createBtn{
+padding:8px 14px;
+border:none;
+background:#5b5bd6;
+color:white;
+border-radius:8px;
+cursor:pointer;
+font-size:13px;
+font-weight:500;
+transition:0.2s;
+}
+
+.createBtn:hover{
+background:#4a4ac8;
+}
+
+/* TIMELINE */
+
+.timeline{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+/* MONTH HEADER */
+
+.upcoming{
+   font-size:16px;
+font-weight:600;
+color:#33475B;
+margin-top:20px;
+}
+
+.month{
+font-size:16px;
+font-weight:600;
+color:#33475B;
+margin-top:6px;
+margin-bottom:10px;
+}
+
+/* EMPTY STATE */
+
+.empty{
+font-size:14px;
+color:#9ca3af;
+padding:20px 0;
+}

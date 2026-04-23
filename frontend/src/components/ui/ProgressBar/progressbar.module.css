@@ -1,0 +1,114 @@
+.box {
+  background: #ffffff;
+  padding: 22px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  width: 100%;
+  max-width: 300px; /* ✅ desktop */
+}
+
+/* Tablet & Mobile */
+@media (max-width: 1024px) {
+  .box {
+    max-width: 100%;   /* ✅ remove limit */
+    width: 100%;       /* ✅ full width */
+    grid-column: 1 / -1; /* 🔥 IMPORTANT if using grid */
+  }
+}
+
+.heading {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 18px;
+  color: #111827;
+}
+
+.progressItem {
+  margin-top: 16px;
+}
+
+.label {
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}
+
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progressBarWrapper {
+  position: relative;
+  margin-top: 8px;
+}
+
+.progressBar {
+  height: 10px;
+  background: #f3f4f6;
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: #111827;
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #111827 transparent transparent transparent;
+}
+
+.progressBarWrapper:hover .tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.tooltipCount {
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+
+.tooltipLabel {
+  font-weight: 400;
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+
+.progressFill {
+  height: 100%;
+  border-radius: 999px;
+  width: 0;
+  background: var(--barColor);
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+

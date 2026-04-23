@@ -1,0 +1,140 @@
+.sidebar {
+  width: 90px;
+  height: calc(100vh - 80px);
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+
+  display: flex;
+  justify-content: center;
+  padding-top: 16px;
+
+  position: sticky;
+  top: 80px;
+
+  transition: left 0.3s ease;
+}
+
+/* MENU */
+
+.menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ITEM */
+
+.menuItem {
+  margin-bottom: 22px;
+}
+
+/* LINK */
+
+.link {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ICON CIRCLE */
+
+.iconCircle {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 1.5px solid #f1f5f9;
+  background: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #94a3b8;
+  font-size: 20px;
+
+  transition: all 0.2s ease;
+}
+
+.iconCircle svg {
+  display: block;
+}
+
+/* LABEL */
+
+.label {
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  transition: 0.2s;
+}
+
+/* HOVER */
+
+.menuItem:hover .iconCircle {
+  border-color: #5b4ce0;
+  color: #5b4ce0;
+  background: #f5f3ff;
+}
+
+.menuItem:hover .label {
+  color: #5b4ce0;
+}
+
+/* ACTIVE */
+
+.active .iconCircle {
+  background: #5b4ce0;
+  color: white;
+  border-color: #5b4ce0;
+  box-shadow: 0 4px 12px rgba(91, 76, 224, 0.25);
+}
+
+.active .label {
+  color: #5b4ce0;
+  font-weight: 700;
+}
+
+/* ACTIVE HOVER (Selected hover icon color matches UI) */
+.active:hover .iconCircle {
+  background: #4a3bc2; /* Slightly darker version for hover on active */
+  color: white;
+  border-color: #4a3bc2;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+
+  .sidebar {
+    position: fixed;
+    top: 80px;
+    left: -120px;
+
+    height: calc(100vh - 80px);
+
+    z-index: 1000;
+  }
+
+  .open {
+    left: 0;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 80px;
+    left: 0;
+
+    width: 100%;
+    height: calc(100vh - 80px);
+
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(1px);
+
+    z-index: 999;
+  }
+}

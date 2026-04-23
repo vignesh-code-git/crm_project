@@ -1,0 +1,11 @@
+.headerRow {
+  background-color: #5b4bd6;
+}
+
+.headerCell {
+  padding: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  text-align: left;
+}

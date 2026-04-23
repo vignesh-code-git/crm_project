@@ -1,0 +1,261 @@
+.panel {
+  width: 100%;
+  padding: 20px;
+  background: #ffffff;
+  /* border-right:1px solid #eee; */
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+
+  height: 100%;
+  overflow-y: auto;
+
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+
+  box-sizing: border-box;
+  /* position:relative; */
+  margin: 0;
+
+}
+
+.stickyHeader {
+  position: sticky;
+  top: -20px;
+  background: #ffffff;
+  z-index: 10;
+  margin: -20px -20px 0 -20px;
+  padding: 20px 20px 0 20px;
+}
+
+
+/* Hide scrollbar by default (Chrome / Edge / Safari) */
+.panel::-webkit-scrollbar {
+  width: 0px;
+}
+
+/* Show scrollbar on hover */
+.panel:hover {
+  scrollbar-width: thin;
+}
+
+.panel:hover::-webkit-scrollbar {
+  width: 6px;
+}
+
+.panel:hover::-webkit-scrollbar-thumb {
+  background: #cfd6e4;
+  border-radius: 10px;
+}
+
+.panel:hover::-webkit-scrollbar-thumb:hover {
+  background: #aab3c5;
+}
+
+/* ACTION BAR */
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  background: #F7F7FA;
+  padding: 14px;
+  border-radius: 12px;
+  margin: 18px 0 0 0; /* ✅ No bottom margin to ensure 'touched' with section header */
+  max-width: 275px;
+}
+
+.sectionHeader {
+  margin-top: 24px;
+  padding-top: 24px;
+  padding-bottom: 16px;
+  background: #fff;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #E1E8F5; /* ✅ Suble separator line */
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #33475B;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.sectionArrow {
+  margin-right: 12px;
+  transition: transform 0.2s ease;
+  color: #5948DB;
+  font-size: 14px;
+}
+
+.sectionRotate {
+  transform: rotate(-90deg); /* ✅ Horizontal when closed, down when open (or vice versa) */
+}
+
+.sectionEdit {
+  color: #5948DB;
+  cursor: pointer;
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+.sectionEdit:hover {
+  transform: scale(1.1);
+}
+
+/* BUTTON */
+
+.actionBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  color: #33475b;
+  width: 48px;
+}
+
+
+
+/* ICON BOX */
+
+.iconBox {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 2px solid #cfd6e4;
+  background: #f6f8fc;
+  transition: all 0.25s ease;
+}
+
+.iconBox:hover {
+  border: 2px solid #5948DB;
+
+
+}
+
+/* ICON */
+
+.iconBox svg {
+  font-size: 18px;
+  color: #5c5ce0;
+}
+
+/* TEXT */
+
+.actionBtn span {
+  font-size: 13px;
+  color: #33475b;
+}
+
+/* BACK BUTTON */
+
+.back {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.backIcon {
+  font-size: 20px;
+  color: #5A5C5E;
+}
+
+.backText {
+  font-size: 15px;
+  font-weight: 600;
+  color: #414D55;
+}
+
+
+.scrollHint {
+
+  position: sticky;
+  bottom: -10px;
+  margin-left: 145px;
+  transform: translateX(-50%);
+
+
+
+  font-size: 18px;
+  color: #5948DB;
+
+  pointer-events: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 1;
+
+}
+
+.scrollHidden {
+  opacity: 0;
+}
+
+/* LEAD CONTACT AUTO-FETCH STYLES */
+.leadContact {
+  background: #f8faff;
+  border: 1px solid #e1e8f5;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.leadHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #e1e8f5;
+  padding-bottom: 10px;
+}
+
+.leadTitle {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #5948DB;
+  letter-spacing: 0.5px;
+}
+
+.leadName {
+  font-size: 15px;
+  font-weight: 600;
+  color: #33475b;
+}
+
+.leadBody {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.leadRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #425b76;
+  font-size: 13.5px;
+}
+
+.leadIcon {
+  font-size: 16px;
+  color: #5948DB;
+  opacity: 0.8;
+}

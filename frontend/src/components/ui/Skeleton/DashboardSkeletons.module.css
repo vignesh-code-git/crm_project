@@ -1,0 +1,144 @@
+/* Status Bar */
+.statusBar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.statusCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  background: white;
+  border-radius: var(--skel-radius, 12px);
+  border: 1px solid var(--skel-border, #cfd6e4);
+  box-shadow: var(--skel-shadow, 0 4px 12px rgba(0, 0, 0, 0.05));
+}
+
+.statusTitle {
+  height: 14px;
+  width: 100px;
+  margin-bottom: 12px;
+}
+
+.statusValue {
+  height: 28px;
+  width: 60px;
+}
+
+.statusIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+}
+
+/* Progress Box */
+.progressBox {
+  flex: 1;
+  padding: 24px;
+  background: white;
+}
+
+.progressHeading {
+  height: 20px;
+  width: 200px;
+  margin-bottom: 24px;
+}
+
+.progressItem {
+  margin-bottom: 20px;
+}
+
+.progressLabel {
+  height: 12px;
+  width: 120px;
+  margin-bottom: 8px;
+}
+
+.progressBar {
+  height: 8px;
+  width: 100%;
+}
+
+/* Chart Box */
+.chartBox {
+  flex: 2;
+  padding: 24px;
+  background: white;
+}
+
+.chartHeading {
+  height: 20px;
+  width: 150px;
+  margin-bottom: 30px;
+}
+
+.chartWrapper {
+  display: flex;
+  gap: 20px;
+  height: 300px;
+}
+
+.yAxis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 25px;
+}
+
+.yLabel {
+  height: 12px;
+  width: 40px;
+}
+
+.chartArea {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  border-left: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 0 10px;
+}
+
+.chartCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 30px;
+}
+
+.chartBar {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+}
+
+.xLabel {
+  height: 10px;
+  width: 25px;
+}
+
+.dashboardContainer {
+  padding: 20px;
+}
+
+.bottom {
+  display: flex;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+@media (max-width: 1200px) {
+  .bottom {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .statusBar {
+    grid-template-columns: 1fr;
+  }
+}

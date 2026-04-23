@@ -1,0 +1,280 @@
+.panel {
+  width: 100%;
+  padding: 20px;
+  background: #fff;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 14px;
+  border-bottom-right-radius: 14px;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.panel::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.panel:hover::-webkit-scrollbar-thumb {
+  background: #cfd6e4;
+}
+
+.panel:hover::-webkit-scrollbar-thumb:hover {
+  background: #aab3c5;
+}
+
+.panel {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.panel:hover {
+  scrollbar-color: #8A8A8A transparent;
+}
+
+@media (max-width: 1024px) {
+  .panel {
+    max-width: 320px;
+  }
+}
+
+/* ---------------- AI CARD ---------------- */
+
+.aiCard {
+  border: 2px solid #5948DB;
+  border-radius: 12px;
+  padding: 16px;
+  background: #F7F7FA;
+  margin-bottom: 20px;
+}
+
+.aiHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #5948DB;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.aiText {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.5;
+}
+
+/* ---------------- ATTACHMENTS SECTION ---------------- */
+
+.attachments {
+  border: 1px solid #e2e8f0;
+  /* Softer, modern border */
+  border-radius: 12px;
+  padding: 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: #fff;
+}
+
+.attachHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toggleBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: #64748b;
+  transition: color 0.2s;
+}
+
+.toggleBtn:hover {
+  color: #5b4cf0;
+}
+
+.left span {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+  letter-spacing: -0.01em;
+}
+
+.addBtn {
+  background: none;
+  border: none;
+  color: #5b4cf0;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+
+.addBtn:hover {
+  color: #4a3de0;
+  transform: translateY(-1px);
+}
+
+.plus {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.attachText {
+  margin-top: 4px;
+  /* Reduced top margin */
+  font-size: 13.5px;
+  color: #94a3b8;
+  line-height: 1.25;
+  /* Thinner line height */
+  font-weight: 400;
+  padding: 2px 0;
+}
+
+.icon {
+  transition: transform 0.25s ease;
+}
+
+.iconOpen {
+  transform: rotate(180deg);
+}
+
+/* ---------------- ATTACHMENT LIST ---------------- */
+.attachList {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+  /* Space for scrollbar */
+}
+
+.attachList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.attachList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.attachList::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+
+/* Section label */
+.sectionLabel {
+  font-size: 12px;
+  /* Set to 12px as requested */
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 18px 0 10px;
+}
+
+/* Section Separator */
+.sectionSeparator {
+  border-top: 1px solid #d8dee9;
+  /* Bit increased color */
+  margin: 16px 0 6px;
+  width: 100%;
+}
+
+/* ---------------- ATTACHMENT CARD ---------------- */
+.attachCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid #b7bec6;
+  /* Micro-adjusted softening */
+  border-radius: 10px;
+  padding: 8px 10px;
+  /* Reverted to 8px 10px */
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.attachCard:hover {
+  border-color: #5b4cf0;
+  background: #fcfdfe;
+  box-shadow: 0 4px 12px rgba(91, 76, 240, 0.08);
+}
+
+.attachThumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f8fafc;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #f1f5f9;
+}
+
+.thumbImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbIcon {
+  color: #94a3b8;
+  font-size: 18px;
+}
+
+.attachInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.attachName {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attachMeta {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 500;
+}

@@ -1,0 +1,124 @@
+/* CONTAINER */
+
+.container {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #B9B9B980;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden; /* hides border leak */
+}
+
+
+/* SCROLL WRAPPER */
+
+.scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* TABLE */
+
+.table {
+  width: max-content;      /* allows table to grow */
+  min-width: 100%;         /* fill container if small */
+  border-collapse: collapse;
+}
+
+
+/* HEADER CORNERS */
+
+.table th:first-child {
+  border-top-left-radius: 8px;
+}
+
+.table th:last-child {
+  border-top-right-radius: 8px;
+}
+
+
+/* CELLS */
+
+/* CELLS */
+
+.table th,
+.table td {
+  padding: 14px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* ROW LINE (perfect horizontal line) */
+
+.table tbody tr {
+  border-bottom: 1px solid #B9B9B980; /* darker like screenshot */
+}
+
+/* remove last line */
+
+.table tbody tr:last-child {
+  border-bottom: none;
+}
+
+
+/* HEADER */
+
+.table th {
+  background: #5b4bd6;
+  color: white;
+  font-weight: 500;
+  text-align: left;
+}
+
+
+/* ROW HOVER */
+
+.table tbody tr:hover {
+  background: #f9fafb;
+}
+
+
+/* EMPTY STATE */
+
+.empty {
+  text-align: center;
+  padding: 60px 0;
+  font-size: 16px;
+  color: #6b7280;
+}
+
+
+/* TABLET */
+
+@media (max-width: 1200px) {
+
+  .table {
+    min-width: 1200px;
+  }
+
+}
+
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+  .table {
+    min-width: 1300px;
+  }
+
+}
+
+
+/* SMALL MOBILE */
+
+@media (max-width: 480px) {
+
+  .table {
+    min-width: 1400px;
+  }
+
+}

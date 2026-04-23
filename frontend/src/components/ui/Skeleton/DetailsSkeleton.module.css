@@ -1,0 +1,471 @@
+.container {
+  display: grid;
+  grid-template-columns: 328px minmax(0, 1fr) 320px;
+  gap: 20px;
+  padding: 20px;
+  height: calc(100vh - 80px);
+  /* Adjust to viewport */
+  background: #f1f5f9;
+  overflow: hidden;
+}
+
+/* Common */
+.leftPanel {
+  background: white;
+  padding: 0;
+  border-radius: var(--skel-radius, 12px);
+  border: none;
+  /* Removed border per user request */
+  box-shadow: var(--skel-shadow, 0 4px 12px rgba(0, 0, 0, 0.05));
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.centerPanel,
+.rightPanel {
+  background: white;
+  padding: 24px;
+  border-radius: var(--skel-radius, 12px);
+  border: none;
+  box-shadow: var(--skel-shadow, 0 4px 12px rgba(0, 0, 0, 0.05));
+  overflow: hidden;
+}
+
+.rightPanel {
+  padding-bottom: 100px;
+  /* Further increased bottom padding per request */
+}
+
+/* Left Panel */
+.leftHeaderSkeleton {
+  padding: 24px 24px 20px 24px;
+  /* Restored bottom padding for better spacing */
+  background: white;
+}
+
+.backSkeleton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.backTextSkeleton {
+  height: 15px;
+  width: 60px;
+  background: var(--skel-base, #cbd5e1);
+  border-radius: 4px;
+}
+
+.profileBox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 0;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.profileText {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.name {
+  height: 20px;
+  width: 140px;
+}
+
+.emailRowSkeleton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.subtitle {
+  height: 14px;
+  width: 100px;
+}
+
+.actionBarSkeleton {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  background: transparent;
+  padding: 0;
+  margin: 24px auto 0 auto;
+  /* Increased from 10px to move icons down */
+  width: 100%;
+}
+
+.actionItemSkeleton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  /* Increased gap for better spacing with large icons */
+  width: 52px;
+  /* Match icon width exactly for centering */
+}
+
+.actionIconBox {
+  width: 44px;
+  /* Reduced slightly to create more gap space */
+  height: 44px;
+  /* Reduced slightly to create more gap space */
+  border-radius: 12px;
+  background: var(--skel-base, #cbd5e1);
+  opacity: 1;
+}
+
+.actionText {
+  height: 10px;
+  width: 30px;
+  background: var(--skel-base, #cbd5e1);
+  border-radius: 3px;
+}
+
+.sectionHeaderSkeleton {
+  margin-top: 24px;
+  /* Moved down from 10px as requested */
+  padding: 16px 0 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #E1E8F5;
+  background: white;
+}
+
+.sectionTitleGroup {
+  display: flex;
+  align-items: center;
+}
+
+.sectionArrow {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  margin-right: 12px;
+  background: #94a3b8;
+  /* Darker as requested */
+}
+
+.sectionTitle {
+  height: 16px;
+  width: 140px;
+  /* Increased from 90px */
+  background: var(--skel-base, #cbd5e1);
+  border-radius: 4px;
+}
+
+.sectionEdit {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: #94a3b8;
+  /* Darker as requested */
+}
+
+.iconSmall {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  background: #94a3b8;
+  /* Significantly darker for icons */
+}
+
+.leftContentSkeleton {
+  margin: 5px 20px 200px 20px;
+  /* Increased bottom margin from 100px to 200px as requested */
+  padding: 20px;
+  background: var(--skel-base, #cbd5e1);
+  border-radius: 12px;
+  flex: 1;
+}
+
+.detailsHeaderSkeleton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: white;
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
+
+.titleSmall {
+  height: 14px;
+  width: 80px;
+}
+
+.push {
+  margin-left: auto;
+}
+
+.detailItem {
+  background: white;
+  padding: 16px 16px 8px 16px;
+  /* Reduced bottom padding as requested */
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.label {
+  height: 9px;
+  width: 120px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.valueInput {
+  height: 11px;
+  width: 95%;
+  border-radius: 4px;
+  background: var(--skel-base, #cbd5e1);
+  opacity: 0.5;
+  display: block;
+}
+
+/* Center Panel (Matching Activity Layout) */
+.centerPanel {
+  padding: 0;
+  /* Align with stickyHeader overlap */
+  display: flex;
+  flex-direction: column;
+}
+
+.stickyHeaderSkeleton {
+  padding: 20px;
+  background: white;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.activityHeaderSkeleton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.searchBarSkeleton {
+  height: 38px;
+  flex: 1;
+  border-radius: 8px;
+}
+
+.convertBtnSkeleton {
+  height: 38px;
+  width: 100px;
+  border-radius: 8px;
+}
+
+.tabsHeaderSkeleton {
+  display: flex;
+  gap: 24px;
+}
+
+.tab {
+  height: 16px;
+  width: 60px;
+}
+
+.activityFeed {
+  padding: 20px;
+  background: var(--skel-base, #cbd5e1);
+  /* Visible background for the feed area */
+  border-radius: 12px;
+  margin: 20px;
+}
+
+.activityItem {
+  background: white;
+  border: none;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.activityItem:last-child {
+  margin-bottom: 0;
+}
+
+.activityHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+}
+
+.activityLeft {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.activityIcon {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  /* Chevron/Icon placeholder */
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.activityTextGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.activityTitle {
+  height: 14px;
+  width: 180px;
+}
+
+.activityPreview {
+  height: 13px;
+  width: 280px;
+  max-width: 100%;
+}
+
+.activityDate {
+  height: 12px;
+  width: 140px;
+  margin-left: 20px;
+}
+
+/* Right Panel */
+.aiSummarySkeleton {
+  border-radius: 12px;
+  padding: 16px;
+  background: var(--skel-base, #cbd5e1);
+  /* Match skeleton base color */
+  margin-bottom: 28px;
+  /* Increased from 24px */
+}
+
+.aiHeaderTitle {
+  height: 18px;
+  width: 140px;
+  margin-bottom: 12px;
+}
+
+.aiTextLine {
+  height: 14px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.aiTextLine:last-child {
+  width: 70%;
+  margin-bottom: 0;
+}
+
+.attachmentsSkeleton {
+  border-radius: 12px;
+  padding: 16px;
+  background: var(--skel-base, #cbd5e1);
+  /* Match visible skeleton base color */
+  flex: 1;
+}
+
+.attachHeaderSkeleton {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.attachIcon {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+}
+
+.attachTitle {
+  height: 15px;
+  width: 100px;
+  margin-left: -40px;
+  /* Adjust to match toggleBtn gap */
+}
+
+.addBtnSkeleton {
+  height: 18px;
+  width: 45px;
+}
+
+.attachListSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 21px;
+  /* Increased by 1px from 20px as requested */
+  /* Increased from 16px */
+  /* Increased gap for more 'empty space' */
+}
+
+.attachItemSkeleton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  /* Further increased padding */
+  background: white;
+  /* Make items pop against the skel-base container */
+  border: 1px solid #e1e8f5;
+  border-radius: 12px;
+}
+
+.attachThumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.attachInfoSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.attachNameSkeleton {
+  height: 12px;
+  width: 120px;
+}
+
+.attachMetaSkeleton {
+  height: 10px;
+  width: 60px;
+}
+
+@media (max-width: 1200px) {
+  .container {
+    grid-template-columns: 328px 1fr;
+  }
+
+  .rightPanel {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+
+  .leftPanel,
+  .rightPanel {
+    display: none;
+  }
+}

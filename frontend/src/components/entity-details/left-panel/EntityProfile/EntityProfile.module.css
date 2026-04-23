@@ -1,0 +1,137 @@
+.profile{
+display:flex;
+gap:12px;
+align-items:center;
+}
+
+.avatar{
+width:72px;
+height:72px;
+border-radius:8px;
+background:#e5e7eb;
+}
+
+.info {
+  gap: 6px;            /* ✅ same as avatar */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* ✅ distribute evenly */
+  margin-bottom: 5px;
+}
+
+.info h2{
+font-size:20px;
+font-weight:600;
+color:#33475B;
+}
+
+.info p{
+font-size:14px;
+color:#33475B;
+}
+
+.contactBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.contactRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #33475B;
+}
+
+.copy{
+cursor:pointer;
+font-size:14px;
+color:#5948DB;
+}
+
+.copy{
+cursor:pointer;
+font-size:14px;
+color:#5948DB;
+}
+
+/* 🎯 INTERACTIVE STAGE DROPDOWN */
+.stageWrapper {
+  position: relative;
+  margin-top: 4px;
+}
+
+.stageBox {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 4px 8px;
+  margin-left: -8px; /* account for padding */
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  width: fit-content;
+}
+
+.stageBox:hover {
+  background: rgba(89, 72, 219, 0.05);
+}
+
+.stageLabel {
+  font-size: 15px;
+  font-weight: 500;
+  color: #33475B;
+  white-space: nowrap;
+}
+
+.chevron {
+  font-size: 16px;
+  color: #5948DB;
+  transition: transform 0.3s ease;
+}
+
+.rotate {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 200px;
+  background: white;
+  border: 1px solid rgba(89, 72, 219, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  padding: 6px;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.option {
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #33475B;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.option:hover {
+  background: rgba(89, 72, 219, 0.08);
+  color: #5948DB;
+}
+
+.option.active {
+  background: #5948DB;
+  color: white;
+  font-weight: 600;
+}

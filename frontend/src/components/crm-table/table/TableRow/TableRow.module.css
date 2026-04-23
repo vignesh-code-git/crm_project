@@ -1,0 +1,13 @@
+.row {
+  transition: background 0.2s ease;
+}
+
+.row:hover {
+  background-color: #f9fafb;
+}
+
+.cell {
+  padding: 14px;
+  font-size: 14px;
+  color: #374151;
+}

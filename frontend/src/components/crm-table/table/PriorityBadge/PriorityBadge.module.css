@@ -1,0 +1,29 @@
+.badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* High - Red */
+.high {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Medium - Yellow */
+.medium {
+  background-color: #fff7e6;
+  color: #b45309;
+}
+
+/* Low - Green */
+.low {
+  background-color: #e6f7ec;
+  color: #1a7f37;
+}
+
+.default {
+  background-color: #f3f4f6;
+  color: #374151;
+}
