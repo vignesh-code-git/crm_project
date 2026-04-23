@@ -33,7 +33,7 @@ app.use(express.json());
 
 app.use(cors({
   origin: [
-    "http://localhost:3000",
+    "https://crm-project-enz1.onrender.com",
     process.env.FRONTEND_URL
   ],
   credentials: true
