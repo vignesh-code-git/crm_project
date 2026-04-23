@@ -65,10 +65,16 @@ async function loginUser(req, res) {
 
     const token = generateToken(user);
 
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   sameSite: "lax",
+    // });
+
     res.cookie("token", token, {
-      httpOnly: true,
-      sameSite: "lax",
-    });
+  httpOnly: true,
+  secure: true,       // 🔥 REQUIRED for HTTPS
+  sameSite: "None",   // 🔥 REQUIRED for cross-origin
+});
 
     // 🔥 NOTIFICATION
     await notifRepo.createNotification({
