@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import styles from "./progressbar.module.css";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 function ProgressLine({ label, value, color, delay, count, total }) {
   const [width, setWidth] = useState(0);
@@ -56,7 +57,7 @@ export default function ProgressBar() {
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:5000/api/deal-progress", {
+    fetch(`${API_BASE_URL}/api/deal-progress`, {
       credentials: "include", // 🔥 IMPORTANT
     })
       .then(async (res) => {

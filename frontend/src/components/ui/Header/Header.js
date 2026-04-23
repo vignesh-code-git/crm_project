@@ -22,6 +22,7 @@ import {
   HiOutlineArrowRightOnRectangle
 } from "react-icons/hi2";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 import NotificationBell from "../notifications/NotificationBell";
 import ProfileViewModal from "./ProfileViewModal";
@@ -69,7 +70,7 @@ export default function Header({ toggleSidebar }) {
 
   // 🔥 Fetch logged user
   useEffect(() => {
-    fetch("http://localhost:5000/api/users/profile", {
+    fetch(`${API_BASE_URL}/api/users/profile`, {
       credentials: "include",
     })
       .then(res => res.json())
@@ -103,7 +104,7 @@ export default function Header({ toggleSidebar }) {
     const delayDebounceFn = setTimeout(async () => {
       setIsSearching(true);
       try {
-        const res = await fetch(`http://localhost:5000/api/search?q=${encodeURIComponent(searchTerm)}`, {
+        const res = await fetch(`${API_BASE_URL}/api/search?q=${encodeURIComponent(searchTerm)}`, {
           credentials: "include",
         });
         const data = await res.json();
@@ -239,7 +240,7 @@ export default function Header({ toggleSidebar }) {
   };
 
   const handleLogout = async () => {
-    await fetch("http://localhost:5000/api/users/logout", { method: "POST", credentials: "include" });
+    await fetch(`${API_BASE_URL}/api/users/logout`, { method: "POST", credentials: "include" });
     window.location.href = "/login";
   };
 

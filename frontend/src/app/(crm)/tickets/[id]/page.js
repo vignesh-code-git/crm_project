@@ -15,6 +15,7 @@ import DetailsSkeleton from "@/components/ui/Skeleton/DetailsSkeleton";
 import { LuPanelLeft, LuPanelRight } from "react-icons/lu";
 import CallOverlay from "@/components/ui/CallOverlay/CallOverlay";
 import { showSuccess, showError } from "@/services/toastService";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 import { noteFields } from "@/config/drawer/activityForm/noteForm";
 import { emailFields } from "@/config/drawer/activityForm/emailForm";
@@ -60,7 +61,7 @@ export default function TicketsDetailsPage() {
 const [leads, setLeads] = useState([]);
 
 useEffect(() => {
-  fetch("http://localhost:5000/api/leads")
+  fetch(`${API_BASE_URL}/api/leads`)
     .then(res => res.json())
     .then(data => {
       if (Array.isArray(data)) {
@@ -105,7 +106,7 @@ const leadOptions = Array.isArray(leads)
   const [user, setUser] = useState(null);
 
 useEffect(() => {
-  fetch("http://localhost:5000/api/users/profile", {
+  fetch(`${API_BASE_URL}/api/users/profile`, {
     credentials: "include",
   })
     .then(res => res.json())
@@ -128,7 +129,7 @@ useEffect(() => {
     
     // ⏹️ TERMINATE REAL CALL IF MANUAL HANGUP (User clicked End Call)
     if (!forceOutcome && callSid) {
-      fetch(`http://localhost:5000/api/calls/terminate/${callSid}`, { 
+      fetch(`${API_BASE_URL}/api/calls/terminate/${callSid}`, { 
         method: 'POST',
         credentials: "include"
       })
@@ -168,7 +169,7 @@ useEffect(() => {
     if (isCalling && callSid) {
       pollInterval = setInterval(async () => {
         try {
-          const res = await fetch(`http://localhost:5000/api/calls/status/${callSid}`, {
+          const res = await fetch(`${API_BASE_URL}/api/calls/status/${callSid}`, {
             credentials: "include"
           });
           const data = await res.json();
@@ -231,7 +232,7 @@ useEffect(() => {
     } else {
       // Fallback: Fetch single entity
       console.log(`[TICKET FALLBACK] Fetching ID: ${id}`);
-      fetch(`http://localhost:5000/api/tickets/${id}`, {
+      fetch(`${API_BASE_URL}/api/tickets/${id}`, {
         credentials: "include"
       })
         .then(async (res) => {
@@ -294,7 +295,7 @@ useEffect(() => {
       
       // 🔥 TRIGGER REAL TWILIO CALL
       try {
-        const res = await fetch("http://localhost:5000/api/calls/initiate", {
+        const res = await fetch(`${API_BASE_URL}/api/calls/initiate`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
@@ -347,7 +348,7 @@ useEffect(() => {
   ========================= */
   const handleConvert = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/leads/${entityState.id}/convert`, {
+      const res = await fetch(`${API_BASE_URL}/api/leads/${entityState.id}/convert`, {
   method: "POST",
   credentials: "include",
 });

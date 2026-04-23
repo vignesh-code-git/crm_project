@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "./chart.module.css";
+import { API_BASE_URL } from "@/config/apiConfig";
 import { useState, useEffect } from "react";
 
 // INR formatter
@@ -27,7 +28,7 @@ export default function SalesReport() {
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:5000/api/sales-report",{
+    fetch(`${API_BASE_URL}/api/sales-report`,{
        credentials: "include", // 🔥 IMPORTANT
     })
       .then((res) => res.json())

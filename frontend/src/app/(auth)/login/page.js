@@ -5,6 +5,7 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,7 +31,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("https://crm-project-enz1.onrender.com/api/users/login", {
+      const res = await fetch(`${API_BASE_URL}/api/users/login`, {
         method: "POST",
         credentials: "include",
         headers: {

@@ -2,6 +2,7 @@
 
 import styles from "./TeamPerformanceTable.module.css";
 import { useEffect, useState } from "react";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 // INR formatter
 const formatINR = (num) => {
@@ -18,7 +19,7 @@ export default function TeamPerformanceTable() {
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:5000/api/team-performance", {
+    fetch(`${API_BASE_URL}/api/team-performance`, {
       credentials: "include", // 🔥 IMPORTANT
     })
       .then(async (res) => {

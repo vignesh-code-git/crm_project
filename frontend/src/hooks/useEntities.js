@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { showError } from "@/services/toastService";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 export default function useApiEntity(entity) {
 
-  const API = `https://crm-project-enz1.onrender.com/api/${entity}`;
+  const API = `${API_BASE_URL}/api/${entity}`;
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 

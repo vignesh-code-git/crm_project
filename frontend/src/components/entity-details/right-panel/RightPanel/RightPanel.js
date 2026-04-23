@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import styles from "./RightPanel.module.css";
 import { FiChevronDown, FiFile } from "react-icons/fi";
 import { RiSparkling2Line } from "react-icons/ri";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 function formatFileSize(bytes) {
   if (!bytes) return "";
@@ -50,7 +51,7 @@ export default function RightPanel({ entityId, entityType, refreshKey }) {
   const fetchAttachments = () => {
     if (!entityType || !entityId) return;
     fetch(
-      `http://localhost:5000/api/attachments?related_type=${entityType}&related_id=${entityId}`,
+      `${API_BASE_URL}/api/attachments?related_type=${entityType}&related_id=${entityId}`,
       { credentials: "include" }
     )
       .then((res) => res.json())
@@ -74,7 +75,7 @@ export default function RightPanel({ entityId, entityType, refreshKey }) {
     formData.append("related_id", entityId || 0);   // ✅ proper entity link
 
     try {
-      const res = await fetch("http://localhost:5000/api/upload", {
+      const res = await fetch(`${API_BASE_URL}/api/upload`, {
         method: "POST",
         body: formData,
         credentials: "include",

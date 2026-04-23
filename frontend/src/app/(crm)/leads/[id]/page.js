@@ -3,6 +3,7 @@
 import { useParams, useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import styles from "./page.module.css";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 import LeftPanel from "@/components/entity-details/left-panel/LeftLayout/LeftLayout";
 import CenterPanel from "@/components/entity-details/center-panel/CenterLayout/CenterLayout";
@@ -60,7 +61,7 @@ export default function LeadsDetailsPage() {
 const [leads, setLeads] = useState([]);
 
 useEffect(() => {
-  fetch("http://localhost:5000/api/leads")
+  fetch(`${API_BASE_URL}/api/leads`)
     .then(res => res.json())
     .then(data => {
       if (Array.isArray(data)) {
@@ -105,7 +106,7 @@ const leadOptions = Array.isArray(leads)
   const [user, setUser] = useState(null);
 
 useEffect(() => {
-  fetch("http://localhost:5000/api/users/profile", {
+  fetch(`${API_BASE_URL}/api/users/profile`, {
     credentials: "include",
   })
     .then(res => res.json())
@@ -128,7 +129,7 @@ useEffect(() => {
     
     // ⏹️ TERMINATE REAL CALL IF MANUAL HANGUP (User clicked End Call)
     if (!forceOutcome && callSid) {
-      fetch(`http://localhost:5000/api/calls/terminate/${callSid}`, { 
+      fetch(`${API_BASE_URL}/api/calls/terminate/${callSid}`, { 
         method: 'POST',
         credentials: "include"
       })
@@ -168,7 +169,7 @@ useEffect(() => {
     if (isCalling && callSid) {
       pollInterval = setInterval(async () => {
         try {
-          const res = await fetch(`http://localhost:5000/api/calls/status/${callSid}`, {
+          const res = await fetch(`${API_BASE_URL}/api/calls/status/${callSid}`, {
             credentials: "include"
           });
           const data = await res.json();
@@ -231,7 +232,7 @@ useEffect(() => {
     } else {
       // Fallback: Fetch single entity
       console.log(`Fallback fetching lead: ${id}`);
-      fetch(`http://localhost:5000/api/leads/${id}`, {
+      fetch(`${API_BASE_URL}/api/leads/${id}`, {
         credentials: "include",
         cache: "no-store" // 🔥 DISABLE CACHE
       })
@@ -294,7 +295,7 @@ useEffect(() => {
       
       // 🔥 TRIGGER REAL TWILIO CALL
       try {
-        const res = await fetch("http://localhost:5000/api/calls/initiate", {
+        const res = await fetch(`${API_BASE_URL}/api/calls/initiate`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",

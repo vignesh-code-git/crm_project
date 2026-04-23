@@ -14,6 +14,7 @@ import {
   HiOutlineShieldCheck
 } from "react-icons/hi2";
 import { showSuccess, showError } from "@/services/toastService";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 export default function ProfileModal({ isOpen, onClose, user, onUpdate }) {
   const [formData, setFormData] = useState({
@@ -72,7 +73,7 @@ export default function ProfileModal({ isOpen, onClose, user, onUpdate }) {
       // If password is empty, don't send it to backend to avoid empty update
       if (!payload.password) delete payload.password;
 
-      const res = await fetch("http://localhost:5000/api/users/profile", {
+      const res = await fetch(`${API_BASE_URL}/api/users/profile`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

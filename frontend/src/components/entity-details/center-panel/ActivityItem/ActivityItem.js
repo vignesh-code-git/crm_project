@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import styles from "./ActivityItem.module.css";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 import { FiChevronDown, FiCalendar, FiClock, FiEye, FiDownload, FiFile, FiPaperclip } from "react-icons/fi";
 import {
@@ -77,7 +78,7 @@ export default function ActivityItem({ activity, entityType }) {
 
     try {
       console.log(`🌐 TOGGLING TASK ID: ${activity.id} TO: ${newValue}`); // 🔥 DEBUG LOG
-      const res = await fetch(`http://localhost:5000/api/tasks/${activity.id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/tasks/${activity.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include", // 🔥 REQUIRED FOR AUTH

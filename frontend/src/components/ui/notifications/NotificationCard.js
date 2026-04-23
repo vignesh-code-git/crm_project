@@ -11,6 +11,7 @@ import {
 } from "react-icons/io5";
 import { formatDistanceToNow } from "date-fns";
 import styles from "./notification.module.css";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 export default function NotificationCard({ notification, onRead, onDelete, onClose, isToast = false }) {
   const [expanded, setExpanded] = useState(false);
@@ -104,7 +105,7 @@ export default function NotificationCard({ notification, onRead, onDelete, onClo
     if (newExpanded && !hydratedData && !metadata.body && !metadata.content) {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5000/api/hydrate/${entity_type}/${entity_id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/hydrate/${entity_type}/${entity_id}`, {
           credentials: 'include'
         });
         if (response.ok) {

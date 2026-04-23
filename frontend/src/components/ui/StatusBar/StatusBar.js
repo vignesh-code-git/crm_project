@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./Statusbar.module.css";
+import { API_BASE_URL } from "@/config/apiConfig";
 import {
   HiOutlineUsers,
   HiOutlineBriefcase,
@@ -53,7 +54,7 @@ export default function StatusBar() {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/statusbar",{
+    fetch(`${API_BASE_URL}/api/statusbar`,{
        credentials: "include", // 🔥 IMPORTANT
     })
     

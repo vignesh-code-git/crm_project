@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import styles from "./page.module.css";
+import { API_BASE_URL } from "@/config/apiConfig";
 import StatusBar from "../../../components/ui/StatusBar/StatusBar.js";
 import ProgressBar from "../../../components/ui/ProgressBar/ProgressBar.js";
 import ChartBox from "../../../components/ui/Chart/Chart.js";
@@ -16,7 +17,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const checkUser = async () => {
-      const res = await fetch("http://localhost:5000/api/users/profile", {
+      const res = await fetch(`${API_BASE_URL}/api/users/profile`, {
         credentials: "include",
       });
 

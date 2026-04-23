@@ -31,6 +31,7 @@ import {
 } from "react-icons/fi";
 
 import { showInfo } from "@/services/toastService";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 export default function DrawerForm({
   fields,
@@ -135,7 +136,7 @@ export default function DrawerForm({
   const fetchExistingAttachments = async () => {
     if (!entityType || !entity?.id) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/attachments?related_type=${entityType}&related_id=${entity.id}`, { credentials: "include" });
+      const res = await fetch(`${API_BASE_URL}/api/attachments?related_type=${entityType}&related_id=${entity.id}`, { credentials: "include" });
       const files = await res.json();
       setExistingAttachments(Array.isArray(files) ? files : []);
     } catch (err) {
@@ -202,7 +203,7 @@ export default function DrawerForm({
       formData.append("user_id", user?.id || 1);
 
       try {
-        const res = await fetch("http://localhost:5000/api/upload", {
+        const res = await fetch(`${API_BASE_URL}/api/upload`, {
           method: "POST",
           body: formData
         });

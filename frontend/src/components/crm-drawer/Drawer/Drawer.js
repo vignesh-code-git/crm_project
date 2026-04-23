@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import styles from "./Drawer.module.css";
 import DrawerForm from "@/components/crm-drawer/DrawerForm/DrawerForm";
 import { FiX } from "react-icons/fi";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 export default function Drawer({
   title,
@@ -31,7 +32,7 @@ export default function Drawer({
 
   useEffect(() => {
     if (user?.role === "admin") {
-      fetch("http://localhost:5000/api/users", {
+      fetch(`${API_BASE_URL}/api/users`, {
         credentials: "include",
       })
         .then((res) => res.json())
@@ -58,7 +59,7 @@ export default function Drawer({
 
   useEffect(() => {
     if (isOpen && entityType === "deals") {
-      fetch("http://localhost:5000/api/leads", {
+      fetch(`${API_BASE_URL}/api/leads`, {
         credentials: "include",
       })
         .then((res) => res.json())
@@ -75,7 +76,7 @@ export default function Drawer({
     }
 
     if (isOpen && entityType === "tickets") {
-      fetch("http://localhost:5000/api/deals", {
+      fetch(`${API_BASE_URL}/api/deals`, {
         credentials: "include",
       })
         .then((res) => res.json())
@@ -93,7 +94,7 @@ export default function Drawer({
   }, [entityType, isOpen]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/leads", {
+    fetch(`${API_BASE_URL}/api/leads`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -111,7 +112,7 @@ export default function Drawer({
         setAllLeadsRaw([]);
       });
 
-    fetch("http://localhost:5000/api/companies", {
+    fetch(`${API_BASE_URL}/api/companies`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -128,7 +129,7 @@ export default function Drawer({
       })
       .catch(() => setCompanyOptions([]));
 
-    fetch("http://localhost:5000/api/deals", {
+    fetch(`${API_BASE_URL}/api/deals`, {
       credentials: "include",
     })
       .then((res) => res.json())

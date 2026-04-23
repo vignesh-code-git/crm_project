@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./sidebar.module.css";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 import { LuLayoutDashboard } from "react-icons/lu";
 import { RxPeople } from "react-icons/rx";
@@ -19,7 +20,7 @@ export default function SideBar({ open, close }) {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/users/profile", {
+        const res = await fetch(`${API_BASE_URL}/api/users/profile`, {
           credentials: "include",
         });
 

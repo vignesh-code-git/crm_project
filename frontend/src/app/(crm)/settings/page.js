@@ -16,6 +16,7 @@ import {
   HiOutlineExclamationTriangle
 } from "react-icons/hi2";
 import { showSuccess, showError, showInfo } from "@/services/toastService";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -36,7 +37,7 @@ export default function SettingsPage() {
 
   // FETCH PROFILE ON MOUNT
   useEffect(() => {
-    fetch("http://localhost:5000/api/users/profile", {
+    fetch(`${API_BASE_URL}/api/users/profile`, {
       credentials: "include",
     })
       .then(res => res.json())
@@ -76,7 +77,7 @@ export default function SettingsPage() {
       delete payload.confirm_password;
       if (!payload.password) delete payload.password;
 
-      const res = await fetch("http://localhost:5000/api/users/profile", {
+      const res = await fetch(`${API_BASE_URL}/api/users/profile`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -99,7 +100,7 @@ export default function SettingsPage() {
 
     setIsDeleting(true);
     try {
-      const res = await fetch("http://localhost:5000/api/users/profile", {
+      const res = await fetch(`${API_BASE_URL}/api/users/profile`, {
         method: "DELETE",
         credentials: "include",
       });

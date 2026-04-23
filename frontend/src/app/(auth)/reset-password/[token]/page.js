@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import Link from "next/link";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState("");
@@ -31,7 +32,7 @@ export default function ResetPasswordPage() {
     setError("");
 
     try {
-      const res = await fetch(`http://localhost:5000/api/auth/reset-password/${token}`, {
+      const res = await fetch(`${API_BASE_URL}/api/auth/reset-password/${token}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

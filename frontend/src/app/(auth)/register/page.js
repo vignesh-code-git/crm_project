@@ -7,6 +7,7 @@ import styles from "./page.module.css";
 import { FiChevronDown } from "react-icons/fi";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -61,7 +62,7 @@ export default function RegisterForm() {
     setLoading(true);
 
     try {
-      const res = await fetch("https://crm-project-enz1.onrender.com/api/users/register", {
+      const res = await fetch(`${API_BASE_URL}/api/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

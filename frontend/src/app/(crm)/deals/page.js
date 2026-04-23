@@ -23,6 +23,7 @@ import TableSkeleton from "@/components/ui/Skeleton/TableSkeleton";
 import ImportModal from "@/components/ui/ImportModal/ImportModal";
 import BulkDeleteButton from "@/components/ui/BulkDeleteButton/BulkDeleteButton";
 import ConfirmModal from "@/components/ui/ConfirmModal/ConfirmModal";
+import { API_BASE_URL } from "@/config/apiConfig";
 
 
 export default function LeadsPage() {
@@ -55,7 +56,7 @@ export default function LeadsPage() {
 
   useEffect(() => {
     // 1. Fetch CURRENT user profile
-    fetch("http://localhost:5000/api/users/profile", {
+    fetch(`${API_BASE_URL}/api/users/profile`, {
       credentials: "include",
     })
       .then(res => res.json())
@@ -69,7 +70,7 @@ export default function LeadsPage() {
       .catch(err => console.error(err));
 
     // 2. Fetch ALL users for filter dropdown
-    fetch("http://localhost:5000/api/users", {
+    fetch(`${API_BASE_URL}/api/users`, {
       credentials: "include",
     })
       .then(res => res.json())
