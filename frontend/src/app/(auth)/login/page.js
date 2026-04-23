@@ -30,7 +30,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/users/login", {
+      const res = await fetch("https://crm-project-enz1.onrender.com/api/users/login", {
         method: "POST",
         credentials: "include",
         headers: {
