@@ -142,10 +142,7 @@ sequelize.authenticate()
   .then(async () => {
     console.log("✅ Database connected successfully.");
 
-    if (process.env.NODE_ENV !== "production") {
-      await sequelize.sync({ alter: true });
-      console.log("✅ Tables synced (dev mode).");
-    }
+    await sequelize.sync({ alter: true });
 
     // Seed roles
     const { Role } = require("./models");
