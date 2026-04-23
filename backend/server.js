@@ -42,13 +42,13 @@ app.use(cors({
   origin: function (origin, callback) {
     const allowedOrigins = [
       "http://localhost:3000",
-      process.env.FRONTEND_URL
+      "https://crm-project-frontend.vercel.app" // ← PUT YOUR REAL URL
     ];
 
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.log("❌ CORS blocked:", origin);
+      console.log("❌ Blocked by CORS:", origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
