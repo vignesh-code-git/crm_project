@@ -19,7 +19,7 @@ export default function SearchBar({
   return (
     <div className={styles.wrapper}>
       {/* 🔍 Icon */}
-      <FiSearch className={styles.icon} />
+      <FiSearch className={styles.icon} size={18} />
 
       {/* 🔤 Input */}
       <input

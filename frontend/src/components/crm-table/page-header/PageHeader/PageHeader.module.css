@@ -2,8 +2,7 @@
 .container {
   background: white;
   border-radius: 10px 10px 0 0;
-  padding: 24px 20px;
-
+  padding: 20px 16px;
   margin-bottom: 2px;
 }
 
@@ -12,31 +11,49 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
 }
 
 /* Title */
 .title {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 600;
   color: #111827;
+  white-space: nowrap;
 }
 
 /* Buttons container */
 .actions {
   display: flex;
-  gap: 12px;
+  gap: 12px; /* Increased gap as requested */
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Button Base Style */
+.baseBtn {
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 13px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px; /* Height preserved as requested */
+  min-width: 85px; /* Reduced width as requested */
+  padding: 0 8px; /* Reduced padding */
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 /* Import button */
 .importBtn {
-  padding: 8px 16px;
-  border-radius: 8px;
   border: 1px solid #5b4cf0;
   background: white;
   color: #5b4cf0;
-  font-weight: 500;
-  cursor: pointer;
-  transition: 0.2s;
 }
 
 .importBtn:hover {
@@ -45,14 +62,9 @@
 
 /* Export button */
 .exportBtn {
-  padding: 8px 16px;
-  border-radius: 8px;
   border: 1px solid #10b981;
   background: white;
   color: #10b981;
-  font-weight: 500;
-  cursor: pointer;
-  transition: 0.2s;
 }
 
 .exportBtn:hover {
@@ -61,16 +73,40 @@
 
 /* Create button */
 .createBtn {
-  padding: 8px 16px;
-  border-radius: 8px;
   border: none;
-  background: #5b4cf0;
+  background: #5b4bdb;
   color: white;
-  font-weight: 500;
-  cursor: pointer;
-  transition: 0.2s;
 }
 
 .createBtn:hover {
   background: #4a38d6;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+  .container {
+    padding: 12px 10px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: space-between;
+    overflow-x: visible;
+    gap: 8px; /* Increased mobile gap */
+  }
+
+  .baseBtn {
+    height: 30px; /* Height preserved */
+    font-size: 11px;
+    min-width: 0;
+    flex: 1;
+    padding: 0 4px;
+  }
 }

@@ -5,8 +5,9 @@
   /* border-right:1px solid #eee; */
   border-top-left-radius: 14px;
   border-bottom-left-radius: 14px;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+  border-top-right-radius: 14px;
+  border-bottom-right-radius: 14px;
+  border: none;
 
   height: 100%;
   overflow-y: auto;
@@ -22,11 +23,11 @@
 
 .stickyHeader {
   position: sticky;
-  top: -20px;
+  top: 0;
   background: #ffffff;
   z-index: 10;
-  margin: -20px -20px 0 -20px;
-  padding: 20px 20px 0 20px;
+  margin: 0;
+  padding: 0;
 }
 
 
@@ -74,7 +75,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid #E1E8F5; /* ✅ Suble separator line */
+  border-top: none; /* ✅ Removed separator line */
 }
 
 .sectionTitle {
@@ -135,15 +136,13 @@
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  border: 2px solid #cfd6e4;
+  border: none;
   background: #f6f8fc;
   transition: all 0.25s ease;
 }
 
 .iconBox:hover {
-  border: 2px solid #5948DB;
-
-
+  background: #edf1f9;
 }
 
 /* ICON */
@@ -211,7 +210,7 @@
 /* LEAD CONTACT AUTO-FETCH STYLES */
 .leadContact {
   background: #f8faff;
-  border: 1px solid #e1e8f5;
+  border: none;
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 20px;
@@ -222,7 +221,7 @@
   flex-direction: column;
   gap: 4px;
   margin-bottom: 12px;
-  border-bottom: 1px solid #e1e8f5;
+  border-bottom: none;
   padding-bottom: 10px;
 }
 

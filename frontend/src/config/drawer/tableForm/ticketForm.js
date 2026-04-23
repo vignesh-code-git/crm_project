@@ -9,7 +9,7 @@ export const ticketFields = [
     name: "deal_id",
     label: "Deal Name",
     type: "select",
-    placeholder: "Select associated deal",
+    placeholder: "Select Associated Deal",
   },
   {
     name: "company_id",
@@ -47,6 +47,7 @@ export const ticketFields = [
     label: "Priority",
     type: "select",
     required: true,
+    placeholder: "Select Priority",
     options: ["Low", "Medium", "High", "Critical"],
   },
   {

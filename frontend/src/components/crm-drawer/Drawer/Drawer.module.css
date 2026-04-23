@@ -62,7 +62,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 18px 20px;
-  border-bottom: 1px solid #eee;
+  border-bottom: none;
   position: sticky;
   top: 0; /* Flush with the top for a solid sticky behavior */
   background: white;
@@ -127,6 +127,13 @@
 
   overflow: hidden;
 
+}
+
+@media (max-width: 600px) {
+  .emailModal {
+    width: 95%;
+    max-height: 95vh;
+  }
 }
 
 

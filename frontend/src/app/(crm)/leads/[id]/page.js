@@ -13,7 +13,7 @@ import useEntities from "@/hooks/useEntities";
 import Drawer from "@/components/crm-drawer/Drawer/Drawer";
 import DetailsSkeleton from "@/components/ui/Skeleton/DetailsSkeleton";
 
-import { HiOutlineIdentification, HiOutlineChartBar } from "react-icons/hi2";
+import { BsLayoutSidebar, BsLayoutSidebarReverse } from "react-icons/bs";
 import CallOverlay from "@/components/ui/CallOverlay/CallOverlay";
 import { showSuccess, showError } from "@/services/toastService";
 
@@ -363,14 +363,14 @@ useEffect(() => {
           className={`${styles.iconBtn} ${styles.leftBtn}`}
           onClick={() => setLeftOpen(true)}
         >
-          <HiOutlineIdentification />
+          <BsLayoutSidebar />
         </button>
 
         <button
           className={`${styles.iconBtn} ${styles.rightBtn}`}
           onClick={() => setRightOpen(true)}
         >
-          <HiOutlineChartBar />
+          <BsLayoutSidebarReverse />
         </button>
       </div>
 

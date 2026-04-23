@@ -14,21 +14,21 @@ export default function PageHeader({ title, onImport, onCreate, onExport, childr
           {children}
           {onExport && (
             <button
-              className={styles.exportBtn}
+              className={`${styles.baseBtn} ${styles.exportBtn}`}
               onClick={onExport}
             >
               Export
             </button>
           )}
           <button
-            className={styles.importBtn}
+            className={`${styles.baseBtn} ${styles.importBtn}`}
             onClick={onImport}
           >
             Import
           </button>
 
           <button
-            className={styles.createBtn}
+            className={`${styles.baseBtn} ${styles.createBtn}`}
             onClick={onCreate}
           >
             Create

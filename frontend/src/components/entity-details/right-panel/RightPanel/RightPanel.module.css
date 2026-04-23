@@ -2,8 +2,8 @@
   width: 100%;
   padding: 20px;
   background: #fff;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
   border-top-right-radius: 14px;
   border-bottom-right-radius: 14px;
   height: 100%;
@@ -75,7 +75,7 @@
 /* ---------------- ATTACHMENTS SECTION ---------------- */
 
 .attachments {
-  border: 1px solid #e2e8f0;
+  border: none;
   /* Softer, modern border */
   border-radius: 12px;
   padding: 16px;
@@ -214,7 +214,7 @@
   align-items: center;
   gap: 12px;
   background: #fff;
-  border: 1px solid #b7bec6;
+  border: none;
   /* Micro-adjusted softening */
   border-radius: 10px;
   padding: 8px 10px;

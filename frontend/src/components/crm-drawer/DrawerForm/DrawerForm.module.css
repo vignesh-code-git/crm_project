@@ -733,8 +733,7 @@
   grid-column: span 1;
 }
 
-.form_deals .field_close_date .inputWrapper {
-  border: 1px solid #d1d5db;
+.form_deals .field_close_date > div {
   width: 180px;
 }
 

@@ -7,16 +7,16 @@
   padding: 24px;
 }
 
-
-
 /* Search + Pagination */
 .topBar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
+  width: 100%;
   margin-bottom: 5px;
+  padding: 0 16px; /* Added margins on left and right */
+  box-sizing: border-box;
 }
 
 .containerSearch {
@@ -70,13 +70,19 @@
   }
 
   .topBar {
-    flex-direction: row;
-    justify-content: space-evenly;
-    padding: 0px 0px 16px 0px;
+    flex-direction: column; /* Stack vertically on mobile */
+    align-items: center;
+    gap: 16px;
+    padding: 0 16px 16px 16px; /* Added horizontal padding for search bar */
   }
 
-  /* 🔥 CENTER BLOCK */
-  .containerFilter {
+  .containerSearch {
+    width: 100%;
+  }
+
+  /* Center pagination below search */
+  .topBar > :last-child {
+    width: 100%;
     display: flex;
     justify-content: center;
   }
@@ -126,5 +132,3 @@
     max-width: 300px;
   }
 }
-
-

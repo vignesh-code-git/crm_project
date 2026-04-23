@@ -32,6 +32,7 @@ import {
 
 import { showInfo } from "@/services/toastService";
 import { API_BASE_URL } from "@/config/apiConfig";
+import CustomDateInput from "@/components/ui/CustomDateInput/CustomDateInput";
 
 export default function DrawerForm({
   fields,
@@ -714,19 +715,30 @@ export default function DrawerForm({
                   field.type !== "phone" &&
                   field.type !== "textarea" &&
                   field.type !== "rich_textarea" && (
-                    <div className={`${styles.inputWrapper} ${errors[field.name] && showRedBorder ? styles.inputError : ""}`}>
-                      {Icon && <Icon className={styles.icon} />}
-                      <input
-                        type={field.type === "date" ? "date" :
-                          field.type === "time" ? "time" :
-                            field.type === "number" ? "number" :
-                              "text"}
-                        placeholder={field.placeholder || ""}
-                        value={values[field.name] || ""}
-                        disabled={field.disabled}
-                        onChange={(e) => handleChange(field.name, e.target.value)}
-                      />
-                    </div>
+                    <>
+                      {field.type === "date" ? (
+                        <CustomDateInput
+                          value={values[field.name]}
+                          onChange={(val) => handleChange(field.name, val)}
+                          placeholder={field.placeholder}
+                          disabled={field.disabled}
+                          error={errors[field.name] && showRedBorder}
+                        />
+                      ) : (
+                        <div className={`${styles.inputWrapper} ${errors[field.name] && showRedBorder ? styles.inputError : ""}`}>
+                          {Icon && <Icon className={styles.icon} />}
+                          <input
+                            type={field.type === "time" ? "time" :
+                              field.type === "number" ? "number" :
+                                "text"}
+                            placeholder={field.placeholder || ""}
+                            value={values[field.name] || ""}
+                            disabled={field.disabled}
+                            onChange={(e) => handleChange(field.name, e.target.value)}
+                          />
+                        </div>
+                      )}
+                    </>
                   )}
 
                 {field.type === "select" && field.name === "attendees" && (

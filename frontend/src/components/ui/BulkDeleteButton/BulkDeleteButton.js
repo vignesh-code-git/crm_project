@@ -7,13 +7,13 @@ export default function BulkDeleteButton({ count, onDelete, loading }) {
   if (count === 0) return null;
 
   return (
-    <button 
-      className={styles.button} 
-      onClick={onDelete} 
+    <button
+      className={styles.button}
+      onClick={onDelete}
       disabled={loading}
     >
       <Trash2 size={16} />
-      <span>Delete Selected ({count})</span>
+      <span>Delete ({count})</span>
     </button>
   );
 }

@@ -10,7 +10,7 @@ export const dealFields = [
     name: "lead_id",
     label: "Associated Lead",
     type: "select",
-    placeholder: "Select associated lead",
+    placeholder: "Select Associated Lead",
   },
   {
     name: "company_id",
@@ -23,7 +23,7 @@ export const dealFields = [
     name: "deal_stage",
     label: "Deal Stage",
     type: "select",
-    placeholder: "Select deal stage",
+    placeholder: "Select Deal Stage...",
     options: [
       "Presentation Scheduled",
       "Qualified to Buy",
@@ -52,13 +52,13 @@ export const dealFields = [
     label: "Close Date",
     type: "date",
     required: true,
-    placeholder: "Select close date",
+    placeholder: "Select Close Date",
   },
   {
     name: "priority",
     label: "Priority",
     type: "select",
-    placeholder: "Select priority",
+    placeholder: "Select Priority",
     options: ["Low", "Medium", "High", "Critical"],
   },
 ];
