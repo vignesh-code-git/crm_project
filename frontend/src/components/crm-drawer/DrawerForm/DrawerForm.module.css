@@ -29,7 +29,9 @@
   font-weight: 500;
   display: block;
 }
-
+.placeholderText {
+  color: #6b7280;
+}
 /* INPUT */
 
 .inputWrapper {
@@ -720,7 +722,7 @@
 
 .form_deals {
   display: grid;
-  grid-template-columns: repeat(2, 180px);
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px 20px;
 }
 
@@ -733,20 +735,16 @@
   grid-column: span 1;
 }
 
-.form_deals .field_close_date > div {
-  width: 180px;
-}
-
-.form_deals .field_priority .dropdownHeader {
-  border: 1px solid #d1d5db;
-  width: 180px;
+.form_deals .dropdownHeader,
+.form_deals .filterBox {
+  width: 100% !important;
 }
 
 /* ===== COMPANIES ===== */
 
 .form_companies {
   display: grid;
-  grid-template-columns: repeat(2, 180px);
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px 20px;
 }
 
@@ -763,39 +761,12 @@
   grid-column: span 1;
 }
 
-.form_companies .field_industry .dropdownHeader {
-  border: 1px solid #d1d5db;
-  width: 180px;
-}
-
-.form_companies .field_type .dropdownHeader {
-  border: 1px solid #d1d5db;
-  width: 180px;
-}
-
-.form_companies .field_city .inputWrapper {
-  border: 1px solid #d1d5db;
-  width: 180px;
-}
-
-.form_companies .field_country .inputWrapper {
-  border: 1px solid #d1d5db;
-  width: 180px;
-}
-
-.form_companies .field_no_of_employees .inputWrapper {
-  border: 1px solid #d1d5db;
-  width: 180px;
-}
-
-.form_companies .field_annual_revenue .inputWrapper {
-  border: 1px solid #d1d5db;
-  width: 180px;
-}
-
-.form_companies .field_phone .phoneInput {
-  border: 1px solid #d1d5db !important;
-  width: 380px !important;
+.form_companies .dropdownHeader,
+.form_companies .inputWrapper,
+.form_companies .phoneInput,
+.form_companies .textarea,
+.form_companies .filterBox {
+  width: 100% !important;
 }
 
 /* ===== CALL ===== */
@@ -1232,7 +1203,9 @@
   color: #64748b;
   font-size: 12px;
 }
+
 @media (max-width: 480px) {
+
   .form_tickets,
   .form_deals,
   .form_companies,
@@ -1242,12 +1215,12 @@
     grid-template-columns: 1fr !important;
   }
 
-  .form_tickets > *,
-  .form_deals > *,
-  .form_companies > *,
-  .form_call > *,
-  .form_meeting > *,
-  .form_task > * {
+  .form_tickets>*,
+  .form_deals>*,
+  .form_companies>*,
+  .form_call>*,
+  .form_meeting>*,
+  .form_task>* {
     grid-column: span 1 !important;
   }
 

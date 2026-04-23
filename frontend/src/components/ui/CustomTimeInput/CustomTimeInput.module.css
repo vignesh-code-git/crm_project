@@ -1,0 +1,214 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.inputBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 42px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0 12px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.inputBox:hover {
+  border-color: #5b4cf0;
+}
+
+.errorBox {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.1) !important;
+}
+
+.disabledBox {
+  background: #f8fafc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.value {
+  font-size: 14px;
+  color: #334155;
+  font-weight: 400;
+}
+
+.placeholder {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.centeredText .value,
+.centeredText .placeholder {
+  flex: 1;
+  text-align: center;
+}
+
+.icon {
+  color: #64748b;
+  font-size: 16px;
+}
+
+/* =========================
+   DROPDOWN & DIALS
+========================= */
+
+.dropdown {
+  position: absolute;
+  width: 210px;
+  z-index: 1000;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding: 12px;
+  box-sizing: border-box;
+  animation: dropdownFade 0.2s ease-out forwards;
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.dialContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  height: 200px;
+}
+
+.column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.colHeader {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-align: center;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.scrollArea {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+}
+
+/* Custom Tiny Dark Scrollbar */
+.scrollArea::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollArea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollArea::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+
+.scrollArea::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
+.dialItem {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #334155;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.1s;
+  margin-bottom: 2px;
+}
+
+.dialItem:hover {
+  background: #f1f5f9;
+}
+
+.activeItem {
+  background: #5b4cf0 !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+/* ARROWS */
+.arrowTop,
+.arrowBottom {
+  position: absolute;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  background: white;
+  z-index: 0;
+}
+
+.arrowTop {
+  top: -8px;
+  border-left: 1px solid #cbd5e1;
+  border-top: 1px solid #cbd5e1;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.arrowBottom {
+  bottom: -8px;
+  border-right: 1px solid #cbd5e1;
+  border-bottom: 1px solid #cbd5e1;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+/* Mobile backdrop */
+.mobileBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9998;
+}
+
+.mobileDropdown {
+  width: auto !important;
+  min-width: 280px !important;
+  max-width: 90vw !important;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25) !important;
+  animation: dropdownFadeMobile 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes dropdownFadeMobile {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -45%) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.compactBox {
+  padding: 0 8px;
+}

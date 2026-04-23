@@ -12,8 +12,11 @@ export default function DateFilter({
   value,
   onChange,
   label = "Select Date",
+  error = false,
+  disabled = false,
 }) {
   const [open, setOpen] = useState(false);
+  const [isTop, setIsTop] = useState(false);
   const ref = useRef(null);
 
   const selectedDate = value ? new Date(value + "T00:00:00") : null;
@@ -26,11 +29,20 @@ export default function DateFilter({
   };
 
   const toggleCalendar = (e) => {
+    if (disabled) return;
     e.stopPropagation();
+
+    if (!open && ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      setIsTop(spaceBelow < 350);
+    }
+
     setOpen((prev) => !prev); // Toggle logic: Click open / Click close
   };
 
   const clearDate = (e) => {
+    if (disabled) return;
     e.stopPropagation();
     onChange("");
     setOpen(false);
@@ -50,7 +62,10 @@ export default function DateFilter({
   return (
     <div className={styles.wrapper} ref={ref}>
       {/* 🔽 Visible Filter Box */}
-      <div className={styles.filterBox} onClick={toggleCalendar}>
+      <div
+        className={`${styles.filterBox} ${error ? styles.errorBox : ""} ${disabled ? styles.disabledBox : ""}`}
+        onClick={toggleCalendar}
+      >
         <span className={styles.label}>
           {value || label}
         </span>
@@ -70,7 +85,7 @@ export default function DateFilter({
       {open && (
         <>
           <div className={styles.mobileOverlay} onClick={() => setOpen(false)} />
-          <div className={styles.dropdown}>
+          <div className={`${styles.dropdown} ${isTop ? styles.dropdownTop : ""}`}>
             <div className={styles.inner}>
               <DatePicker
                 inline

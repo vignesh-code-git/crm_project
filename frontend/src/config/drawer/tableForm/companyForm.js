@@ -26,32 +26,38 @@ export const companyFields = [
     name: "industry",
     label: "Industry",
     type: "text",
+    halfWidth: true,
   },
   {
     name: "type",
     label: "Type",
     type: "select",
     options: ["Customer", "Partner"],
+    halfWidth: true,
   },
   {
     name: "city",
     label: "City",
     type: "text",
+    halfWidth: true,
   },
   {
     name: "country",
     label: "Country/Region",
     type: "text",
+    halfWidth: true,
   },
   {
     name: "no_of_employees",
     label: "No of Employees",
     type: "text",
+    halfWidth: true,
   },
   {
     name: "annual_revenue",
     label: "Revenue",
     type: "text",
+    halfWidth: true,
   },
   {
     name: "phone",

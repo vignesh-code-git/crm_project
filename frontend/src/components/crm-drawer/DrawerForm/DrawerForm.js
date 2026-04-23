@@ -32,7 +32,9 @@ import {
 
 import { showInfo } from "@/services/toastService";
 import { API_BASE_URL } from "@/config/apiConfig";
+import DateFilter from "@/components/crm-table/filters/DateFilter/DateFilter";
 import CustomDateInput from "@/components/ui/CustomDateInput/CustomDateInput";
+import CustomTimeInput from "@/components/ui/CustomTimeInput/CustomTimeInput";
 
 export default function DrawerForm({
   fields,
@@ -717,10 +719,30 @@ export default function DrawerForm({
                   field.type !== "rich_textarea" && (
                     <>
                       {field.type === "date" ? (
-                        <CustomDateInput
+                        activityType?.toLowerCase() === "meeting" ? (
+                          <CustomDateInput
+                            value={values[field.name]}
+                            onChange={(val) => handleChange(field.name, val)}
+                            placeholder={field.placeholder || "Select Date"}
+                            disabled={field.disabled}
+                            error={errors[field.name] && showRedBorder}
+                            centered={true}
+                            compact={true}
+                          />
+                        ) : (
+                          <DateFilter
+                            value={values[field.name]}
+                            onChange={(val) => handleChange(field.name, val)}
+                            label={field.placeholder || "Select Date"}
+                            disabled={field.disabled}
+                            error={errors[field.name] && showRedBorder}
+                          />
+                        )
+                      ) : field.type === "time" ? (
+                        <CustomTimeInput
                           value={values[field.name]}
                           onChange={(val) => handleChange(field.name, val)}
-                          placeholder={field.placeholder}
+                          placeholder={field.placeholder || "Select Time"}
                           disabled={field.disabled}
                           error={errors[field.name] && showRedBorder}
                         />
@@ -728,9 +750,7 @@ export default function DrawerForm({
                         <div className={`${styles.inputWrapper} ${errors[field.name] && showRedBorder ? styles.inputError : ""}`}>
                           {Icon && <Icon className={styles.icon} />}
                           <input
-                            type={field.type === "time" ? "time" :
-                              field.type === "number" ? "number" :
-                                "text"}
+                            type={field.type === "number" ? "number" : "text"}
                             placeholder={field.placeholder || ""}
                             value={values[field.name] || ""}
                             disabled={field.disabled}
@@ -806,9 +826,9 @@ export default function DrawerForm({
                       <input
                         type="text"
                         value={
-                          field.options?.find(o => String(o.value) === String(values[field.name]))?.label || 
-                          values[`${field.name.replace('_id', '')}_name`] || 
-                          values[field.name] || 
+                          field.options?.find(o => String(o.value) === String(values[field.name]))?.label ||
+                          values[`${field.name.replace('_id', '')}_name`] ||
+                          values[field.name] ||
                           ""
                         }
                         disabled
@@ -873,9 +893,11 @@ function CustomDropdown({ field, value, open, toggle, onChange, error }) {
         className={`${styles.dropdownHeader} ${error ? styles.inputError : ""}`}
         onClick={(e) => { e.stopPropagation(); toggle(); }}
       >
-        {selectedOption
-          ? selectedOption.label
-          : field.placeholder || "Select"}
+        {selectedOption ? (
+          selectedOption.label
+        ) : (
+          <span className={styles.placeholderText}>{field.placeholder || "Select"}</span>
+        )}
         <FiChevronDown
           className={`${styles.arrow} ${open ? styles.rotate : ""}`}
         />
@@ -937,7 +959,11 @@ function AttendeesDropdown({ field, value = [], open, toggle, onChange, error })
         className={`${styles.dropdownHeader} ${error ? styles.inputError : ""}`}
         onClick={(e) => { e.stopPropagation(); toggle(); }}
       >
-        {getHeaderLabel()}
+        {normalizedValue.length > 0 ? (
+          getHeaderLabel()
+        ) : (
+          <span className={styles.placeholderText}>{getHeaderLabel()}</span>
+        )}
         <FiChevronDown
           className={`${styles.arrow} ${open ? styles.rotate : ""}`}
         />
