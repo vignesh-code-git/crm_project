@@ -23,10 +23,18 @@ app.use(express.json());
 //   credentials: true
 // }));
 
+// app.use(cors({
+//   origin: [
+//     "http://localhost:3000",
+//     "https://your-frontend.vercel.app"
+//   ],
+//   credentials: true
+// }));
+
 app.use(cors({
   origin: [
     "http://localhost:3000",
-    "https://your-frontend.vercel.app"
+    process.env.FRONTEND_URL
   ],
   credentials: true
 }));
@@ -83,14 +91,46 @@ app.use(errorMiddleware);
 // ==========================
 // START SERVER
 // ==========================
-sequelize.authenticate().then(() => {
-  console.log("✅ Database connected successfully.");
-  /* Make sure to only use sync() when initially creating tables or pass { alter: true } carefully
-   We won't auto-sync here to prevent accidental drops on existing DB, but connection is validated! */
-  sequelize.sync({ alter: true }).then(async () => {
-    console.log("✅ All exact tables and enums have been automatically created in crm_sequelize DB!");
+// sequelize.authenticate().then(() => {
+//   console.log("✅ Database connected successfully.");
+//   /* Make sure to only use sync() when initially creating tables or pass { alter: true } carefully
+//    We won't auto-sync here to prevent accidental drops on existing DB, but connection is validated! */
+//   sequelize.sync({ alter: true }).then(async () => {
+//     console.log("✅ All exact tables and enums have been automatically created in crm_sequelize DB!");
     
-    // Seed default roles to prevent foreign key errors on user registration
+//     // Seed default roles to prevent foreign key errors on user registration
+//     const { Role } = require("./models");
+//     try {
+//       if (Role) {
+//         await Role.findOrCreate({ where: { id: 1 }, defaults: { name: 'admin' } });
+//         await Role.findOrCreate({ where: { id: 2 }, defaults: { name: 'user' } });
+//         console.log("✅ Default Roles verified.");
+//       }
+//     } catch (err) {
+//       console.error("❌ Error seeding roles:", err);
+//     }
+//   }); 
+
+//   app.listen(process.env.PORT || 5000, () => {
+//     console.log(`🚀 CRM running on port ${process.env.PORT || 5000}`);
+//   });
+// }).catch((err) => {
+//   console.error("❌ Database connection error:", err);
+// });
+
+
+const PORT = process.env.PORT || 5000;
+
+sequelize.authenticate()
+  .then(async () => {
+    console.log("✅ Database connected successfully.");
+
+    if (process.env.NODE_ENV !== "production") {
+      await sequelize.sync({ alter: true });
+      console.log("✅ Tables synced (dev mode).");
+    }
+
+    // Seed roles
     const { Role } = require("./models");
     try {
       if (Role) {
@@ -101,11 +141,16 @@ sequelize.authenticate().then(() => {
     } catch (err) {
       console.error("❌ Error seeding roles:", err);
     }
-  }); 
 
-  app.listen(process.env.PORT || 5000, () => {
-    console.log(`🚀 CRM running on port ${process.env.PORT || 5000}`);
+    app.listen(PORT, () => {
+      console.log(`🚀 CRM running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ Database connection error:", err);
+    process.exit(1);
   });
-}).catch((err) => {
-  console.error("❌ Database connection error:", err);
-});
+
+
+
+
