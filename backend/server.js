@@ -68,6 +68,11 @@ app.use("/uploads", express.static(uploadPath));
 // ROUTES
 // ==========================
 
+
+app.get("/", (req, res) => {
+  res.send("CRM API Running ✅");
+});
+
 // Existing Routes
 app.use("/api/leads", require("./routes/leadsRoutes"));
 app.use("/api/deals", require("./routes/dealsRoutes"));
