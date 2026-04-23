@@ -33,7 +33,6 @@ app.use(express.json());
 
 app.use(cors({
   origin: [
-    "https://crm-project-enz1.onrender.com",
     process.env.FRONTEND_URL
   ],
   credentials: true
