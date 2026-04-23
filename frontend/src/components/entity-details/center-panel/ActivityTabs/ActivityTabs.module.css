@@ -1,8 +1,19 @@
 .tabs {
   display: flex;
-  gap: 28px;
+  gap: 24px;
   border-bottom: 1px solid #e5e7eb;
   padding-bottom: 0.5px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none; /* Hide scrollbar Firefox */
+}
+
+.tabs::-webkit-scrollbar {
+  display: none; /* Hide scrollbar Chrome/Safari */
+}
+
+.tab, .active {
+  flex-shrink: 0;
 }
 
 .tab {

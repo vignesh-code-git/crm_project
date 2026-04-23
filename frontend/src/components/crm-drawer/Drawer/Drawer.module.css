@@ -16,26 +16,24 @@
 /* ================= RIGHT DRAWER ================= */
 
 .drawer {
-
   position: fixed;
-
   right: 0;
   top: 0;
-
-  padding: 0 5px 5px 5px; /* Removed top padding to stabilize sticky header */
-
+  padding: 0 5px 5px 5px;
   width: 440px;
+  max-width: 100%;
   height: 100vh;
-
   background: white;
-
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-
   display: flex;
   flex-direction: column;
-
   overflow-y: auto;
+}
 
+@media (max-width: 480px) {
+  .drawer {
+    width: 100%;
+  }
 }
 
 /* Custom Tiny Dark Scrollbar */

@@ -1233,3 +1233,37 @@
   color: #64748b;
   font-size: 12px;
 }
+@media (max-width: 480px) {
+  .form_tickets,
+  .form_deals,
+  .form_companies,
+  .form_call,
+  .form_meeting,
+  .form_task {
+    grid-template-columns: 1fr !important;
+  }
+
+  .form_tickets > *,
+  .form_deals > *,
+  .form_companies > *,
+  .form_call > *,
+  .form_meeting > *,
+  .form_task > * {
+    grid-column: span 1 !important;
+  }
+
+  .field_description textarea,
+  .field_note textarea,
+  .phoneInput {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .dropdownHeader {
+    width: 100% !important;
+  }
+
+  .inputWrapper {
+    width: 100% !important;
+  }
+}

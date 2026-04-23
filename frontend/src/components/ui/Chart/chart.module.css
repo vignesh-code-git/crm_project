@@ -172,21 +172,23 @@
 @media (max-width: 768px) {
   .chartWrapper {
     flex-direction: column;
+    align-items: center;
   }
 
   .yAxis {
-    flex-direction: row;
-    height: auto;
-    margin-bottom: 10px;
+    display: none; /* Hide Y axis on small mobile to save space */
   }
 
   .chart {
-    gap: 10px;
+    gap: 12px;
     overflow-x: auto;
+    padding-bottom: 10px;
+    height: 220px;
   }
 
   .barWrap {
-    height: 160px;
+    height: 180px;
+    min-width: 35px;
   }
 }
 

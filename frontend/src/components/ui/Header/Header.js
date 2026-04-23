@@ -254,6 +254,11 @@ export default function Header({ toggleSidebar }) {
       </div>
 
       <div className={styles.right}>
+        {/* Mobile Search Icon */}
+        <div className={styles.searchMobile} onClick={() => setShowSearch(true)}>
+          <HiOutlineMagnifyingGlass />
+        </div>
+
         {/* Search */}
         <div className={styles.searchDesktop} ref={searchRef}>
           <HiOutlineMagnifyingGlass className={styles.searchIcon} />
@@ -305,6 +310,48 @@ export default function Header({ toggleSidebar }) {
             </div>
           )}
         </div>
+
+        {/* Mobile Search Overlay */}
+        {showSearch && (
+          <div className={styles.mobileSearchBar}>
+            <HiOutlineMagnifyingGlass className={styles.searchIcon} />
+            <input
+              type="text"
+              placeholder="Search..."
+              autoFocus
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onFocus={() => searchTerm.length >= 2 && setShowResults(true)}
+              onKeyDown={handleKeyDown}
+            />
+            <HiOutlineXMark
+              className={styles.closeIcon}
+              onClick={() => {
+                setShowSearch(false);
+                setShowResults(false);
+                setSearchTerm("");
+              }}
+            />
+            {showResults && (
+              <div className={styles.mobileResults}>
+                {results.length > 0 ? (
+                  finalGroups.map((group, gIdx) => (
+                    <div key={gIdx} className={styles.groupContainer}>
+                      <div className={styles.groupHeader}>{group.type}</div>
+                      {group.items.map((res, i) => (
+                        <div key={i} className={styles.resultItem} onClick={() => handleResultClick(res)}>
+                          {renderResultContent(res)}
+                        </div>
+                      ))}
+                    </div>
+                  ))
+                ) : (
+                  <div className={styles.noResults}>No results found</div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Icons */}
         <div className={styles.iconBox}>
