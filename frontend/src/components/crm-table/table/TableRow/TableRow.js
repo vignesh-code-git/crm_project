@@ -53,7 +53,7 @@ export default function TableRow({
   return (
 
     <tr
-      className={styles.row}
+      className={`${styles.row} ${row.role === "admin" ? styles.adminRow : ""}`}
       onClick={() => module && router.push(`/${module}/${row.id}`)}
       style={{ cursor: module ? "pointer" : "default" }}
     >

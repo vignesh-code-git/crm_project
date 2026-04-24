@@ -173,13 +173,13 @@ export default function UsersPage() {
   };
 
   const handleExport = () => {
-    if (!filteredData.length) return;
+    if (!sortedData.length) return;
 
     let headers = ["first_name", "last_name", "email", "phone", "company_name", "industry_type", "country", "role"];
 
     const csvRows = [
       headers.join(","), 
-      ...filteredData.map(row => {
+      ...sortedData.map(row => {
         return headers.map(fieldName => {
           let val = row[fieldName];
           if (val && typeof val === "string" && val.includes(",")) val = `"${val}"`; 
@@ -199,18 +199,24 @@ export default function UsersPage() {
     document.body.removeChild(link);
   };
 
-  const filteredData = useMemo(() => {
-    return filterData({
+  const sortedData = useMemo(() => {
+    const base = filterData({
       data,
       search,
       searchFields,
       filters,
     });
+    // 🔥 ADMIN FIRST
+    return [...base].sort((a, b) => {
+      if (a.role === "admin" && b.role !== "admin") return -1;
+      if (a.role !== "admin" && b.role === "admin") return 1;
+      return 0;
+    });
   }, [data, search, filters, searchFields]);
 
-  const totalPages = Math.ceil(filteredData.length / pageSize);
+  const totalPages = Math.ceil(sortedData.length / pageSize);
 
-  const paginatedData = filteredData
+  const paginatedData = sortedData
     .slice((page - 1) * pageSize, page * pageSize);
 
   const handleFilterChange = (key, value) => {
