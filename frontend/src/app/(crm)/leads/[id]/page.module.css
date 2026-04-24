@@ -65,6 +65,27 @@
 
 /* hide drawer buttons on desktop */
 
+.close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    border: none;
+    background: transparent;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    cursor: pointer;
+    z-index: 100;
+    color: #ffffff;
+    font-weight: 400;
+    transition: all 0.2s ease;
+    box-shadow: none;
+}
+
 .iconBtn {
     display: flex;
     border: 1px solid #e2e8f0;

@@ -37,9 +37,8 @@ export default function LeftPanel({
     if (!panelRef.current) return;
 
     const { scrollTop } = panelRef.current;
-    const fadeDistance = 80;
+    const fadeDistance = 50; // More sensitive for "speedy" feel
     
-    // Fade out as we scroll down from the top
     const opacity = Math.max(1 - scrollTop / fadeDistance, 0);
     setArrowOpacity(opacity);
   };
