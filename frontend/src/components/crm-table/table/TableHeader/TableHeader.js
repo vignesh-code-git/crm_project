@@ -28,7 +28,7 @@ export default function TableHeader({
             <th 
               key={index} 
               className={styles.headerCell}
-              style={{ textAlign: col.type === "status" ? "center" : "left" }}
+              style={{ textAlign: col.align || (col.type === "status" || col.type === "actions" ? "center" : "left") }}
             >
               {col.label}
             </th>

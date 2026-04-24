@@ -62,6 +62,7 @@ export default function TableRow({
     >
 
       {columns.map((col, index) => {
+        const alignStyle = { textAlign: col.align || (col.type === "status" || col.type === "actions" ? "center" : "left") };
 
         /* ===== Checkbox ===== */
 
@@ -86,7 +87,7 @@ export default function TableRow({
 
         if (col.type === "status") {
           return (
-            <td key={index} className={styles.cell} style={{ textAlign: "center" }}>
+            <td key={index} className={styles.cell} style={alignStyle}>
               <StatusBadge status={row[col.key]} />
             </td>
           );
@@ -101,6 +102,7 @@ export default function TableRow({
               key={index}
               className={styles.cell}
               onClick={(e) => e.stopPropagation()}
+              style={alignStyle}
             >
               <ActionButtons
                 onEdit={handleEdit}
@@ -119,7 +121,7 @@ export default function TableRow({
         ) : row[col.key];
 
         return (
-          <td key={index} className={styles.cell}>
+          <td key={index} className={styles.cell} style={alignStyle}>
             {cellContent}
           </td>
         );

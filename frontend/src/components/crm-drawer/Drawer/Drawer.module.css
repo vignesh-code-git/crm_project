@@ -38,7 +38,7 @@
 
 /* Custom Tiny Dark Scrollbar */
 .drawer::-webkit-scrollbar {
-  width: 5px;
+  width: 4px;
 }
 
 .drawer::-webkit-scrollbar-track {
@@ -46,12 +46,12 @@
 }
 
 .drawer::-webkit-scrollbar-thumb {
-  background: #777;
+  background: #cbd5e1;
   border-radius: 10px;
 }
 
 .drawer::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: #94a3b8;
 }
 
 

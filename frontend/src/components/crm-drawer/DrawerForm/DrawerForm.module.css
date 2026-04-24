@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+  overflow-x: hidden;
 }
 
 .group label {
@@ -29,9 +30,11 @@
   font-weight: 500;
   display: block;
 }
+
 .placeholderText {
   color: #6b7280;
 }
+
 /* INPUT */
 
 .inputWrapper {
@@ -145,7 +148,7 @@
 
 /* Custom Scrollbar for Dropdowns */
 .dropdownList::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 
 .dropdownList::-webkit-scrollbar-track {
@@ -225,10 +228,11 @@
   border-radius: 6px !important;
   border: 1px solid #d1d5db !important;
   font-size: 14px !important;
-  padding-left: 50px !important;
+  padding-left: 55px !important;
   background: #ffffff !important;
   transition: all 0.2s ease !important;
   outline: none !important;
+  box-sizing: border-box !important;
 }
 
 .phoneInput:focus {
@@ -1204,7 +1208,7 @@
   font-size: 12px;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 1024px) {
 
   .form_tickets,
   .form_deals,
