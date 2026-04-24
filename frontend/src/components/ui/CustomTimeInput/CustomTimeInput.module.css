@@ -1,214 +1,205 @@
+/* =========================
+   WRAPPER & INPUT
+========================= */
+
 .wrapper {
   position: relative;
   width: 100%;
+}
+
+.inputLabel {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+  margin-bottom: 6px;
 }
 
 .inputBox {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  height: 42px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
   padding: 0 12px;
+  height: 42px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
   background: white;
+  font-size: 14px;
+  color: #334155;
   cursor: pointer;
-  transition: all 0.2s;
-  box-sizing: border-box;
+  transition: all 0.2s ease;
 }
 
 .inputBox:hover {
-  border-color: #5b4cf0;
+  border-color: #5b4bdb;
 }
 
-.errorBox {
+.inputError {
   border-color: #ef4444 !important;
-  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.1) !important;
 }
 
-.disabledBox {
+.disabled {
   background: #f8fafc;
+  color: #94a3b8;
   cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.value {
-  font-size: 14px;
-  color: #334155;
-  font-weight: 400;
 }
 
 .placeholder {
-  font-size: 14px;
-  color: #94a3b8;
-}
-
-.centeredText .value,
-.centeredText .placeholder {
-  flex: 1;
-  text-align: center;
+  color: #9ca3af;
 }
 
 .icon {
+  font-size: 18px;
   color: #64748b;
-  font-size: 16px;
 }
 
 /* =========================
-   DROPDOWN & DIALS
+   TIME PICKER DROPDOWN (TINY SIZE)
 ========================= */
 
 .dropdown {
   position: absolute;
-  width: 210px;
-  z-index: 1000;
   background: white;
-  border: 1px solid #cbd5e1;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  padding: 12px;
-  box-sizing: border-box;
+  border-radius: 10px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  padding: 10px 8px;
+  z-index: 1000;
+  border: 1px solid #e2e8f0;
   animation: dropdownFade 0.2s ease-out forwards;
 }
 
-@keyframes dropdownFade {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(5px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-}
-
-.dialContainer {
+.timePickerContainer {
   display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  height: 200px;
+  align-items: flex-start;
+  gap: 4px;
 }
 
 .column {
-  flex: 1;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 38px; /* Even smaller width */
+  border: 1px solid #f1f5f9;
+  border-radius: 6px;
+  background: #fafafa;
+  padding-bottom: 2px;
 }
 
-.colHeader {
-  font-size: 12px;
-  font-weight: 600;
+.label {
+  font-size: 8px; /* Tiny labels */
+  font-weight: 800;
   color: #94a3b8;
-  text-align: center;
-  margin-bottom: 8px;
+  margin: 6px 0;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.scrollArea {
-  flex: 1;
+.scroll {
+  height: 130px; /* Reduced height */
   overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 4px;
+  width: 100%;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Custom Tiny Dark Scrollbar */
-.scrollArea::-webkit-scrollbar {
-  width: 4px;
+.scroll::-webkit-scrollbar {
+  display: none;
 }
 
-.scrollArea::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.scrollArea::-webkit-scrollbar-thumb {
-  background: #e2e8f0;
-  border-radius: 10px;
-}
-
-.scrollArea::-webkit-scrollbar-thumb:hover {
-  background: #cbd5e1;
-}
-
-.dialItem {
-  height: 32px;
+.option {
+  width: 28px; /* Smallest options */
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  color: #334155;
-  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
   cursor: pointer;
-  transition: all 0.1s;
-  margin-bottom: 2px;
+  border-radius: 4px;
+  margin: 1px 0;
+  transition: all 0.2s ease;
 }
 
-.dialItem:hover {
+.option:hover {
   background: #f1f5f9;
+  color: #5b4bdb;
 }
 
-.activeItem {
-  background: #5b4cf0 !important;
+.selected {
+  background: #5b4bdb !important;
   color: white !important;
-  font-weight: 600;
+  font-weight: 700;
+  box-shadow: 0 2px 5px rgba(91, 75, 219, 0.15);
 }
 
-/* ARROWS */
+.divider {
+  display: none;
+}
+
+/* =========================
+   ARROWS
+========================= */
+
 .arrowTop,
 .arrowBottom {
   position: absolute;
   left: 50%;
-  width: 14px;
-  height: 14px;
+  width: 10px;
+  height: 10px;
   background: white;
   z-index: 0;
 }
 
 .arrowTop {
-  top: -8px;
-  border-left: 1px solid #cbd5e1;
-  border-top: 1px solid #cbd5e1;
+  top: -6px;
+  border-left: 1px solid #e2e8f0;
+  border-top: 1px solid #e2e8f0;
   transform: translateX(-50%) rotate(45deg);
+}
+
+@media (max-width: 1200px) {
+  .arrowTop,
+  .arrowBottom {
+    display: none !important;
+  }
 }
 
 .arrowBottom {
-  bottom: -8px;
-  border-right: 1px solid #cbd5e1;
-  border-bottom: 1px solid #cbd5e1;
+  bottom: -6px;
+  border-right: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
   transform: translateX(-50%) rotate(45deg);
 }
 
-/* Mobile backdrop */
-.mobileBackdrop {
+/* =========================
+   OVERLAYS
+========================= */
+
+.mobileOverlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  z-index: 9998;
+  backdrop-filter: blur(4px);
+  z-index: 999998;
 }
 
-.mobileDropdown {
-  width: auto !important;
-  min-width: 280px !important;
-  max-width: 90vw !important;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25) !important;
-  animation: dropdownFadeMobile 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+.desktopOverlay {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  z-index: 9999;
 }
 
-@keyframes dropdownFadeMobile {
+@keyframes dropdownFade {
   from {
     opacity: 0;
-    transform: translate(-50%, -45%) scale(0.95);
+    transform: translateY(-5px);
   }
-
   to {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translateY(0);
   }
-}
-
-.compactBox {
-  padding: 0 8px;
 }

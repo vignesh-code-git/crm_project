@@ -37,7 +37,7 @@ export default function DateFilter({
 
     if (!open && ref.current) {
       const rect = ref.current.getBoundingClientRect();
-      const mobile = window.innerWidth <= 768;
+      const mobile = window.innerWidth <= 1024;
       const spaceBelow = window.innerHeight - rect.bottom;
       
       setIsMobile(mobile);
