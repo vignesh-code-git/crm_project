@@ -19,6 +19,7 @@ import {
   HiOutlineUser,
   HiOutlineCog6Tooth,
   HiOutlineQuestionMarkCircle,
+  HiOutlineInformationCircle,
   HiOutlineArrowRightOnRectangle
 } from "react-icons/hi2";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -374,6 +375,9 @@ export default function Header({ toggleSidebar }) {
               <div className={styles.dropdownMenu}>
                 <div className={styles.dropdownItem} onClick={() => { setShowDropdown(false); setIsProfileViewOpen(true); }}>
                   <HiOutlineUser /> My Profile
+                </div>
+                <div className={styles.dropdownItem} onClick={() => { setShowDropdown(false); router.push("/about"); }}>
+                  <HiOutlineInformationCircle /> About
                 </div>
                 <div className={styles.dropdownItem} onClick={() => { setShowDropdown(false); router.push("/settings"); }}>
                   <HiOutlineCog6Tooth /> Settings
