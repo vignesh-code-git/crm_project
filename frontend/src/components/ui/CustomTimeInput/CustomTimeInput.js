@@ -16,6 +16,7 @@ export default function CustomTimeInput({
 }) {
   const [open, setOpen] = useState(false);
   const [isTop, setIsTop] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const ref = useRef(null);
 
   // Parse "HH:mm:ss" -> { hour12, minute, second, ampm }
@@ -57,7 +58,10 @@ export default function CustomTimeInput({
 
     if (!open && ref.current) {
       const rect = ref.current.getBoundingClientRect();
+      const mobile = window.innerWidth <= 768;
       const spaceBelow = window.innerHeight - rect.bottom;
+      
+      setIsMobile(mobile);
       setIsTop(spaceBelow < 250);
     }
 
@@ -77,7 +81,7 @@ export default function CustomTimeInput({
     };
   }, []);
 
-  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+  // Render arrays
 
   // Render arrays
   const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, "0"));
@@ -167,7 +171,7 @@ export default function CustomTimeInput({
       </div>
 
       {open && (
-        isMobile ? createPortal(
+        isMobile && typeof document !== "undefined" ? createPortal(
           <>
             <div className={styles.mobileBackdrop} onClick={() => setOpen(false)} />
             <div

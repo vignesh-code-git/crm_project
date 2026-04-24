@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -17,6 +18,7 @@ export default function DateFilter({
 }) {
   const [open, setOpen] = useState(false);
   const [isTop, setIsTop] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const ref = useRef(null);
 
   const selectedDate = value ? new Date(value + "T00:00:00") : null;
@@ -34,7 +36,10 @@ export default function DateFilter({
 
     if (!open && ref.current) {
       const rect = ref.current.getBoundingClientRect();
+      const mobile = window.innerWidth <= 768;
       const spaceBelow = window.innerHeight - rect.bottom;
+      
+      setIsMobile(mobile);
       setIsTop(spaceBelow < 350);
     }
 
@@ -83,18 +88,40 @@ export default function DateFilter({
 
       {/* 📅 Calendar Dropdown */}
       {open && (
-        <>
-          <div className={styles.mobileOverlay} onClick={() => setOpen(false)} />
-          <div className={`${styles.dropdown} ${isTop ? styles.dropdownTop : ""}`}>
-            <div className={styles.inner}>
-              <DatePicker
-                inline
-                selected={selectedDate}
-                onChange={handleSelect}
-              />
+        isMobile && typeof document !== "undefined" ? createPortal(
+          <>
+            <div className={styles.mobileOverlay} onClick={() => setOpen(false)} />
+            <div className={`${styles.dropdown} ${styles.mobileDropdown}`} style={{
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 99999
+            }}>
+              <div className={styles.inner}>
+                <DatePicker
+                  inline
+                  selected={selectedDate}
+                  onChange={handleSelect}
+                />
+              </div>
             </div>
-          </div>
-        </>
+          </>,
+          document.body
+        ) : (
+          <>
+            <div className={styles.mobileOverlay} onClick={() => setOpen(false)} />
+            <div className={`${styles.dropdown} ${isTop ? styles.dropdownTop : ""}`}>
+              <div className={styles.inner}>
+                <DatePicker
+                  inline
+                  selected={selectedDate}
+                  onChange={handleSelect}
+                />
+              </div>
+            </div>
+          </>
+        )
       )}
     </div>
   );

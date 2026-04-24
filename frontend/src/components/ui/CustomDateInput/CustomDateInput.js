@@ -68,7 +68,7 @@ export default function CustomDateInput({
       </div>
 
       {open && (
-        isMobile ? createPortal(
+        isMobile && typeof document !== "undefined" ? createPortal(
           <>
             <div className={styles.mobileBackdrop} onClick={() => setOpen(false)} />
             <div
