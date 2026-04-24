@@ -25,30 +25,46 @@
 }
 
 .title {
-    font-weight: 600;
-    display: none;
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 16px;
+    letter-spacing: -0.01em;
+    flex: 1;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 12px;
 }
 
 
 /* hide drawer buttons on desktop */
 
 .iconBtn {
-    display: none;
-
-    border: none;
-    background: #f3f4f6;
-
-    width: 36px;
-    height: 36px;
-
-    border-radius: 8px;
-
+    display: flex;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
     align-items: center;
     justify-content: center;
-
     cursor: pointer;
+    font-size: 20px;
+    color: #5b4ce0;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
 
-    font-size: 18px;
+.iconBtn:active {
+    transform: scale(0.9);
+    background: #f8fafc;
+}
+
+.leftGroup {
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
 
 
@@ -91,13 +107,10 @@
         position: sticky;
         top: 0;
         z-index: 200;
-    }
-
-    .title {
-        display: block;
-        flex: 1;
-        text-align: center;
-        font-size: 15px;
+        background: #ffffff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border-bottom: 1px solid #f1f5f9;
+        height: 64px;
     }
 
     .container {
@@ -107,11 +120,13 @@
         padding: 12px;
     }
 
-    .rightDesktop, .leftDesktop {
+    .rightDesktop,
+    .leftDesktop {
         display: none;
     }
 
-    .rightBtn, .leftBtn {
+    .rightBtn,
+    .leftBtn {
         display: flex;
     }
 
@@ -237,6 +252,7 @@
         opacity: 0;
         transform: scale(0.85) translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: scale(1) translateY(0);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import styles from "./page.module.css";
 
@@ -12,7 +12,7 @@ import useEntities from "@/hooks/useEntities";
 import Drawer from "@/components/crm-drawer/Drawer/Drawer";
 import DetailsSkeleton from "@/components/ui/Skeleton/DetailsSkeleton";
 
-import { BsLayoutSidebar, BsLayoutSidebarReverse } from "react-icons/bs";
+import { HiOutlineArrowLeft, HiOutlineUserCircle, HiOutlinePlus } from "react-icons/hi2";
 import CallOverlay from "@/components/ui/CallOverlay/CallOverlay";
 import { showSuccess, showError } from "@/services/toastService";
 import { API_BASE_URL } from "@/config/apiConfig";
@@ -28,7 +28,8 @@ import useActivities from "@/hooks/useActivities";
 
 export default function TicketsDetailsPage() {
   const entity = "tickets";
-  
+  const router = useRouter();
+
   const searchParams = useSearchParams();
   const initialTab = searchParams.get("tab") || "activity";
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -56,63 +57,63 @@ export default function TicketsDetailsPage() {
 
 
   // =========================
-// LEADS (STATE + FETCH + OPTIONS + FIELDS)
-// =========================
-const [leads, setLeads] = useState([]);
+  // LEADS (STATE + FETCH + OPTIONS + FIELDS)
+  // =========================
+  const [leads, setLeads] = useState([]);
 
-useEffect(() => {
-  fetch(`${API_BASE_URL}/api/leads`)
-    .then(res => res.json())
-    .then(data => {
-      if (Array.isArray(data)) {
-        setLeads(data);
-      } else if (Array.isArray(data?.data)) {
-        setLeads(data.data);
-      } else {
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/leads`)
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setLeads(data);
+        } else if (Array.isArray(data?.data)) {
+          setLeads(data.data);
+        } else {
+          setLeads([]);
+        }
+      })
+      .catch(err => {
+        console.error("Leads fetch error:", err);
         setLeads([]);
-      }
-    })
-    .catch(err => {
-      console.error("Leads fetch error:", err);
-      setLeads([]);
-    });
-}, []);
+      });
+  }, []);
 
-const leadOptions = Array.isArray(leads)
-  ? leads.map((lead) => ({
+  const leadOptions = Array.isArray(leads)
+    ? leads.map((lead) => ({
       label: `${lead.first_name} ${lead.last_name}`,
       value: lead.id,
     }))
-  : [];
+    : [];
 
-// 🔹 Inject into meeting fields
-// const dynamicMeetingFields = meetingFields.map((field) => {
-//   if (field.name === "attendees") {
-//     return {
-//       ...field,
-//       options: leadOptions,
-//     };
-//   }
-//   return field;
-// });
-
-
+  // 🔹 Inject into meeting fields
+  // const dynamicMeetingFields = meetingFields.map((field) => {
+  //   if (field.name === "attendees") {
+  //     return {
+  //       ...field,
+  //       options: leadOptions,
+  //     };
+  //   }
+  //   return field;
+  // });
 
 
-    /* =========================
-     LOGGED USER
-  ==========================*/
+
+
+  /* =========================
+   LOGGED USER
+==========================*/
 
   const [user, setUser] = useState(null);
 
-useEffect(() => {
-  fetch(`${API_BASE_URL}/api/users/profile`, {
-    credentials: "include",
-  })
-    .then(res => res.json())
-    .then(data => setUser(data))
-    .catch(err => console.error(err));
-}, []);
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/users/profile`, {
+      credentials: "include",
+    })
+      .then(res => res.json())
+      .then(data => setUser(data))
+      .catch(err => console.error(err));
+  }, []);
 
 
 
@@ -126,10 +127,10 @@ useEffect(() => {
   const handleHangUp = useCallback((duration, forceOutcome) => {
     // 1️⃣ Priority: Close UI immediately
     setIsCalling(false);
-    
+
     // ⏹️ TERMINATE REAL CALL IF MANUAL HANGUP (User clicked End Call)
     if (!forceOutcome && callSid) {
-      fetch(`${API_BASE_URL}/api/calls/terminate/${callSid}`, { 
+      fetch(`${API_BASE_URL}/api/calls/terminate/${callSid}`, {
         method: 'POST',
         credentials: "include"
       })
@@ -137,7 +138,7 @@ useEffect(() => {
     }
 
     setCallSid(null);
-    
+
     // 🕒 GET CURRENT DATE/TIME
     const now = new Date();
     const date = now.toISOString().split("T")[0];
@@ -158,7 +159,7 @@ useEffect(() => {
       note: "Call logged via system."
     });
 
-    setCallStatus("initiated"); 
+    setCallStatus("initiated");
     setDrawerType("call");
   }, [callSid, callStatus, entityState, setDrawerType]);
 
@@ -183,7 +184,7 @@ useEffect(() => {
             setCallStatus("ringing");
           } else if (["completed", "busy", "no-answer", "failed", "canceled"].includes(status)) {
             clearInterval(pollInterval);
-            
+
             // 🕒 FORMAT DURATION (Twilio returns seconds)
             const durSeconds = parseInt(data.duration) || 0;
             const mins = Math.floor(durSeconds / 60);
@@ -202,7 +203,7 @@ useEffect(() => {
             } else if (status === "no-answer" || status === "canceled" || status === "failed") {
               mappedOutcome = "Not Connected";
             }
-            
+
             // ⏱️ DELAY BEFORE OPENING DRAWER
             setTimeout(() => {
               handleHangUp(formattedDur, mappedOutcome);
@@ -250,7 +251,7 @@ useEffect(() => {
           if (data && !data.error && Object.keys(data).length > 0) {
             setEntityState(data);
           } else {
-             console.error("[TICKET FALLBACK] Error or empty data received:", data);
+            console.error("[TICKET FALLBACK] Error or empty data received:", data);
           }
         })
         .catch(err => console.error("[TICKET FALLBACK] Fetch error:", err))
@@ -259,7 +260,7 @@ useEffect(() => {
   }, [data, id]);
 
   if (loading) {
-     return <DetailsSkeleton />;
+    return <DetailsSkeleton />;
   }
 
   if (!entityState) {
@@ -292,7 +293,7 @@ useEffect(() => {
     if (type === "call") {
       setIsCalling(true);
       setCallStatus("initiated");
-      
+
       // 🔥 TRIGGER REAL TWILIO CALL
       try {
         const res = await fetch(`${API_BASE_URL}/api/calls/initiate`, {
@@ -324,12 +325,12 @@ useEffect(() => {
   /* =========================
      SAVE ACTIVITY (HOOK)
   ========================= */
- 
+
 
   const handleSave = async (values) => {
     try {
       await createActivity({ type: drawerType, data: values }, user);
-      
+
       const capitalizedType = drawerType ? drawerType.charAt(0).toUpperCase() + drawerType.slice(1) : "Activity";
       showSuccess(`${capitalizedType} created successfully!`);
 
@@ -349,9 +350,9 @@ useEffect(() => {
   const handleConvert = async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/api/leads/${entityState.id}/convert`, {
-  method: "POST",
-  credentials: "include",
-});
+        method: "POST",
+        credentials: "include",
+      });
 
       const data = await res.json();
 
@@ -366,8 +367,8 @@ useEffect(() => {
       }));
 
       window.location.href = `/deals?leadId=${entityState.id}&leadName=${encodeURIComponent(
-  `${entityState.first_name} ${entityState.last_name}`
-)}`;
+        `${entityState.first_name} ${entityState.last_name}`
+      )}`;
     } catch (err) {
       console.error("Convert error:", err);
     }
@@ -375,20 +376,32 @@ useEffect(() => {
 
   return (
     <div className={styles.wrapper}>
-      {/* TOP BAR */}
+      {/* TOP BAR / ACTION BAR */}
       <div className={styles.topBar}>
-        <button
-          className={`${styles.iconBtn} ${styles.leftBtn}`}
-          onClick={() => setLeftOpen(true)}
-        >
-          <BsLayoutSidebar />
-        </button>
+        <div className={styles.leftGroup}>
+          <button
+            className={styles.iconBtn}
+            onClick={() => router.push("/tickets")}
+          >
+            <HiOutlineArrowLeft />
+          </button>
+          <button
+            className={styles.iconBtn}
+            onClick={() => setLeftOpen(true)}
+          >
+            <HiOutlineUserCircle />
+          </button>
+        </div>
+
+        <span className={styles.title}>
+          {entityState.ticket_name || entityState.name}
+        </span>
 
         <button
           className={`${styles.iconBtn} ${styles.rightBtn}`}
           onClick={() => setRightOpen(true)}
         >
-          <BsLayoutSidebarReverse />
+          <HiOutlinePlus />
         </button>
       </div>
 
