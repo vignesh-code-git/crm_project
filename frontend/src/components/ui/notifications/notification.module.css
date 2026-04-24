@@ -79,13 +79,18 @@
 }
 
 .groupTitle {
-  font-size: 13px;
-  text-transform: uppercase;
-  font-weight: 700;
-  color: #475569;
-  letter-spacing: 0.12em;
-  margin: 14px 0 8px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #64748b;
+  letter-spacing: 0.05em;
+  margin: 24px 0 12px 0;
   text-align: center;
+}
+
+.groupItems {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .empty {
@@ -140,6 +145,13 @@
 .toastCard {
   width: 420px;
   margin: 16px;
+}
+
+@media (max-width: 540px) {
+  .toastCard {
+    width: calc(100% - 20px);
+    margin: 8px 10px;
+  }
 }
 
 .cardHeader {
@@ -329,14 +341,21 @@
   top: 20px;
   right: 20px;
   z-index: 2147483647;
-  /* MAXIMUM POSSIBLE Z-INDEX */
   display: flex;
   flex-direction: column;
   gap: 12px;
   width: 420px;
-  /* Match toast width */
   pointer-events: auto;
-  /* Ensure events work normally */
+}
+
+@media (max-width: 540px) {
+  .customToastWrapper {
+    top: 10px;
+    right: 0;
+    left: 0;
+    width: 100%;
+    align-items: center;
+  }
 }
 
 /* No longer needed but keeping structure simple */
