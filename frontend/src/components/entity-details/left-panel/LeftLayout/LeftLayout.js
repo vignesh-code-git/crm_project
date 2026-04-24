@@ -62,12 +62,7 @@ export default function LeftPanel({
   };
 
   return (
-    <div
-      className={styles.panel}
-      ref={panelRef}
-      onScroll={handleScroll}
-    >
-
+    <div className={styles.panel}>
       <div className={styles.stickyHeader}>
         {/* BACK */}
         <div
@@ -138,26 +133,32 @@ export default function LeftPanel({
       </div>
 
 
-      {/* DETAILS */}
-      <EntityDetails
-        entity={mappedEntity}
-        fields={config.fields}
-        aboutTitle={config.aboutTitle}
-        onUpdate={onUpdate}
-        entityType={entityType}
-        isOpen={isDetailsOpen}
-        onToggle={setIsDetailsOpen}
-        editMode={isEditMode}
-        setEditMode={setIsEditMode}
-        hideHeader={true}
-      />
-
-      {/* SCROLL HINT */}
+      {/* DETAILS (Scrollable Area) */}
       <div
-        className={styles.scrollHint}
-        style={{ opacity: arrowOpacity }}
+        className={styles.scrollArea}
+        ref={panelRef}
+        onScroll={handleScroll}
       >
-        <FaArrowDown />
+        <EntityDetails
+          entity={mappedEntity}
+          fields={config.fields}
+          aboutTitle={config.aboutTitle}
+          onUpdate={onUpdate}
+          entityType={entityType}
+          isOpen={isDetailsOpen}
+          onToggle={setIsDetailsOpen}
+          editMode={isEditMode}
+          setEditMode={setIsEditMode}
+          hideHeader={true}
+        />
+
+        {/* SCROLL HINT */}
+        <div
+          className={styles.scrollHint}
+          style={{ opacity: arrowOpacity }}
+        >
+          <FaArrowDown />
+        </div>
       </div>
 
     </div>

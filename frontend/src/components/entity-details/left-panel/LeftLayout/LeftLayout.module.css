@@ -1,57 +1,52 @@
 .panel {
   width: 100%;
-  padding: 20px;
   background: #ffffff;
-  /* border-right:1px solid #eee; */
-  border-top-left-radius: 14px;
-  border-bottom-left-radius: 14px;
-  border-top-right-radius: 14px;
-  border-bottom-right-radius: 14px;
+  border-radius: 14px;
   border: none;
-
   height: 100%;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: 0;
+}
 
+.scrollArea {
+  flex: 1;
+  overflow-y: auto;
   scrollbar-width: none;
   scroll-behavior: smooth;
-
-  box-sizing: border-box;
-  /* position:relative; */
-  margin: 0;
-
+  padding: 0 20px 20px 20px;
 }
 
-.stickyHeader {
-  position: sticky;
-  top: 0;
-  background: #ffffff;
-  z-index: 10;
-  margin: 0;
-  padding: 0;
-}
-
-
-/* Hide scrollbar by default (Chrome / Edge / Safari) */
-.panel::-webkit-scrollbar {
+.scrollArea::-webkit-scrollbar {
   width: 0px;
 }
 
-/* Show scrollbar on hover */
-.panel:hover {
+.scrollArea:hover {
   scrollbar-width: thin;
 }
 
-.panel:hover::-webkit-scrollbar {
+.scrollArea:hover::-webkit-scrollbar {
   width: 6px;
 }
 
-.panel:hover::-webkit-scrollbar-thumb {
+.scrollArea:hover::-webkit-scrollbar-thumb {
   background: #cfd6e4;
   border-radius: 10px;
 }
 
-.panel:hover::-webkit-scrollbar-thumb:hover {
+.scrollArea:hover::-webkit-scrollbar-thumb:hover {
   background: #aab3c5;
+}
+
+/* Sticky Header Styling */
+.stickyHeader {
+  background: #ffffff;
+  z-index: 10;
+  margin: 0;
+  padding: 20px 20px 0 20px;
+  flex-shrink: 0;
 }
 
 /* ACTION BAR */
@@ -182,25 +177,18 @@
 
 
 .scrollHint {
-
   position: sticky;
-  bottom: -10px;
-  margin-left: 145px;
+  bottom: 0;
+  left: 50%;
   transform: translateX(-50%);
-
-
-
   font-size: 18px;
   color: #5948DB;
-
   pointer-events: none;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   opacity: 1;
-
+  padding: 10px 0;
 }
 
 .scrollHidden {
