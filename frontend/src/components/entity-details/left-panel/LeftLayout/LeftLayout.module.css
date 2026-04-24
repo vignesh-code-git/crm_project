@@ -178,14 +178,17 @@
   bottom: -10px;
   margin-left: 145px;
   transform: translateX(-50%);
-  font-size: 18px;
+  font-size: 14px;
   color: #5948DB;
   pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(89, 72, 219, 0.1);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
   opacity: 1;
-  padding: 10px 0;
 }
 
 .scrollHidden {

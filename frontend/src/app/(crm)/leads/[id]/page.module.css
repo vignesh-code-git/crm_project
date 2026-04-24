@@ -291,10 +291,7 @@
     transition: all 0.2s ease;
 }
 
-.leftDrawer .close {
-    top: 20px;
-    right: 20px;
-}
+
 
 .close:hover {
     color: #FF0000 !important;
