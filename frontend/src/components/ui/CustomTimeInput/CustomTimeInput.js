@@ -18,6 +18,7 @@ export default function CustomTimeInput({
   const [isTop, setIsTop] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const ref = useRef(null);
+  const dropdownRef = useRef(null);
 
   // Parse "HH:mm:ss" -> { hour12, minute, second, ampm }
   const parseTime = (val) => {
@@ -69,7 +70,10 @@ export default function CustomTimeInput({
   };
 
   const handleClickOutside = (e) => {
-    if (ref.current && !ref.current.contains(e.target)) {
+    if (
+      ref.current && !ref.current.contains(e.target) &&
+      (!dropdownRef.current || !dropdownRef.current.contains(e.target))
+    ) {
       setOpen(false);
     }
   };
@@ -176,6 +180,7 @@ export default function CustomTimeInput({
             <div className={styles.mobileBackdrop} onClick={() => setOpen(false)} />
             <div
               className={`${styles.dropdown} ${styles.mobileDropdown}`}
+              ref={dropdownRef}
               style={{
                 position: 'fixed',
                 top: '50%',

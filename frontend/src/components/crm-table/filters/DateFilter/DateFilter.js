@@ -20,6 +20,7 @@ export default function DateFilter({
   const [isTop, setIsTop] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const ref = useRef(null);
+  const dropdownRef = useRef(null);
 
   const selectedDate = value ? new Date(value + "T00:00:00") : null;
 
@@ -56,7 +57,10 @@ export default function DateFilter({
   // Close outside click
   useEffect(() => {
     const handleOutside = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) {
+      if (
+        ref.current && !ref.current.contains(e.target) &&
+        (!dropdownRef.current || !dropdownRef.current.contains(e.target))
+      ) {
         setOpen(false);
       }
     };
@@ -91,7 +95,7 @@ export default function DateFilter({
         isMobile && typeof document !== "undefined" ? createPortal(
           <>
             <div className={styles.mobileOverlay} onClick={() => setOpen(false)} />
-            <div className={`${styles.dropdown} ${styles.mobileDropdown}`} style={{
+            <div className={`${styles.dropdown} ${styles.mobileDropdown}`} ref={dropdownRef} style={{
               position: 'fixed',
               top: '50%',
               left: '50%',
@@ -111,7 +115,7 @@ export default function DateFilter({
         ) : (
           <>
             <div className={styles.mobileOverlay} onClick={() => setOpen(false)} />
-            <div className={`${styles.dropdown} ${isTop ? styles.dropdownTop : ""}`}>
+            <div className={`${styles.dropdown} ${isTop ? styles.dropdownTop : ""}`} ref={dropdownRef}>
               <div className={styles.inner}>
                 <DatePicker
                   inline

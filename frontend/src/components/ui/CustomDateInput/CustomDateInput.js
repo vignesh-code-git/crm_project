@@ -21,6 +21,7 @@ export default function CustomDateInput({
   const [isTop, setIsTop] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const ref = useRef(null);
+  const dropdownRef = useRef(null);
 
   const selectedDate = value ? new Date(value + "T00:00:00") : null;
 
@@ -47,7 +48,10 @@ export default function CustomDateInput({
 
   useEffect(() => {
     const handleOutside = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) {
+      if (
+        ref.current && !ref.current.contains(e.target) &&
+        (!dropdownRef.current || !dropdownRef.current.contains(e.target))
+      ) {
         setOpen(false);
       }
     };
@@ -73,6 +77,7 @@ export default function CustomDateInput({
             <div className={styles.mobileBackdrop} onClick={() => setOpen(false)} />
             <div
               className={`${styles.dropdown} ${styles.mobileDropdown}`}
+              ref={dropdownRef}
               style={{
                 position: 'fixed',
                 top: '50%',
@@ -100,6 +105,7 @@ export default function CustomDateInput({
                 ${isTop ? styles.dropdownTop : ""} 
                 ${compact ? styles.compactDropdown : ""}
               `}
+              ref={dropdownRef}
               style={{
                 position: 'absolute',
                 top: isTop ? 'auto' : 'calc(100% + 10px)',
