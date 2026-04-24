@@ -8,6 +8,11 @@ export default function ActionButtons({ onEdit, onDelete, onSpecial }) {
   return (
     <div className={styles.actions}>
 
+      <FiEdit2
+        className={styles.edit}
+        onClick={onEdit}
+      />
+
       {onSpecial && (
         <HiOutlineShieldCheck
           className={styles.special}
@@ -15,11 +20,6 @@ export default function ActionButtons({ onEdit, onDelete, onSpecial }) {
           title="Permissions"
         />
       )}
-
-      <FiEdit2
-        className={styles.edit}
-        onClick={onEdit}
-      />
 
       {onDelete && (
         <FiTrash2

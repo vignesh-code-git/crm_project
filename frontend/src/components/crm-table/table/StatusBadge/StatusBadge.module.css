@@ -119,7 +119,7 @@
 .admin {
   background-color: #fee2e2;
   color: #dc2626;
-  border: 1px solid #fca5a5;
+  border: none;
 }
 
 .userBadge {

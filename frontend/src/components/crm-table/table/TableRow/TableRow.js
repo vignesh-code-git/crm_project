@@ -7,6 +7,8 @@ import CheckboxCell from "../CheckboxCell/CheckboxCell";
 import styles from "./TableRow.module.css";
 
 import { useRouter, usePathname } from "next/navigation";
+import { showInfo } from "@/services/toastService";
+
 // TableRow component
 
 export default function TableRow({
@@ -69,7 +71,7 @@ export default function TableRow({
               className={styles.cell}
               onClick={(e) => e.stopPropagation()}
             >
-              <CheckboxCell 
+              <CheckboxCell
                 checked={isSelected}
                 onChange={(e) => onSelect(e.target.checked)}
                 disabled={isDisabled}
@@ -102,7 +104,7 @@ export default function TableRow({
               <ActionButtons
                 onEdit={handleEdit}
                 onDelete={row.role === "admin" ? null : handleDelete}
-                onSpecial={row.role === "admin" ? () => alert("Permission Settings for Admin") : null}
+                onSpecial={row.role === "admin" ? () => showInfo("Administrative permissions are active for this account.") : null}
               />
             </td>
           );
