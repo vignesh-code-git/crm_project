@@ -356,21 +356,23 @@ export default function CompaniesDetailsPage() {
         <div className={styles.leftGroup}>
           <button
             className={styles.iconBtn}
-            onClick={() => router.push("/companies")}
-          >
-            <HiOutlineArrowLeft />
-          </button>
-          <button
-            className={styles.iconBtn}
             onClick={() => setLeftOpen(true)}
           >
             <HiOutlineUserCircle />
           </button>
         </div>
 
-        <span className={styles.title}>
-          {entityState.company_name || entityState.name}
-        </span>
+        <div className={styles.titleGroup}>
+          <button
+            className={styles.backBtn}
+            onClick={() => router.push("/companies")}
+          >
+            <HiOutlineArrowLeft />
+          </button>
+          <span className={styles.titleText}>
+            {entityState.company_name || entityState.name}
+          </span>
+        </div>
 
         <button
           className={`${styles.iconBtn} ${styles.rightBtn}`}

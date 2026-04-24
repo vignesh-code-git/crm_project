@@ -381,21 +381,23 @@ export default function DealsDetailsPage() {
         <div className={styles.leftGroup}>
           <button
             className={styles.iconBtn}
-            onClick={() => router.push("/deals")}
-          >
-            <HiOutlineArrowLeft />
-          </button>
-          <button
-            className={styles.iconBtn}
             onClick={() => setLeftOpen(true)}
           >
             <HiOutlineUserCircle />
           </button>
         </div>
 
-        <span className={styles.title}>
-          {entityState.deal_name || entityState.name}
-        </span>
+        <div className={styles.titleGroup}>
+          <button
+            className={styles.backBtn}
+            onClick={() => router.push("/deals")}
+          >
+            <HiOutlineArrowLeft />
+          </button>
+          <span className={styles.titleText}>
+            {entityState.deal_name || entityState.name}
+          </span>
+        </div>
 
         <button
           className={`${styles.iconBtn} ${styles.rightBtn}`}

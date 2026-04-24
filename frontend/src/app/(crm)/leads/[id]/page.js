@@ -363,21 +363,23 @@ export default function LeadsDetailsPage() {
         <div className={styles.leftGroup}>
           <button
             className={styles.iconBtn}
-            onClick={() => router.push("/leads")}
-          >
-            <HiOutlineArrowLeft />
-          </button>
-          <button
-            className={styles.iconBtn}
             onClick={() => setLeftOpen(true)}
           >
             <HiOutlineUserCircle />
           </button>
         </div>
 
-        <span className={styles.title}>
-          {entityState.first_name} {entityState.last_name}
-        </span>
+        <div className={styles.titleGroup}>
+          <button
+            className={styles.backBtn}
+            onClick={() => router.push("/leads")}
+          >
+            <HiOutlineArrowLeft />
+          </button>
+          <span className={styles.titleText}>
+            {entityState.first_name} {entityState.last_name}
+          </span>
+        </div>
 
         <button
           className={`${styles.iconBtn} ${styles.rightBtn}`}
