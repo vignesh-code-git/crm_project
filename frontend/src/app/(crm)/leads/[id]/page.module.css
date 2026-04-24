@@ -277,12 +277,17 @@
     right: 16px;
     border: none;
     background: none;
-    font-size: 22px;
+    font-size: 18px;
     cursor: pointer;
     z-index: 100;
     color: #2D3E50;
     font-weight: 600;
     transition: all 0.2s ease;
+}
+
+.leftDrawer .close {
+    top: 20px;
+    right: 20px;
 }
 
 .close:hover {
