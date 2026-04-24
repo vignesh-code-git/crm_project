@@ -192,6 +192,40 @@
   background: transparent;
   z-index: 9999;
 }
+/* =========================
+   MOBILE RESPONSIVENESS
+========================= */
+
+@media (max-width: 1200px) {
+  .column {
+    width: 48px;
+    padding-bottom: 4px;
+  }
+
+  .label {
+    font-size: 10px;
+    margin: 8px 0;
+  }
+
+  .scroll {
+    height: 180px;
+  }
+
+  .option {
+    width: 38px;
+    height: 38px;
+    font-size: 15px;
+    margin: 2px 0;
+  }
+
+  .dropdown {
+    padding: 15px 12px;
+  }
+
+  .timePickerContainer {
+    gap: 8px;
+  }
+}
 
 @keyframes dropdownFade {
   from {
