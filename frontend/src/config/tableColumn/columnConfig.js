@@ -4,7 +4,7 @@ export const entityConfig = {
 
     columns: [
       { key: "checkbox", type: "checkbox" },
-      { key: "first_name", label: "NAME" },
+      { key: "lead_name", label: "NAME" },
       { key: "email", label: "EMAIL" },
       { key: "phone", label: "PHONE NUMBER" },
       { key: "date", label: "CREATED DATE" },
@@ -14,7 +14,7 @@ export const entityConfig = {
       { key: "actions", label: "ACTIONS", type: "actions" },
     ],
 
-    searchFields: ["first_name", "email", "phone", "owner_name", "lead_status", "company_name"],
+    searchFields: ["lead_name", "email", "phone", "owner_name", "lead_status", "company_name"],
   },
 
   companies: {

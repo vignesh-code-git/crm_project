@@ -25,7 +25,11 @@ export default function TableHeader({
           }
 
           return (
-            <th key={index} className={styles.headerCell}>
+            <th 
+              key={index} 
+              className={styles.headerCell}
+              style={{ textAlign: col.type === "status" ? "center" : "left" }}
+            >
               {col.label}
             </th>
           );

@@ -192,7 +192,7 @@ export default function LeadsPage() {
     const isAdmin = user?.role === "admin";
 
     // Define headers for export
-    let headers = ["first_name", "last_name", "email", "phone", "job_title", "lead_status", "company_id", "created_at"];
+    let headers = ["lead_name", "email", "phone", "job_title", "lead_status", "company_id", "created_at"];
 
     // Role-based additions
     headers.push("owner_id");

@@ -86,7 +86,7 @@ export default function TableRow({
 
         if (col.type === "status") {
           return (
-            <td key={index} className={styles.cell}>
+            <td key={index} className={styles.cell} style={{ textAlign: "center" }}>
               <StatusBadge status={row[col.key]} />
             </td>
           );
