@@ -40,7 +40,7 @@ async function getUserByEmail(email) {
 // GET USER BY ID
 async function getUserById(id) {
   const user = await User.findByPk(id, {
-    attributes: ["id", "first_name", "last_name", "email", "phone", "company_name", "industry_type", "country", "created_at"],
+    attributes: ["id", "first_name", "last_name", "email", "phone", "company_name", "industry_type", "country", "created_at", "is_active"],
     include: [{ model: Role, attributes: ["name"] }],
   });
 
@@ -55,7 +55,7 @@ async function getUserById(id) {
 // GET ALL USERS
 async function getUsers() {
   const users = await User.findAll({
-    attributes: ["id", "first_name", "last_name", "email", "phone", "company_name", "industry_type", "country", "created_at"],
+    attributes: ["id", "first_name", "last_name", "email", "phone", "company_name", "industry_type", "country", "created_at", "is_active"],
     include: [{ model: Role, attributes: ["name"] }],
     order: [["id", "DESC"]],
   });

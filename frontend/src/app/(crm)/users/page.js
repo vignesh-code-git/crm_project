@@ -165,7 +165,26 @@ export default function UsersPage() {
 
   const handleImport = async (csvData) => {
     try {
-      await bulkCreateEntity(csvData);
+      // 🔥 Process full_name → first/last
+      const processed = csvData.map(row => {
+        let first = row.first_name;
+        let last = row.last_name;
+
+        if (row.full_name && (!first || !last)) {
+          const parts = row.full_name.trim().split(/\s+/);
+          first = parts[0] || "";
+          last = parts.slice(1).join(" ") || "";
+        }
+
+        return {
+          ...row,
+          first_name: first,
+          last_name: last,
+          is_active: row.is_active === "true" || row.is_active === "Active" || row.is_active === 1 || row.is_active === true
+        };
+      });
+
+      await bulkCreateEntity(processed);
       showToast({ entity, action: "create" });
     } catch (err) {
       console.error("Import error:", err);
@@ -182,7 +201,7 @@ export default function UsersPage() {
   const handleExport = () => {
     if (!sortedData.length) return;
 
-    let headers = ["first_name", "last_name", "email", "phone", "company_name", "industry_type", "country", "role"];
+    let headers = ["full_name", "email", "role", "is_active", "phone", "company_name", "industry_type", "country", "created_at"];
 
     const csvRows = [
       headers.join(","), 
@@ -206,9 +225,18 @@ export default function UsersPage() {
     document.body.removeChild(link);
   };
 
+  const mappedData = useMemo(() => {
+    return data.map(row => ({
+      ...row,
+      full_name: `${row.first_name || ""} ${row.last_name || ""}`.trim(),
+      is_active_label: row.is_active ? "Active" : "Inactive",
+      date: formatDate(row.created_at)
+    }));
+  }, [data]);
+
   const sortedData = useMemo(() => {
     const base = filterData({
-      data,
+      data: mappedData,
       search,
       searchFields,
       filters,
@@ -219,16 +247,12 @@ export default function UsersPage() {
       if (a.role !== "admin" && b.role === "admin") return 1;
       return 0;
     });
-  }, [data, search, filters, searchFields]);
+  }, [mappedData, search, filters, searchFields]);
 
   const totalPages = Math.ceil(sortedData.length / pageSize);
 
   const paginatedData = sortedData
-    .slice((page - 1) * pageSize, page * pageSize)
-    .map(row => ({
-      ...row,
-      date: formatDate(row.created_at)
-    }));
+    .slice((page - 1) * pageSize, page * pageSize);
 
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({
