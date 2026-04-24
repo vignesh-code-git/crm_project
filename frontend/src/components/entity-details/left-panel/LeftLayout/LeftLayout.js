@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import styles from "./LeftLayout.module.css";
 import { useRouter } from "next/navigation";
 
@@ -28,19 +28,39 @@ export default function LeftPanel({
   const router = useRouter();
   const panelRef = useRef(null);
 
-  const [arrowOpacity, setArrowOpacity] = useState(1);
+  const [arrowOpacity, setArrowOpacity] = useState(0);
+  const [canScroll, setCanScroll] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(true);
   const [isEditMode, setIsEditMode] = useState(false);
 
   const handleScroll = () => {
     if (!panelRef.current) return;
 
-    const scrollTop = panelRef.current.scrollTop;
+    const { scrollTop } = panelRef.current;
     const fadeDistance = 80;
-
+    
+    // Fade out as we scroll down from the top
     const opacity = Math.max(1 - scrollTop / fadeDistance, 0);
     setArrowOpacity(opacity);
   };
+
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (panelRef.current) {
+        const hasOverflow = panelRef.current.scrollHeight > panelRef.current.clientHeight;
+        setCanScroll(hasOverflow);
+        setArrowOpacity(hasOverflow ? 1 : 0);
+      }
+    };
+
+    // Small delay to allow content to render
+    const timer = setTimeout(checkOverflow, 100);
+    window.addEventListener("resize", checkOverflow);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", checkOverflow);
+    };
+  }, [entity, isDetailsOpen]);
 
   // ✅ GET CONFIG
   const config = entityConfig[entityType];
@@ -153,12 +173,14 @@ export default function LeftPanel({
         />
 
         {/* SCROLL HINT */}
-        <div
-          className={styles.scrollHint}
-          style={{ opacity: arrowOpacity }}
-        >
-          <FaArrowDown />
-        </div>
+        {canScroll && (
+          <div
+            className={styles.scrollHint}
+            style={{ opacity: arrowOpacity }}
+          >
+            <FaArrowDown />
+          </div>
+        )}
       </div>
 
     </div>

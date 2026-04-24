@@ -14,30 +14,27 @@
 .scrollArea {
   flex: 1;
   overflow-y: auto;
-  scrollbar-width: none;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd6e2 transparent;
   scroll-behavior: smooth;
   padding: 0 20px 20px 20px;
 }
 
 .scrollArea::-webkit-scrollbar {
-  width: 0px;
-}
-
-.scrollArea:hover {
-  scrollbar-width: thin;
-}
-
-.scrollArea:hover::-webkit-scrollbar {
   width: 6px;
 }
 
-.scrollArea:hover::-webkit-scrollbar-thumb {
-  background: #cfd6e4;
+.scrollArea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollArea::-webkit-scrollbar-thumb {
+  background: #cbd6e2;
   border-radius: 10px;
 }
 
-.scrollArea:hover::-webkit-scrollbar-thumb:hover {
-  background: #aab3c5;
+.scrollArea::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 /* Sticky Header Styling */
@@ -178,8 +175,8 @@
 
 .scrollHint {
   position: sticky;
-  bottom: 0;
-  left: 50%;
+  bottom: -10px;
+  margin-left: 145px;
   transform: translateX(-50%);
   font-size: 18px;
   color: #5948DB;
@@ -189,6 +186,7 @@
   justify-content: center;
   opacity: 1;
   padding: 10px 0;
+  transition: opacity 0.3s ease;
 }
 
 .scrollHidden {
