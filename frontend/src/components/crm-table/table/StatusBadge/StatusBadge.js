@@ -23,6 +23,10 @@ export default function StatusBadge({ status }) {
     if (s === "nurturing") return styles.nurturing;
     if (s === "pending") return styles.pending;
     if (s === "resolved") return styles.resolved;
+    
+    // User Roles
+    if (s === "admin") return styles.admin;
+    if (s === "user") return styles.userBadge;
 
     return styles.default;
   };

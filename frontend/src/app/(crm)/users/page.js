@@ -310,6 +310,7 @@ export default function UsersPage() {
                 onSelectRow={handleSelectRow}
                 onSelectAll={handleSelectAll}
                 isAllSelected={isAllSelectedOnPage}
+                checkDisabledRow={(row) => row.role === "admin"}
               />
             )}
           </div>

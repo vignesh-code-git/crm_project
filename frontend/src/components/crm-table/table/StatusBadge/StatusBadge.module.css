@@ -114,3 +114,16 @@
   background-color: #f1f5f9;
   color: #475569;
 }
+
+/* USER ROLES */
+.admin {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+}
+
+.userBadge {
+  background-color: #f8fafc;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
