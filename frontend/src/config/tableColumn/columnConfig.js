@@ -81,7 +81,6 @@ export const entityConfig = {
       { key: "full_name", label: "NAME" },
       { key: "email", label: "EMAIL" },
       { key: "role", label: "ROLE", type: "status" },
-      { key: "is_active_label", label: "ACTIVE", type: "status" },
       { key: "phone", label: "PHONE" },
       { key: "company_name", label: "COMPANY" },
       { key: "industry_type", label: "INDUSTRY" },
