@@ -1,13 +1,27 @@
 .actions {
   display: flex;
+  align-items: center;
   gap: 16px;
   cursor: pointer;
 }
 
 .edit {
   color: #5b4bd6;
+  font-size: 16px;
+}
+
+.special {
+  cursor: pointer;
+  font-size: 18px;
+  color: #3b82f6; 
+  transition: color 0.2s;
+}
+
+.special:hover {
+  color: #2563eb;
 }
 
 .delete {
   color: #ef4444;
+  font-size: 16px;
 }

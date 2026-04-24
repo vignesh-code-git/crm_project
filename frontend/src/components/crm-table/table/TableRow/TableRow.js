@@ -101,7 +101,8 @@ export default function TableRow({
             >
               <ActionButtons
                 onEdit={handleEdit}
-                onDelete={handleDelete}
+                onDelete={row.role === "admin" ? null : handleDelete}
+                onSpecial={row.role === "admin" ? () => alert("Permission Settings for Admin") : null}
               />
             </td>
           );
