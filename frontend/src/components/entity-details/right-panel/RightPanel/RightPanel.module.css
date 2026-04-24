@@ -54,6 +54,7 @@
   border-radius: 12px;
   padding: 16px;
   background: #F7F7FA;
+  margin-top: 25px;
   margin-bottom: 20px;
 }
 
@@ -191,8 +192,7 @@
 
 /* Section label */
 .sectionLabel {
-  font-size: 12px;
-  /* Set to 12px as requested */
+  font-size: 13px;
   font-weight: 700;
   color: #64748b;
   text-transform: uppercase;
@@ -203,7 +203,6 @@
 /* Section Separator */
 .sectionSeparator {
   border-top: 1px solid #d8dee9;
-  /* Bit increased color */
   margin: 16px 0 6px;
   width: 100%;
 }
