@@ -85,6 +85,7 @@ export const entityConfig = {
       { key: "company_name", label: "COMPANY" },
       { key: "industry_type", label: "INDUSTRY" },
       { key: "country", label: "COUNTRY" },
+      { key: "date", label: "CREATED DATE" },
       { key: "actions", label: "ACTIONS", type: "actions" },
     ],
 

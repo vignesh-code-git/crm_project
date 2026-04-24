@@ -4,30 +4,23 @@ import styles from "./Pagination.module.css";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 export default function Pagination({ page, totalPages, onPageChange }) {
-  const pages = [];
-  const displayPages = totalPages > 0 ? totalPages : 1;
-
-  for (let i = 1; i <= displayPages; i++) {
-    pages.push(i);
-  }
-
   const renderPages = () => {
-    if (totalPages <= 7) {
-      return pages.map((p) => (
-        <button
-          key={p}
-          className={`${styles.page} ${page === p ? styles.active : ""}`}
-          onClick={() => onPageChange(p)}
-        >
-          {p}
-        </button>
-      ));
-    }
+    if (totalPages <= 0) return null;
 
     const items = [];
-    items.push(1, 2, 3);
-    items.push("...");
-    items.push(totalPages - 1, totalPages);
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) {
+        items.push(i);
+      }
+    } else {
+      if (page <= 3) {
+        items.push(1, 2, 3, 4, "...", totalPages);
+      } else if (page >= totalPages - 2) {
+        items.push(1, "...", totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        items.push(1, "...", page, "...", totalPages);
+      }
+    }
 
     return items.map((p, idx) => (
       p === "..." ? (
@@ -48,7 +41,6 @@ export default function Pagination({ page, totalPages, onPageChange }) {
 
   return (
     <div className={styles.pagination}>
-      {/* Previous */}
       <button
         className={styles.nav}
         disabled={isOnlyOnePage || page === 1}
@@ -58,14 +50,12 @@ export default function Pagination({ page, totalPages, onPageChange }) {
         <span className={styles.navText}>Previous</span>
       </button>
 
-      {/* Page Numbers */}
       <div className={styles.pagesWrapper}>
         {renderPages()}
       </div>
 
-      {/* Next */}
       <button
-        className={`${styles.nav} ${styles.next}`}
+        className={styles.nav}
         disabled={isOnlyOnePage || page === totalPages}
         onClick={() => onPageChange(page + 1)}
       >

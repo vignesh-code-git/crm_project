@@ -13,8 +13,8 @@
 }
 
 .page {
-  min-width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border: none;
   background: transparent;
   cursor: pointer;
@@ -29,6 +29,7 @@
 }
 
 .page:hover:not(.active) {
+  background: #f3f4f6;
   color: #111827;
 }
 
@@ -37,8 +38,6 @@
   color: #ffffff !important;
   border-radius: 8px;
   font-weight: 600;
-  width: 30px;
-  height: 30px;
 }
 
 .dots {
@@ -55,7 +54,7 @@
   align-items: center;
   gap: 4px;
   font-size: 14px;
-  color: #d1d5db;
+  color: #5e4cf0;
   font-weight: 400;
   padding: 4px;
   transition: all 0.2s;
@@ -63,10 +62,6 @@
 
 .navText {
   display: inline;
-}
-
-.next {
-  color: #5e4cf0;
 }
 
 .nav:disabled {
@@ -97,7 +92,7 @@
   }
 
   .navText {
-    display: none; /* Hide 'Previous' and 'Next' text on mobile */
+    display: none;
   }
 
   .nav {

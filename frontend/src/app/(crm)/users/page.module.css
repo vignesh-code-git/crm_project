@@ -55,7 +55,7 @@
 .tableWrapper {
   width: 100%;
   background: white;
-  border-radius: 12px;
+  border-radius: 0 0 12px 12px;
   padding: 16px;
   overflow-x: auto;
 }

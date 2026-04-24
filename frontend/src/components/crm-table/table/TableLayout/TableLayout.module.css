@@ -6,7 +6,8 @@
   border: 1px solid #B9B9B980;
   width: 100%;
   max-width: 100%;
-  overflow: hidden; /* hides border leak */
+  overflow: hidden;
+  /* hides border leak */
 }
 
 
@@ -23,8 +24,10 @@
 /* TABLE */
 
 .table {
-  width: max-content;      /* allows table to grow */
-  min-width: 100%;         /* fill container if small */
+  width: max-content;
+  /* allows table to grow */
+  min-width: 100%;
+  /* fill container if small */
   border-collapse: collapse;
 }
 
@@ -54,7 +57,8 @@
 /* ROW LINE (perfect horizontal line) */
 
 .table tbody tr {
-  border-bottom: 1px solid #B9B9B980; /* darker like screenshot */
+  border-bottom: 1px solid #B9B9B980;
+  /* darker like screenshot */
 }
 
 /* remove last line */

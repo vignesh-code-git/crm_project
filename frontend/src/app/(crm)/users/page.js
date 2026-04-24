@@ -9,6 +9,7 @@ import SelectFilter from "@/components/crm-table/filters/SelectFilter/SelectFilt
 import Pagination from "@/components/crm-table/filters/Pagination/Pagination";
 import Table from "@/components/crm-table/table/TableLayout/TableLayout";
 import Drawer from "@/components/crm-drawer/Drawer/Drawer";
+import { formatDate } from "@/utils/dateFormat";
 import { entityConfig } from "@/config/tableColumn/columnConfig";
 import { filterConfig } from "@/config/selectFilter/filterConfig";
 import { filterData } from "@/services/filterService";
@@ -20,6 +21,7 @@ import TableSkeleton from "@/components/ui/Skeleton/TableSkeleton";
 import ConfirmModal from "@/components/ui/ConfirmModal/ConfirmModal";
 import ImportModal from "@/components/ui/ImportModal/ImportModal";
 import BulkDeleteButton from "@/components/ui/BulkDeleteButton/BulkDeleteButton";
+import PermissionsModal from "@/components/ui/PermissionsModal/PermissionsModal";
 import { API_BASE_URL } from "@/config/apiConfig";
 
 export default function UsersPage() {
@@ -37,7 +39,7 @@ export default function UsersPage() {
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState({});
   const [page, setPage] = useState(1);
-  const pageSize = 8;
+  const pageSize = 6;
 
   const [popup, setPopup] = useState({ show: false, title: "", message: "", type: "error" });
   const [permissionsPopup, setPermissionsPopup] = useState({ show: false, user: null });
@@ -45,6 +47,7 @@ export default function UsersPage() {
   const [isSingleConfirmOpen, setIsSingleConfirmOpen] = useState(false);
   const [isBulkConfirmOpen, setIsBulkConfirmOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [deleteUser, setDeleteUser] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [bulkLoading, setBulkLoading] = useState(false);
   const [user, setUser] = useState(null);
@@ -87,6 +90,8 @@ export default function UsersPage() {
 
   const handleDelete = (id) => {
     setDeleteId(id);
+    const target = data.find(u => u.id === id);
+    setDeleteUser(target);
     setIsSingleConfirmOpen(true);
   };
 
@@ -219,7 +224,11 @@ export default function UsersPage() {
   const totalPages = Math.ceil(sortedData.length / pageSize);
 
   const paginatedData = sortedData
-    .slice((page - 1) * pageSize, page * pageSize);
+    .slice((page - 1) * pageSize, page * pageSize)
+    .map(row => ({
+      ...row,
+      date: formatDate(row.created_at)
+    }));
 
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({
@@ -249,6 +258,19 @@ export default function UsersPage() {
     if (paginatedData.length === 0) return false;
     return paginatedData.every(row => selectedIds.includes(row.id));
   }, [paginatedData, selectedIds]);
+
+  const userFields = useMemo(() => {
+    return formConfig.users.map(field => {
+      if (field.name === "password") {
+        return {
+          ...field,
+          label: editEntity ? "Reset Password" : "Password",
+          placeholder: editEntity ? "Leave blank to keep current" : "Enter password",
+        };
+      }
+      return field;
+    });
+  }, [editEntity]);
 
   const handleShowPermissions = (row) => {
     setPermissionsPopup({ show: true, user: row });
@@ -326,7 +348,7 @@ export default function UsersPage() {
 
       <Drawer
         title={editEntity ? `Edit User: ${editEntity.first_name}` : `Create New User`}
-        fields={formConfig[entity]}
+        fields={userFields}
         isOpen={drawerOpen}
         data={editEntity}
         onSave={handleSave}
@@ -351,22 +373,9 @@ export default function UsersPage() {
         onClose={() => setPopup({ ...popup, show: false })}
       />
 
-      <PopupMessage
-        show={permissionsPopup.show}
-        title={`Admin Permissions: ${permissionsPopup.user?.first_name}`}
-        type="info"
-        message={
-          <div className={styles.permissionsList}>
-            <p><strong>System Authority:</strong> Full administrative access granted.</p>
-            <ul>
-              <li>Manage all Leads, Companies, Deals, and Tickets.</li>
-              <li>User Management: Create, Edit, and Bulk Delete users.</li>
-              <li>Data Administration: Bulk Import and Export system records.</li>
-              <li>Global Configuration: Access to system-wide settings.</li>
-              <li>Analytics Oversight: View all reports and audit logs.</li>
-            </ul>
-          </div>
-        }
+      <PermissionsModal
+        isOpen={permissionsPopup.show}
+        userName={permissionsPopup.user?.first_name}
         onClose={() => setPermissionsPopup({ show: false, user: null })}
       />
 
@@ -374,8 +383,8 @@ export default function UsersPage() {
         isOpen={isSingleConfirmOpen}
         onClose={() => setIsSingleConfirmOpen(false)}
         onConfirm={handleConfirmSingleDelete}
-        title={`Delete User`}
-        message={`Are you sure you want to delete this user? This action cannot be undone.`}
+        title={`Delete ${deleteUser ? deleteUser.first_name + " " + deleteUser.last_name : "User"}`}
+        message={`Are you sure you want to delete ${deleteUser ? deleteUser.first_name + " " + deleteUser.last_name : "this user"}?\nThis action cannot be undone.`}
         confirmText={`Delete User`}
         loading={deleteLoading}
       />
@@ -385,7 +394,7 @@ export default function UsersPage() {
         onClose={() => setIsBulkConfirmOpen(false)}
         onConfirm={handleConfirmBulkDelete}
         title={`Delete Users`}
-        message={`Are you sure you want to delete ${selectedIds.length} users? This action cannot be undone.`}
+        message={`Are you sure you want to delete ${selectedIds.length} users?\nThis action cannot be undone.`}
         confirmText={`Delete ${selectedIds.length} Users`}
         loading={bulkLoading}
       />
