@@ -40,6 +40,8 @@ export default function UsersPage() {
   const pageSize = 8;
 
   const [popup, setPopup] = useState({ show: false, title: "", message: "", type: "error" });
+  const [permissionsPopup, setPermissionsPopup] = useState({ show: false, user: null });
+
   const [isSingleConfirmOpen, setIsSingleConfirmOpen] = useState(false);
   const [isBulkConfirmOpen, setIsBulkConfirmOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
@@ -248,6 +250,10 @@ export default function UsersPage() {
     return paginatedData.every(row => selectedIds.includes(row.id));
   }, [paginatedData, selectedIds]);
 
+  const handleShowPermissions = (row) => {
+    setPermissionsPopup({ show: true, user: row });
+  };
+
   return (
     <div className={styles.layout}>
       <div className={styles.main}>
@@ -305,6 +311,7 @@ export default function UsersPage() {
                 data={paginatedData}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
+                onSpecial={handleShowPermissions}
                 emptyMessage={emptyMessage}
                 selectedIds={selectedIds}
                 onSelectRow={handleSelectRow}
@@ -342,6 +349,25 @@ export default function UsersPage() {
         message={popup.message}
         type={popup.type}
         onClose={() => setPopup({ ...popup, show: false })}
+      />
+
+      <PopupMessage
+        show={permissionsPopup.show}
+        title={`Admin Permissions: ${permissionsPopup.user?.first_name}`}
+        type="info"
+        message={
+          <div className={styles.permissionsList}>
+            <p><strong>System Authority:</strong> Full administrative access granted.</p>
+            <ul>
+              <li>Manage all Leads, Companies, Deals, and Tickets.</li>
+              <li>User Management: Create, Edit, and Bulk Delete users.</li>
+              <li>Data Administration: Bulk Import and Export system records.</li>
+              <li>Global Configuration: Access to system-wide settings.</li>
+              <li>Analytics Oversight: View all reports and audit logs.</li>
+            </ul>
+          </div>
+        }
+        onClose={() => setPermissionsPopup({ show: false, user: null })}
       />
 
       <ConfirmModal

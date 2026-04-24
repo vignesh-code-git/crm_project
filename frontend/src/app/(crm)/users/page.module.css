@@ -128,3 +128,27 @@
     max-width: 300px;
   }
 }
+
+.permissionsList {
+  text-align: left;
+  margin-top: 12px;
+}
+
+.permissionsList p {
+  margin-bottom: 12px;
+  color: #374151;
+}
+
+.permissionsList ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.permissionsList li {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.5;
+}

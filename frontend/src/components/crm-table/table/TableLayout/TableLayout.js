@@ -14,7 +14,8 @@ export default function Table({
   isSelectAllDisabled,
   onSelectRow,
   selectedIds = [],
-  checkDisabledRow // fn(row) => bool
+  checkDisabledRow, // fn(row) => bool
+  onSpecial
 }) {
   return (
     <div className={styles.container}>
@@ -52,6 +53,7 @@ export default function Table({
                 columns={columns}
                 onEdit={onEdit}
                 onDelete={onDelete}
+                onSpecial={onSpecial}
                 isSelected={selectedIds.includes(row.id)}
                 onSelect={(checked) => onSelectRow(row.id, checked)}
                 isDisabled={checkDisabledRow ? checkDisabledRow(row) : false}

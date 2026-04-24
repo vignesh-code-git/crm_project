@@ -18,7 +18,8 @@ export default function TableRow({
   onDelete,
   onSelect,
   isSelected,
-  isDisabled
+  isDisabled,
+  onSpecial
 }) {
 
   const router = useRouter();
@@ -104,7 +105,7 @@ export default function TableRow({
               <ActionButtons
                 onEdit={handleEdit}
                 onDelete={row.role === "admin" ? null : handleDelete}
-                onSpecial={row.role === "admin" ? () => showInfo("Administrative permissions are active for this account.") : null}
+                onSpecial={row.role === "admin" ? (onSpecial ? () => onSpecial(row) : () => showInfo("Administrative permissions are active for this account.")) : null}
               />
             </td>
           );
