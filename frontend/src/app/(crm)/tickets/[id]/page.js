@@ -259,6 +259,13 @@ export default function TicketsDetailsPage() {
     }
   }, [data, id]);
 
+  useEffect(() => {
+    if (entityState) {
+      const name = entityState.ticket_name || entityState.name;
+      document.title = `${name} | Tickets`;
+    }
+  }, [entityState]);
+
   if (loading) {
     return <DetailsSkeleton />;
   }

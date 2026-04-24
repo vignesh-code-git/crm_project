@@ -259,6 +259,13 @@ export default function CompaniesDetailsPage() {
     }
   }, [data, id]);
 
+  useEffect(() => {
+    if (entityState) {
+      const name = entityState.company_name || entityState.name;
+      document.title = `${name} | Companies`;
+    }
+  }, [entityState]);
+
   if (loading) {
     return <DetailsSkeleton />;
   }

@@ -118,6 +118,7 @@ export const filterConfig = {
         "Decision Maker Bought-In",
         "Closed Won",
         "Closed Lost",
+        "Closed Lost - Other",
       ],
     },
     {
@@ -160,6 +161,24 @@ export const filterConfig = {
       type: "date",
       key: "created_at",
       label: "Created Date",
+    },
+  ],
+
+  // ======================
+  // USERS
+  // ======================
+  users: [
+    {
+      type: "select",
+      key: "role",
+      label: "Role",
+      options: ["admin", "user"],
+    },
+    {
+      type: "select",
+      key: "country",
+      label: "Country",
+      options: ["India", "USA", "UK", "Canada", "Australia"],
     },
   ],
 };

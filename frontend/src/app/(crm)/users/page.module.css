@@ -1,0 +1,130 @@
+.layout {
+  width: 100%;
+}
+
+.content {
+  width: 100%;
+  padding: 24px;
+}
+
+/* Search + Pagination */
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 5px;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.containerSearch {
+  background: white;
+  padding: 0;
+  border-bottom: none;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.containerFilter {
+  background: white;
+  padding: 16px;
+  border-bottom: none;
+  width: 100%;
+}
+
+/* ================= FILTERS ================= */
+
+.filters {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  flex-wrap: nowrap;
+  max-width: 1000px;
+}
+
+.filters>* {
+  flex: 0 1 220px;
+  min-width: 180px;
+  max-width: 250px;
+}
+
+/* ================= TABLE ================= */
+
+.tableWrapper {
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  overflow-x: auto;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 774px) {
+  .content {
+    padding: 12px;
+  }
+
+  .topBar {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 0 16px 16px 16px;
+  }
+
+  .containerSearch {
+    width: 100%;
+  }
+
+  .topBar > :last-child {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .containerFilter {
+    display: flex;
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .filters {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .filters>* {
+    flex: 1;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .content {
+    padding: 18px;
+  }
+
+  .containerFilter {
+    display: flex;
+    justify-content: center;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 12px;
+    width: 100%;
+    max-width: 700px;
+  }
+
+  .filters>* {
+    flex: 1 1 calc(50% - 6px);
+    max-width: 300px;
+  }
+}

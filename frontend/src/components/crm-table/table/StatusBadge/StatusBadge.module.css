@@ -14,8 +14,9 @@
 
 /* 1. NEW - Original Blue */
 .new {
-  background-color: #e6f0ff;
-  color: #1a56db;
+  background-color: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #dcfce7;
 }
 
 /* 2. OPEN - Original Green */

@@ -142,7 +142,12 @@ export default function LeadsDetailsPage() {
     // 🕒 GET CURRENT DATE/TIME
     const now = new Date();
     const date = now.toISOString().split("T")[0];
-    const time = now.toTimeString().split(" ")[0].slice(0, 5);
+    const time = now.toLocaleTimeString("en-US", { 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit', 
+      hour12: true 
+    });
 
     // 🧠 SMART OUTCOME: 
     let finalOutcome = forceOutcome;
@@ -264,6 +269,13 @@ export default function LeadsDetailsPage() {
         .finally(() => setLoading(false));
     }
   }, [data, id]);
+
+  useEffect(() => {
+    if (entityState) {
+      const name = `${entityState.first_name} ${entityState.last_name}`;
+      document.title = `${name} | Leads`;
+    }
+  }, [entityState]);
 
   if (loading) {
     return <DetailsSkeleton />;

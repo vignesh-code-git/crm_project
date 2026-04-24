@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './about.module.css';
 import { 
   HiOutlineUsers, 
@@ -12,6 +12,10 @@ import {
 } from "react-icons/hi2";
 
 export default function AboutPage() {
+  useEffect(() => {
+    document.title = "About | CRM";
+  }, []);
+
   const currentYear = new Date().getFullYear();
 
   return (

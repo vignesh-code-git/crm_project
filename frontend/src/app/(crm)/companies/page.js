@@ -52,6 +52,10 @@ export default function LeadsPage() {
 
 
   useEffect(() => {
+    document.title = "Companies | CRM";
+  }, []);
+
+  useEffect(() => {
     fetch(`${API_BASE_URL}/api/users/profile`, {
       credentials: "include",
     })
@@ -105,8 +109,23 @@ export default function LeadsPage() {
     setDrawerOpen(true);
   };
 
-  const handleDelete = async (id) => {
-    const result = await deleteEntity(id);
+  const [isSingleConfirmOpen, setIsSingleConfirmOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const handleDelete = (id) => {
+    setDeleteId(id);
+    setIsSingleConfirmOpen(true);
+  };
+
+  const handleConfirmSingleDelete = async () => {
+    if (!deleteId) return;
+    setDeleteLoading(true);
+    const result = await deleteEntity(deleteId);
+    setDeleteLoading(false);
+    setIsSingleConfirmOpen(false);
+    setDeleteId(null);
+
     if (result === true) {
       showToast({ entity, action: "delete" });
     } else if (typeof result === "string") {
@@ -447,6 +466,16 @@ export default function LeadsPage() {
         message={`Are you sure you want to delete ${selectedIds.length} companies? This action cannot be undone.`}
         confirmText={`Delete ${selectedIds.length} Companies`}
         loading={bulkLoading}
+      />
+
+      <ConfirmModal
+        isOpen={isSingleConfirmOpen}
+        onClose={() => setIsSingleConfirmOpen(false)}
+        onConfirm={handleConfirmSingleDelete}
+        title={`Delete Company`}
+        message={`Are you sure you want to delete this company? This action cannot be undone.`}
+        confirmText={`Delete Company`}
+        loading={deleteLoading}
       />
     </div>
   );

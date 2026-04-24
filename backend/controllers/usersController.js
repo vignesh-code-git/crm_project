@@ -167,6 +167,104 @@ async function getUsers(req, res) {
   res.json(users);
 }
 
+// UPDATE USER (ADMIN)
+async function updateUserAdmin(req, res) {
+  try {
+    const { id } = req.params;
+    const data = { ...req.body };
+
+    // 🔥 SECURITY: Check if password change is requested
+    if (data.password && data.password.trim() !== "") {
+      data.password = await hashPassword(data.password);
+    } else {
+      delete data.password;
+    }
+
+    // 🔥 Map role name to role_id
+    if (data.role) {
+      data.role_id = data.role.toLowerCase() === "admin" ? 1 : 2;
+    }
+
+    const updatedUser = await repo.updateUser(id, data);
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(updatedUser);
+  } catch (err) {
+    console.error("ADMIN UPDATE USER ERROR ❌", err);
+    res.status(500).json({ error: "Update failed" });
+  }
+}
+
+// DELETE USER (ADMIN)
+async function deleteUserAdmin(req, res) {
+  try {
+    const { id } = req.params;
+    const success = await repo.deleteUser(id);
+    
+    if (success) {
+      res.json({ message: "User deleted successfully" });
+    } else {
+      res.status(404).json({ error: "User not found" });
+    }
+  } catch (err) {
+    console.error("ADMIN DELETE USER ERROR ❌", err);
+    res.status(500).json({ error: "Deletion failed" });
+  }
+}
+
+// BULK CREATE USERS (ADMIN)
+async function bulkCreateUsers(req, res) {
+  try {
+    const users = req.body;
+    if (!Array.isArray(users)) return res.status(400).json({ error: "Invalid data format" });
+
+    const results = [];
+    for (const u of users) {
+      try {
+        const hashedPassword = await hashPassword(u.password || "User@123");
+        const role_id = u.role?.toLowerCase() === "admin" ? 1 : 2;
+        
+        const newUser = await repo.createUser({
+          ...u,
+          password: hashedPassword,
+          role_id
+        });
+        results.push(newUser);
+      } catch (err) {
+        console.error("Single user import failed:", err);
+      }
+    }
+    res.json(results);
+  } catch (err) {
+    console.error("BULK CREATE USERS ERROR ❌", err);
+    res.status(500).json({ error: "Bulk creation failed" });
+  }
+}
+
+// BULK DELETE USERS (ADMIN)
+async function bulkDeleteUsers(req, res) {
+  try {
+    const { ids } = req.body;
+    if (!Array.isArray(ids)) return res.status(400).json({ error: "Invalid data format" });
+
+    let deletedCount = 0;
+    for (const id of ids) {
+      try {
+        const success = await repo.deleteUser(id);
+        if (success) deletedCount++;
+      } catch (err) {
+        console.error(`Failed to delete user ${id}:`, err);
+      }
+    }
+    res.json({ message: `${deletedCount} users deleted successfully` });
+  } catch (err) {
+    console.error("BULK DELETE USERS ERROR ❌", err);
+    res.status(500).json({ error: "Bulk deletion failed" });
+  }
+}
+
 // LOGOUT
 async function logoutUser(req, res) {
   res.clearCookie("token");
@@ -181,4 +279,8 @@ module.exports = {
   logoutUser,
   updateProfile,
   deleteAccount,
+  updateUserAdmin,
+  deleteUserAdmin,
+  bulkCreateUsers,
+  bulkDeleteUsers,
 };

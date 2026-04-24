@@ -36,13 +36,48 @@ router.delete(
 );
 
 // =========================================
-// GET ALL USERS (ADMIN ONLY 🔐)
+// ADMIN ROUTES (🔐)
 // =========================================
 router.get(
   "/",
   authMiddleware,
-  allowRoles("admin"), // 🔥 ONLY ADMIN CAN SEE USERS
+  allowRoles("admin"),
   asyncHandler(controller.getUsers)
+);
+
+router.post(
+  "/",
+  authMiddleware,
+  allowRoles("admin"),
+  asyncHandler(controller.registerUser)
+);
+
+router.post(
+  "/bulk",
+  authMiddleware,
+  allowRoles("admin"),
+  asyncHandler(controller.bulkCreateUsers)
+);
+
+router.post(
+  "/bulk-delete",
+  authMiddleware,
+  allowRoles("admin"),
+  asyncHandler(controller.bulkDeleteUsers)
+);
+
+router.put(
+  "/:id",
+  authMiddleware,
+  allowRoles("admin"),
+  asyncHandler(controller.updateUserAdmin)
+);
+
+router.delete(
+  "/:id",
+  authMiddleware,
+  allowRoles("admin"),
+  asyncHandler(controller.deleteUserAdmin)
 );
 
 module.exports = router;

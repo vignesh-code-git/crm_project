@@ -41,7 +41,21 @@ export default function useActivities(entityId, entityType) {
       if (!userName && item.author) userName = item.author;
 
       // 🛠️ Standardize DATE
-      const createdAt = item.created_at || item.createdAt || item.date || new Date();
+      let createdAt = item.created_at || item.createdAt || item.date || new Date();
+      if (type === "call" && item.call_date) {
+        // Merge date and time for correct timeline positioning
+        const timePart = item.call_time || "00:00:00";
+        // Handle AM/PM if present in DB
+        if (timePart.includes("AM") || timePart.includes("PM")) {
+            const [time, period] = timePart.split(" ");
+            let [h, m, s] = time.split(":");
+            if (period === "PM" && h !== "12") h = Number(h) + 12;
+            if (period === "AM" && h === "12") h = "00";
+            createdAt = `${item.call_date}T${String(h).padStart(2, '0')}:${m}:${s || "00"}`;
+        } else {
+            createdAt = `${item.call_date}T${timePart}`;
+        }
+      }
 
       // Standardize data body for each type
       let formattedData = { ...item };
@@ -154,13 +168,24 @@ export default function useActivities(entityId, entityType) {
     };
 
     if (activity.type === "call") {
+      let finalTime = cleanData.time || new Date().toLocaleTimeString("en-US", { hour12: false });
+      
+      // Convert AM/PM to 24h for DB
+      if (finalTime.includes("AM") || finalTime.includes("PM")) {
+          const [time, period] = finalTime.split(" ");
+          let [h, m, s] = time.split(":");
+          if (period === "PM" && h !== "12") h = Number(h) + 12;
+          if (period === "AM" && h === "12") h = "00";
+          finalTime = `${String(h).padStart(2, '0')}:${m}:${s || "00"}`;
+      }
+
       cleanData = {
         note: "",
         ...cleanData,
         connected_to: cleanData.connected || "",
         call_outcome: cleanData.outcome?.value || cleanData.outcome || "No Answer",
         call_date: cleanData.date || new Date().toISOString().split('T')[0],
-        call_time: cleanData.time || new Date().toTimeString().split(' ')[0],
+        call_time: finalTime,
       };
       ["connected", "outcome", "date", "time"].forEach(key => delete cleanData[key]);
     }

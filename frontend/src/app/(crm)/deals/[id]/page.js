@@ -259,6 +259,13 @@ export default function DealsDetailsPage() {
     }
   }, [data, id]);
 
+  useEffect(() => {
+    if (entityState) {
+      const name = entityState.deal_name || entityState.name;
+      document.title = `${name} | Deals`;
+    }
+  }, [entityState]);
+
   if (loading) {
     return <DetailsSkeleton />;
   }

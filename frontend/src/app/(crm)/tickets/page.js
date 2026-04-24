@@ -52,6 +52,10 @@ export default function TicketsPage() {
 
 
   useEffect(() => {
+    document.title = "Tickets | CRM";
+  }, []);
+
+  useEffect(() => {
     // 1. Fetch CURRENT user profile
     fetch(`${API_BASE_URL}/api/users/profile`, {
       credentials: "include",
@@ -107,8 +111,23 @@ export default function TicketsPage() {
     setDrawerOpen(true);
   };
 
-  const handleDelete = async (id) => {
-    const result = await deleteEntity(id);
+  const [isSingleConfirmOpen, setIsSingleConfirmOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const handleDelete = (id) => {
+    setDeleteId(id);
+    setIsSingleConfirmOpen(true);
+  };
+
+  const handleConfirmSingleDelete = async () => {
+    if (!deleteId) return;
+    setDeleteLoading(true);
+    const result = await deleteEntity(deleteId);
+    setDeleteLoading(false);
+    setIsSingleConfirmOpen(false);
+    setDeleteId(null);
+
     if (result === true) {
       showToast({ entity, action: "delete" });
     } else if (typeof result === "string") {
@@ -439,6 +458,16 @@ export default function TicketsPage() {
         message={`Are you sure you want to delete ${selectedIds.length} tickets? This action cannot be undone.`}
         confirmText={`Delete ${selectedIds.length} Tickets`}
         loading={bulkLoading}
+      />
+
+      <ConfirmModal
+        isOpen={isSingleConfirmOpen}
+        onClose={() => setIsSingleConfirmOpen(false)}
+        onConfirm={handleConfirmSingleDelete}
+        title={`Delete Ticket`}
+        message={`Are you sure you want to delete this ticket? This action cannot be undone.`}
+        confirmText={`Delete Ticket`}
+        loading={deleteLoading}
       />
     </div>
   );

@@ -54,7 +54,8 @@
   background: #F7F7FA;
   padding: 14px;
   border-radius: 12px;
-  margin: 18px 0 0 0; /* ✅ No bottom margin to ensure 'touched' with section header */
+  margin: 18px 0 0 0;
+  /* ✅ No bottom margin to ensure 'touched' with section header */
   max-width: 275px;
 }
 
@@ -67,7 +68,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: none; /* ✅ Removed separator line */
+  border-top: none;
+  /* ✅ Removed separator line */
 }
 
 .sectionTitle {
@@ -88,7 +90,8 @@
 }
 
 .sectionRotate {
-  transform: rotate(-90deg); /* ✅ Horizontal when closed, down when open (or vice versa) */
+  transform: rotate(-90deg);
+  /* ✅ Horizontal when closed, down when open (or vice versa) */
 }
 
 .sectionEdit {

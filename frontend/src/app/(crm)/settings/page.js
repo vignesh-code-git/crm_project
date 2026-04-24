@@ -13,7 +13,8 @@ import {
   HiOutlineLockClosed,
   HiOutlineShieldCheck,
   HiOutlineTrash,
-  HiOutlineExclamationTriangle
+  HiOutlineEye,
+  HiOutlineEyeSlash
 } from "react-icons/hi2";
 import { showSuccess, showError, showInfo } from "@/services/toastService";
 import { API_BASE_URL } from "@/config/apiConfig";
@@ -34,9 +35,12 @@ export default function SettingsPage() {
   });
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // FETCH PROFILE ON MOUNT
   useEffect(() => {
+    document.title = "Settings | CRM";
     fetch(`${API_BASE_URL}/api/users/profile`, {
       credentials: "include",
     })
@@ -117,7 +121,15 @@ export default function SettingsPage() {
     }
   };
 
-  if (!user) return <div className={styles.wrapper}>Loading Settings...</div>;
+  if (!user) {
+    return (
+      <div className={styles.wrapper}>
+        <div className={styles.container} style={{ textAlign: "center", paddingTop: "100px" }}>
+          <p style={{ color: "#64748b", fontSize: "16px", fontWeight: "600" }}>Loading your settings...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.wrapper}>
@@ -127,13 +139,14 @@ export default function SettingsPage() {
           <p>Manage your professional profile and security preferences.</p>
         </div>
 
-        {/* 📋 PROFILE SECTION */}
+        {/* 👤 PERSONAL INFO */}
         <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <h3><HiOutlineUser /> Profile Information</h3>
-          </div>
-          <div className={styles.cardBody}>
-            <form onSubmit={handleSave} className={styles.formGrid}>
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>
+              <HiOutlineUser />
+              Personal Information
+            </div>
+            <div className={styles.formGrid}>
               <div className={styles.inputGroup}>
                 <label>First Name</label>
                 <div className={styles.inputWrapper}>
@@ -142,6 +155,7 @@ export default function SettingsPage() {
                     type="text"
                     value={formData.first_name}
                     onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+                    placeholder="First name"
                   />
                 </div>
               </div>
@@ -153,6 +167,7 @@ export default function SettingsPage() {
                     type="text"
                     value={formData.last_name}
                     onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+                    placeholder="Last name"
                   />
                 </div>
               </div>
@@ -164,6 +179,7 @@ export default function SettingsPage() {
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="Email address"
                   />
                 </div>
               </div>
@@ -175,63 +191,7 @@ export default function SettingsPage() {
                     type="text"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  />
-                </div>
-              </div>
-              <div className={styles.inputGroup}>
-                <label>Company</label>
-                <div className={styles.inputWrapper}>
-                  <HiOutlineBuildingOffice />
-                  <input
-                    type="text"
-                    value={formData.company_name}
-                    onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
-                  />
-                </div>
-              </div>
-              <div className={styles.inputGroup}>
-                <label>Industry</label>
-                <div className={styles.inputWrapper}>
-                  <HiOutlineBriefcase />
-                  <input
-                    type="text"
-                    value={formData.industry_type}
-                    onChange={(e) => setFormData({ ...formData, industry_type: e.target.value })}
-                  />
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        {/* 🔐 SECURITY SECTION */}
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <h3><HiOutlineShieldCheck /> Security</h3>
-          </div>
-          <div className={styles.cardBody}>
-            <div className={styles.formGrid}>
-              <div className={styles.inputGroup}>
-                <label>New Password</label>
-                <div className={styles.inputWrapper}>
-                  <HiOutlineLockClosed />
-                  <input
-                    type="password"
-                    placeholder="••••••••"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  />
-                </div>
-              </div>
-              <div className={styles.inputGroup}>
-                <label>Confirm Password</label>
-                <div className={styles.inputWrapper}>
-                  <HiOutlineShieldCheck />
-                  <input
-                    type="password"
-                    placeholder="••••••••"
-                    value={formData.confirm_password}
-                    onChange={(e) => setFormData({ ...formData, confirm_password: e.target.value })}
+                    placeholder="Phone number"
                   />
                 </div>
               </div>
@@ -239,7 +199,109 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* ACCOUNT MANAGEMENT (Red Border kept, Heading removed) */}
+        {/* 🏢 COMPANY DETAILS */}
+        <div className={styles.card}>
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>
+              <HiOutlineBuildingOffice />
+              Company Details
+            </div>
+            <div className={styles.formGrid}>
+              <div className={`${styles.inputGroup} ${styles.fullWidth}`}>
+                <label>Company Name</label>
+                <div className={styles.inputWrapper}>
+                  <HiOutlineBuildingOffice />
+                  <input
+                    type="text"
+                    value={formData.company_name}
+                    onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
+                    placeholder="Company name"
+                  />
+                </div>
+              </div>
+              <div className={`${styles.inputGroup} ${styles.fullWidth}`}>
+                <label>Industry</label>
+                <div className={styles.inputWrapper}>
+                  <HiOutlineBriefcase />
+                  <input
+                    type="text"
+                    value={formData.industry_type}
+                    onChange={(e) => setFormData({ ...formData, industry_type: e.target.value })}
+                    placeholder="e.g. Technology"
+                  />
+                </div>
+              </div>
+              <div className={styles.inputGroup}>
+                <label>Country</label>
+                <div className={styles.inputWrapper}>
+                  <HiOutlineGlobeAlt />
+                  <input
+                    type="text"
+                    value={formData.country}
+                    onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                    placeholder="e.g. India"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 🔐 SECURITY */}
+        <div className={styles.card}>
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>
+              <HiOutlineLockClosed />
+              Security & Password
+            </div>
+            <div className={styles.formGrid}>
+              <div className={styles.inputGroup}>
+                <label>New Password</label>
+                <div className={styles.inputWrapper}>
+                  <HiOutlineLockClosed />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className={styles.passwordInput}
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    autoComplete="new-password"
+                  />
+                  <button 
+                    type="button" 
+                    className={styles.eyeButton}
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <HiOutlineEyeSlash className={styles.eyeIcon} /> : <HiOutlineEye className={styles.eyeIcon} />}
+                  </button>
+                </div>
+              </div>
+              <div className={styles.inputGroup}>
+                <label>Confirm Password</label>
+                <div className={styles.inputWrapper}>
+                  <HiOutlineShieldCheck />
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    className={styles.passwordInput}
+                    placeholder="••••••••"
+                    value={formData.confirm_password}
+                    onChange={(e) => setFormData({ ...formData, confirm_password: e.target.value })}
+                    autoComplete="new-password"
+                  />
+                  <button 
+                    type="button" 
+                    className={styles.eyeButton}
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? <HiOutlineEyeSlash className={styles.eyeIcon} /> : <HiOutlineEye className={styles.eyeIcon} />}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ACCOUNT MANAGEMENT */}
         <div className={`${styles.card} ${styles.dangerZone}`}>
           <div className={styles.dangerBody}>
             <div className={styles.dangerInfo}>
@@ -268,7 +330,7 @@ export default function SettingsPage() {
             onClick={handleSave}
             disabled={isSaving}
           >
-            {isSaving ? "Saving..." : "Save All Changes"}
+            {isSaving ? "Saving Changes..." : "Save All Changes"}
           </button>
         </div>
       </div>

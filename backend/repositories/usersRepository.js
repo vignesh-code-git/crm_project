@@ -79,6 +79,7 @@ async function updateUser(id, data) {
     industry_type: data.industry_type,
     country: data.country,
     password: data.password, // Passed as hashed or ignored if null
+    role_id: data.role_id,
   }, {
     where: { id }
   });

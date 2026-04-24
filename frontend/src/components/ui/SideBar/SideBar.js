@@ -9,7 +9,7 @@ import { API_BASE_URL } from "@/config/apiConfig";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { RxPeople } from "react-icons/rx";
 import { PiBriefcase } from "react-icons/pi";
-import { HiOutlineClipboardCheck } from "react-icons/hi";
+import { HiOutlineClipboardCheck, HiOutlineUsers } from "react-icons/hi";
 import { BsTicket } from "react-icons/bs";
 
 export default function SideBar({ open, close }) {
@@ -46,6 +46,9 @@ export default function SideBar({ open, close }) {
     { name: "Companies", icon: <PiBriefcase />, path: "/companies" },
     { name: "Deals", icon: <HiOutlineClipboardCheck />, path: "/deals" },
     { name: "Tickets", icon: <BsTicket />, path: "/tickets" },
+    ...(role === "admin"
+      ? [{ name: "Users", icon: <HiOutlineUsers />, path: "/users" }]
+      : []),
   ];
 
   return (

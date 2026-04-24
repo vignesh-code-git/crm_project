@@ -72,4 +72,22 @@ export const entityConfig = {
 
     searchFields: ["ticket_name", "deal_name", "owner_name", "ticket_status", "company_name", "priority", "source"],
   },
+
+  users: {
+    title: "Users",
+
+    columns: [
+      { key: "checkbox", type: "checkbox" },
+      { key: "first_name", label: "NAME" },
+      { key: "email", label: "EMAIL" },
+      { key: "role", label: "ROLE", type: "status" },
+      { key: "phone", label: "PHONE" },
+      { key: "company_name", label: "COMPANY" },
+      { key: "industry_type", label: "INDUSTRY" },
+      { key: "country", label: "COUNTRY" },
+      { key: "actions", label: "ACTIONS", type: "actions" },
+    ],
+
+    searchFields: ["first_name", "last_name", "email", "role", "company_name"],
+  },
 };

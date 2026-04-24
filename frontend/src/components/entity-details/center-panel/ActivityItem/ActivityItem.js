@@ -243,6 +243,13 @@ export default function ActivityItem({ activity, entityType }) {
         return (
           <>
             <div className={styles.metaBox}>
+              <div>
+                <span>Date & Time</span>
+                <p>
+                  {d.call_date ? new Date(d.call_date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : ""}
+                  {" "}{d.call_time ? new Date(`1970-01-01T${d.call_time}`).toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" }) : ""}
+                </p>
+              </div>
               <div className={styles.field}>
                 <span>Outcome <span className={styles.required}>*</span></span>
                 <input
