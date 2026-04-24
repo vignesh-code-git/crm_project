@@ -184,7 +184,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(89, 72, 219, 0.1);
+  background: rgba(0, 0, 0, 0.05);
   width: 28px;
   height: 28px;
   border-radius: 50%;
