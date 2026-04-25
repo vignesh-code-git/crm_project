@@ -1,6 +1,7 @@
 // [controllers/leadsController.js]
 const service = require("../services/leadsService");
 const repo = require("../repositories/leadsRepository");
+const usersRepo = require("../repositories/usersRepository");
 const notifRepo = require("../repositories/notificationsRepository");
 
 // GET
@@ -149,11 +150,18 @@ exports.deleteLead = async (req, res) => {
       const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
       const actingUserId = Number(req.user.id);
       
-      // Notify all previous owners
+      // Notify all previous owners AND all Admins
       if (Array.isArray(result.previousOwners)) {
-        // Ensure we include the acting user if they were an owner
         const ownersToNotify = new Set(result.previousOwners.map(Number));
         ownersToNotify.add(actingUserId);
+        
+        // Add all admins
+        try {
+          const adminIds = await usersRepo.getAdminIds();
+          adminIds.forEach(id => ownersToNotify.add(Number(id)));
+        } catch (err) {
+          console.error("Failed to fetch admin IDs:", err);
+        }
 
         for (const ownerId of ownersToNotify) {
           const isActingUser = Number(ownerId) === actingUserId;
@@ -182,12 +190,19 @@ exports.deleteLead = async (req, res) => {
       });
     }
 
-    // 🔥 NOTIFICATION (Notify all previous owners of the full delete)
+    // 🔥 NOTIFICATION (Notify all previous owners AND Admins of the full delete)
     if (Array.isArray(result.previousOwners)) {
       const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
       const actingUserId = Number(req.user.id);
       const ownersToNotify = new Set(result.previousOwners.map(Number));
       ownersToNotify.add(actingUserId);
+      
+      try {
+        const adminIds = await usersRepo.getAdminIds();
+        adminIds.forEach(id => ownersToNotify.add(Number(id)));
+      } catch (err) {
+        console.error("Failed to fetch admin IDs:", err);
+      }
 
       for (const ownerId of ownersToNotify) {
         await notifRepo.createNotification({
@@ -223,20 +238,37 @@ exports.bulkDeleteLeads = async (req, res) => {
 
     if (result?.unassigned > 0 || result?.action === 'mixed') {
       const actingUserId = Number(req.user.id);
-      // 🔥 NOTIFICATION (mixed bulk action)
-      await notifRepo.createNotification({
-        user_id: actingUserId,
-        type: "info",
-        title: "Bulk Action Result",
-        message: `${result.deleted} lead(s) deleted. You were removed as owner from ${result.unassigned} lead(s) that still have other owners.`,
-        metadata: {
-          actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
-          entity_type: 'leads'
-        }
-      });
+      
+      // Notify the acting user AND all Admins
+      const usersToNotify = new Set([actingUserId]);
+      try {
+        const adminIds = await usersRepo.getAdminIds();
+        adminIds.forEach(id => usersToNotify.add(Number(id)));
+      } catch (err) {
+        console.error("Failed to fetch admin IDs:", err);
+      }
+
+      for (const userId of usersToNotify) {
+        const isActingUser = Number(userId) === actingUserId;
+        const unassignedNamesStr = result.unassignedNames?.join(", ") || "the selected leads";
+        
+        await notifRepo.createNotification({
+          user_id: userId,
+          type: "error", // 🔥 Redish color
+          title: "Bulk Action Result",
+          message: isActingUser 
+            ? `You have been removed from Leads: **${unassignedNamesStr}**. The record(s) still exist for other owners.`
+            : `**${req.user.first_name}** performed a bulk action. ${result.deleted} lead(s) deleted, ${result.unassigned} unassigned.`,
+          metadata: {
+            actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
+            entity_type: 'leads'
+          }
+        });
+      }
+
       return res.json({
         action: 'mixed',
-        message: `${result.deleted} lead(s) deleted. You were removed as owner from ${result.unassigned} lead(s) that still have other owners.`,
+        message: `You have been removed from Leads: ${result.unassignedNames?.join(", ") || "the selected leads"}. The record(s) still exist for other owners.`,
         deleted: result.deleted,
         unassigned: result.unassigned
       });

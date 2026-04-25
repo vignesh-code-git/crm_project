@@ -182,18 +182,26 @@ async function createBulk(dataArray) {
 
 // DELETE BULK (Option 1)
 async function deleteCompaniesBulk(ids, requestingUserId = null, isAdmin = false) {
-  if (!Array.isArray(ids) || ids.length === 0) return { deleted: 0, unassigned: 0 };
+  if (!Array.isArray(ids) || ids.length === 0) return { deleted: 0, unassigned: 0, unassignedNames: [] };
 
   let deleted = 0;
   let unassigned = 0;
+  const unassignedNames = [];
 
   for (const id of ids) {
+    const company = await Company.findByPk(id);
+    const name = company ? company.company_name : `ID ${id}`;
+    
     const result = await deleteCompany(id, requestingUserId, isAdmin);
-    if (result?.action === 'deleted') deleted++;
-    else if (result?.action === 'unassigned') unassigned++;
+    if (result?.action === 'deleted') {
+      deleted++;
+    } else if (result?.action === 'unassigned') {
+      unassigned++;
+      unassignedNames.push(name);
+    }
   }
 
-  return { deleted, unassigned };
+  return { deleted, unassigned, unassignedNames };
 }
 
 module.exports = {

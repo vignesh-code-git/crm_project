@@ -227,18 +227,26 @@ async function createBulk(dataArray) {
 
 // DELETE BULK (Option 1)
 async function deleteTicketsBulk(ids, requestingUserId = null, isAdmin = false) {
-  if (!Array.isArray(ids) || ids.length === 0) return { deleted: 0, unassigned: 0 };
+  if (!Array.isArray(ids) || ids.length === 0) return { deleted: 0, unassigned: 0, unassignedNames: [] };
 
   let deleted = 0;
   let unassigned = 0;
+  const unassignedNames = [];
 
   for (const id of ids) {
+    const ticket = await Ticket.findByPk(id);
+    const name = ticket ? ticket.ticket_name : `ID ${id}`;
+    
     const result = await deleteTicket(id, requestingUserId, isAdmin);
-    if (result?.action === 'deleted') deleted++;
-    else if (result?.action === 'unassigned') unassigned++;
+    if (result?.action === 'deleted') {
+      deleted++;
+    } else if (result?.action === 'unassigned') {
+      unassigned++;
+      unassignedNames.push(name);
+    }
   }
 
-  return { deleted, unassigned };
+  return { deleted, unassigned, unassignedNames };
 }
 
 module.exports = {

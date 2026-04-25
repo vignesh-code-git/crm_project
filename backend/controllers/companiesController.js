@@ -1,5 +1,6 @@
 // [controllers/companiesController.js]
 const repo = require("../repositories/companiesRepository");
+const usersRepo = require("../repositories/usersRepository");
 const notifRepo = require("../repositories/notificationsRepository");
 
 // CREATE
@@ -110,6 +111,13 @@ exports.deleteCompany = async (req, res) => {
       if (Array.isArray(result.previousOwners)) {
         const ownersToNotify = new Set(result.previousOwners.map(Number));
         ownersToNotify.add(actingUserId);
+        
+        try {
+          const adminIds = await usersRepo.getAdminIds();
+          adminIds.forEach(id => ownersToNotify.add(Number(id)));
+        } catch (err) {
+          console.error("Failed to fetch admin IDs:", err);
+        }
 
         for (const ownerId of ownersToNotify) {
           const isActingUser = Number(ownerId) === actingUserId;
@@ -132,12 +140,19 @@ exports.deleteCompany = async (req, res) => {
       return res.json({ message: `You have been removed from Company "${company.company_name}". The record still exists for other owners.`, action: 'unassigned' });
     }
 
-    // 🔥 NOTIFICATION (Full delete)
+    // 🔥 NOTIFICATION (Full delete - Notify all previous owners AND Admins)
     if (Array.isArray(result.previousOwners)) {
       const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
       const actingUserId = Number(req.user.id);
       const ownersToNotify = new Set(result.previousOwners.map(Number));
       ownersToNotify.add(actingUserId);
+
+      try {
+        const adminIds = await usersRepo.getAdminIds();
+        adminIds.forEach(id => ownersToNotify.add(Number(id)));
+      } catch (err) {
+        console.error("Failed to fetch admin IDs:", err);
+      }
 
       for (const ownerId of ownersToNotify) {
         await notifRepo.createNotification({
@@ -171,20 +186,38 @@ exports.bulkDeleteCompanies = async (req, res) => {
     const result = await repo.deleteCompaniesBulk(ids, req.user.id, isAdmin);
 
     if (result?.unassigned > 0 || result?.action === 'mixed') {
-      // 🔥 NOTIFICATION
-      await notifRepo.createNotification({
-        user_id: req.user.id,
-        type: "info",
-        title: "Bulk Action Result",
-        message: `${result.deleted} company(s) deleted. You were removed as owner from ${result.unassigned} company(s) that still have other owners.`,
-        metadata: { actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim() }
-      });
+      const actingUserId = Number(req.user.id);
+      const usersToNotify = new Set([actingUserId]);
+      try {
+        const adminIds = await usersRepo.getAdminIds();
+        adminIds.forEach(id => usersToNotify.add(Number(id)));
+      } catch (err) {
+        console.error("Failed to fetch admin IDs:", err);
+      }
 
-      return res.json({
-        action: 'mixed',
-        message: `${result.deleted} company(s) deleted. You were removed as owner from ${result.unassigned} company(s) that still have other owners.`,
-        deleted: result.deleted,
-        unassigned: result.unassigned
+      for (const userId of usersToNotify) {
+        const isActingUser = Number(userId) === actingUserId;
+        const unassignedNamesStr = result.unassignedNames?.join(", ") || "the selected companies";
+
+        await notifRepo.createNotification({
+          user_id: userId,
+          type: "error", // 🔥 Redish color
+          title: "Bulk Action Result",
+          message: isActingUser 
+            ? `You have been removed from Companies: **${unassignedNamesStr}**. The record(s) still exist for other owners.`
+            : `**${req.user.first_name}** performed a bulk action. ${result.deleted} company(ies) deleted, ${result.unassigned} unassigned.`,
+          metadata: {
+            actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
+            entity_type: 'companies'
+          }
+        });
+      }
+
+      return res.json({ 
+        action: 'mixed', 
+        message: `You have been removed from Companies: ${result.unassignedNames?.join(", ") || "the selected companies"}. The record(s) still exist for other owners.`,
+        deleted: result.deleted, 
+        unassigned: result.unassigned 
       });
     }
 

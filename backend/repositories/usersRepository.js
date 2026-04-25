@@ -113,6 +113,19 @@ async function deleteUser(id) {
   return deletedCount > 0;
 }
 
+// GET ADMIN IDs
+async function getAdminIds() {
+  const admins = await User.findAll({
+    include: [{ 
+      model: Role, 
+      where: { name: 'admin' },
+      attributes: [] 
+    }],
+    attributes: ['id']
+  });
+  return admins.map(a => a.id);
+}
+
 module.exports = {
   createUser,
   getUserByEmail,
@@ -120,4 +133,5 @@ module.exports = {
   getUsers,
   updateUser,
   deleteUser,
+  getAdminIds,
 };
