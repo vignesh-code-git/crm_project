@@ -44,17 +44,18 @@ export default function NotificationPanel({ notifications, onMarkAsRead, onMarkA
 
   // 🔄 INFINITE SCROLL OBSERVER
   useEffect(() => {
-    if (!hasMore || loading) return;
+    if (!hasMore || !listRef.current || !sentryRef.current) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
+        if (entries[0].isIntersecting && !loading) {
+          console.log("🚀 Sentry reached, fetching more...");
           onFetchMore();
         }
       },
       { 
-        root: listRef.current, // 🔥 Detect intersection within the scrollable list
-        threshold: 0.1 
+        root: listRef.current,
+        rootMargin: '100px', // Fetch when 100px away from bottom
       }
     );
 
@@ -91,13 +92,18 @@ export default function NotificationPanel({ notifications, onMarkAsRead, onMarkA
           </div>
         ))}
 
-        {hasMore && (
-          <div className={styles.loadMoreWrapper} ref={sentryRef}>
-            <div className={styles.loadMoreBtn}>
-              {loading ? "Loading..." : "Fetching more..."}
+        <div 
+          ref={sentryRef} 
+          style={{ height: '20px', margin: '10px 0', opacity: hasMore ? 1 : 0 }}
+        >
+          {hasMore && (
+            <div className={styles.loadMoreWrapper}>
+              <div className={styles.loadMoreBtn}>
+                {loading ? "Loading..." : "Fetching more..."}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {notifications.length === 0 && !loading && (
           <div className={styles.empty}>No notifications</div>
@@ -105,4 +111,4 @@ export default function NotificationPanel({ notifications, onMarkAsRead, onMarkA
       </div>
     </div>
   );
-}
+}

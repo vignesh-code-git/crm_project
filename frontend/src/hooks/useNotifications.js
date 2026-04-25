@@ -20,9 +20,14 @@ export default function useNotificationApi() {
       const data = Array.isArray(result) ? result : [];
       
       if (isInitial) {
-        setNotifications(data);
-        setPage(1);
-        setHasMore(data.length === 10);
+        setNotifications(prev => {
+          if (prev.length === 0) return data;
+          // Merge and keep unique by ID, maintaining the order (newest first)
+          const combined = [...data, ...prev];
+          const unique = combined.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
+          return unique;
+        });
+        setHasMore(data.length === 10 || notifications.length > 10);
       } else {
         setNotifications(prev => {
           const combined = [...prev, ...data];
