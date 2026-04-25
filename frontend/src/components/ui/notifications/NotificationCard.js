@@ -176,7 +176,7 @@ export default function NotificationCard({ notification, onRead, onDelete, onClo
       return (
         <div className={styles.dataGrid}>
           {fields.map((f, i) => f.value && (
-            <div key={i} className={styles.gridItem}>
+            <div key={i} className={`${styles.gridItem} ${f.label === "Edited" ? styles.gridItemFull : ""}`}>
               <span className={styles.gridLabel}>{f.label}:</span>
               <span className={styles.gridValue}>{f.value}</span>
             </div>
