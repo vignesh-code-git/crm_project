@@ -603,196 +603,166 @@ export default function DrawerForm({
   return (
     <div
       ref={formRef}
-      className={`
-        ${styles.form}
-        ${entityType ? styles[`form_${entityType}`] : ""}
-        ${activityType ? styles[`form_${activityType}`] : ""}
-      `}
+      className={styles.form}
       onClick={() => setOpenDropdown(null)}
     >
-      {fields.map((field, index) => {
-        const Icon = field.icon;
-        return (
-          <div
-            key={field.name || index}
-            className={`${styles.group} ${styles[`field_${field.name}`]}`}
-          >
-            <label>
-              {field.label}
-              {field.required && <span className={styles.required}> *</span>}
-            </label>
+      <div className={`
+        ${styles.scrollBody}
+        ${entityType ? styles[`form_${entityType}`] : ""}
+        ${activityType ? styles[`form_${activityType}`] : ""}
+      `}>
+        {fields.map((field, index) => {
+          const Icon = field.icon;
+          return (
+            <div
+              key={field.name || index}
+              className={`${styles.group} ${styles[`field_${field.name}`]}`}
+            >
+              <label>
+                {field.label}
+                {field.required && <span className={styles.required}> *</span>}
+              </label>
 
-            {field.name === "lead_status" && isConverted ? (
-              <div className={styles.inputWrapper}>
-                <input type="text" value="Converted" disabled />
-              </div>
-            ) : (
-              <>
-                {field.type === "phone" && (
-                  <PhoneInput
-                    country={"in"}
-                    value={values[field.name]?.replace("+", "") || ""}
-                    onChange={(phone) => handleChange(field.name, "+" + phone)}
-                    inputClass={`${styles.phoneInput} ${errors[field.name] && showRedBorder ? styles.inputError : ""}`}
-                    containerClass={styles.phoneContainer}
-                    buttonClass={styles.flagButton}
-                    dropdownClass={styles.flagDropdown}
-                  />
-                )}
-
-                {field.type === "textarea" && (
-                  <textarea
-                    className={`${styles.textarea} ${errors[field.name] && showRedBorder ? styles.inputError : ""}`}
-                    value={values[field.name] || ""}
-                    onChange={(e) => handleChange(field.name, e.target.value)}
-                  />
-                )}
-
-                {field.type === "rich_textarea" && (
-                  <div className={`${styles.richEditor} ${errors[field.name] && showRedBorder ? styles.inputError : ""}`}>
-                    <div className={styles.toolbar}>
-                      <FiBold onMouseDown={(e) => { e.preventDefault(); format("bold"); }} />
-                      <FiItalic onMouseDown={(e) => { e.preventDefault(); format("italic"); }} />
-                      <FiUnderline onMouseDown={(e) => { e.preventDefault(); format("underline"); }} />
-                      <FiList onMouseDown={(e) => { e.preventDefault(); format("insertUnorderedList"); }} />
-                      <FiMenu onMouseDown={(e) => { e.preventDefault(); format("insertOrderedList"); }} />
-                      <FiImage onMouseDown={(e) => {
-                        e.preventDefault();
-                        handleFileUpload(field.name, "image");
-                      }} />
-                      <FiPaperclip onMouseDown={(e) => {
-                        e.preventDefault();
-                        handleFileUpload(field.name, "file");
-                      }} />
-                    </div>
-
-                    <div
-                      ref={(el) => {
-                        if (el && !editorRef.current[field.name]) {
-                          el.innerHTML = values[field.name] || "";
-                          editorRef.current[field.name] = el;
-                        }
-                      }}
-                      className={`${styles.editor} ${errors[field.name] && showRedBorder ? styles.inputError : ""}`}
-                      contentEditable
-                      suppressContentEditableWarning
-                      onInput={(e) => {
-                        saveSelection();
-                        handleChange(field.name, e.currentTarget.innerHTML);
-                      }}
-                      onClick={saveSelection}
-                      onKeyUp={saveSelection}
+              {field.name === "lead_status" && isConverted ? (
+                <div className={styles.inputWrapper}>
+                  <input type="text" value="Converted" disabled />
+                </div>
+              ) : (
+                <>
+                  {field.type === "phone" && (
+                    <PhoneInput
+                      country={"in"}
+                      value={values[field.name]?.replace("+", "") || ""}
+                      onChange={(phone) => handleChange(field.name, "+" + phone)}
+                      inputClass={`${styles.phoneInput} ${errors[field.name] && showRedBorder ? styles.inputError : ""}`}
+                      containerClass={styles.phoneContainer}
+                      buttonClass={styles.flagButton}
+                      dropdownClass={styles.flagDropdown}
                     />
-
-                    {/* ✅ ATTACHMENT TRAY FOR NOTES */}
-                    {attachments.length > 0 && field.name === activityType && (
-                      <div className={styles.composerMediaFooter}>
-                        {attachments.map((file) => (
-                          <div key={file.id} className={styles.compactMediaCard}>
-                            <div className={styles.cardPreviewLeft}>
-                              {file.type?.startsWith("image/") ? (
-                                <img src={file.url} alt="" className={styles.thumbnail} />
-                              ) : (
-                                <FiFileText size={16} color="#64748b" />
-                              )}
-                            </div>
-                            <div className={styles.cardInfo}>
-                              <div className={styles.fileName}>{file.name}</div>
-                              <div className={styles.fileSize}>{(file.size / 1024).toFixed(1)} KB</div>
-                            </div>
-                            <div className={styles.removeIconSmall} onClick={() => {
-                              setAttachments(attachments.filter(a => a.id !== file.id));
-                              setAttachmentIds(attachmentIds.filter(id => id !== file.id));
-                            }}>
-                              &times;
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {field.type !== "select" &&
-                  field.type !== "phone" &&
-                  field.type !== "textarea" &&
-                  field.type !== "rich_textarea" && (
-                    <>
-                      {field.type === "date" ? (
-                        activityType?.toLowerCase() === "meeting" ? (
-                          <CustomDateInput
-                            selectedDate={values[field.name]}
-                            onChange={(val) => handleChange(field.name, val)}
-                            placeholder={field.placeholder || "Select Date"}
-                            disabled={field.disabled}
-                            error={errors[field.name] && showRedBorder}
-                            centered={true}
-                            compact={true}
-                          />
-                        ) : (
-                          <DateFilter
-                            value={values[field.name]}
-                            onChange={(val) => handleChange(field.name, val)}
-                            label={field.placeholder || "Select Date"}
-                            disabled={field.disabled}
-                            error={errors[field.name] && showRedBorder}
-                          />
-                        )
-                      ) : field.type === "time" ? (
-                        <CustomTimeInput
-                          value={values[field.name]}
-                          onChange={(val) => handleChange(field.name, val)}
-                          placeholder={field.placeholder || "Select Time"}
-                          disabled={field.disabled}
-                          error={errors[field.name] && showRedBorder}
-                        />
-                      ) : (
-                        <div className={`${styles.inputWrapper} ${errors[field.name] && showRedBorder ? styles.inputError : ""}`}>
-                          {Icon && <Icon className={styles.icon} />}
-                          <input
-                            type={field.type === "number" ? "number" : "text"}
-                            placeholder={field.placeholder || ""}
-                            value={values[field.name] || ""}
-                            disabled={field.disabled}
-                            onChange={(e) => handleChange(field.name, e.target.value)}
-                          />
-                        </div>
-                      )}
-                    </>
                   )}
 
-                {field.type === "select" && field.name === "attendees" && (
-                  <AttendeesDropdown
-                    field={field}
-                    error={errors[field.name] && showRedBorder}
-                    value={values[field.name] || []}
-                    open={openDropdown === field.name}
-                    toggle={() =>
-                      setOpenDropdown(openDropdown === field.name ? null : field.name)
-                    }
-                    onChange={(val) => {
-                      handleChange(field.name, val);
-                    }}
-                  />
-                )}
+                  {field.type === "textarea" && (
+                    <textarea
+                      className={`${styles.textarea} ${errors[field.name] && showRedBorder ? styles.inputError : ""}`}
+                      value={values[field.name] || ""}
+                      onChange={(e) => handleChange(field.name, e.target.value)}
+                    />
+                  )}
 
-                {field.type === "select" && field.name === "owner_id" && (
-                  field.disabled ? (
-                    <div className={styles.inputWrapper}>
-                      <input
-                        type="text"
-                        value={
-                          field.multiple
-                            ? (values[field.name] || [])
-                              .map(v => field.options?.find(o => String(o.value) === String(v))?.label)
-                              .filter(Boolean)
-                              .join(", ")
-                            : field.options?.find(o => String(o.value) === String(values[field.name]))?.label || ""
-                        }
-                        disabled
+                  {field.type === "rich_textarea" && (
+                    <div className={`${styles.richEditor} ${errors[field.name] && showRedBorder ? styles.inputError : ""}`}>
+                      <div className={styles.toolbar}>
+                        <FiBold onMouseDown={(e) => { e.preventDefault(); format("bold"); }} />
+                        <FiItalic onMouseDown={(e) => { e.preventDefault(); format("italic"); }} />
+                        <FiUnderline onMouseDown={(e) => { e.preventDefault(); format("underline"); }} />
+                        <FiList onMouseDown={(e) => { e.preventDefault(); format("insertUnorderedList"); }} />
+                        <FiMenu onMouseDown={(e) => { e.preventDefault(); format("insertOrderedList"); }} />
+                        <FiImage onMouseDown={(e) => {
+                          e.preventDefault();
+                          handleFileUpload(field.name, "image");
+                        }} />
+                        <FiPaperclip onMouseDown={(e) => {
+                          e.preventDefault();
+                          handleFileUpload(field.name, "file");
+                        }} />
+                      </div>
+
+                      <div
+                        ref={(el) => {
+                          if (el && !editorRef.current[field.name]) {
+                            el.innerHTML = values[field.name] || "";
+                            editorRef.current[field.name] = el;
+                          }
+                        }}
+                        className={`${styles.editor} ${errors[field.name] && showRedBorder ? styles.inputError : ""}`}
+                        contentEditable
+                        suppressContentEditableWarning
+                        onInput={(e) => {
+                          saveSelection();
+                          handleChange(field.name, e.currentTarget.innerHTML);
+                        }}
+                        onClick={saveSelection}
+                        onKeyUp={saveSelection}
                       />
+
+                      {/* ✅ ATTACHMENT TRAY FOR NOTES */}
+                      {attachments.length > 0 && field.name === activityType && (
+                        <div className={styles.composerMediaFooter}>
+                          {attachments.map((file) => (
+                            <div key={file.id} className={styles.compactMediaCard}>
+                              <div className={styles.cardPreviewLeft}>
+                                {file.type?.startsWith("image/") ? (
+                                  <img src={file.url} alt="" className={styles.thumbnail} />
+                                ) : (
+                                  <FiFileText size={16} color="#64748b" />
+                                )}
+                              </div>
+                              <div className={styles.cardInfo}>
+                                <div className={styles.fileName}>{file.name}</div>
+                                <div className={styles.fileSize}>{(file.size / 1024).toFixed(1)} KB</div>
+                              </div>
+                              <div className={styles.removeIconSmall} onClick={() => {
+                                setAttachments(attachments.filter(a => a.id !== file.id));
+                                setAttachmentIds(attachmentIds.filter(id => id !== file.id));
+                              }}>
+                                &times;
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  ) : field.multiple ? (
+                  )}
+
+                  {field.type !== "select" &&
+                    field.type !== "phone" &&
+                    field.type !== "textarea" &&
+                    field.type !== "rich_textarea" && (
+                      <>
+                        {field.type === "date" ? (
+                          activityType?.toLowerCase() === "meeting" ? (
+                            <CustomDateInput
+                              selectedDate={values[field.name]}
+                              onChange={(val) => handleChange(field.name, val)}
+                              placeholder={field.placeholder || "Select Date"}
+                              disabled={field.disabled}
+                              error={errors[field.name] && showRedBorder}
+                              centered={true}
+                              compact={true}
+                            />
+                          ) : (
+                            <DateFilter
+                              value={values[field.name]}
+                              onChange={(val) => handleChange(field.name, val)}
+                              label={field.placeholder || "Select Date"}
+                              disabled={field.disabled}
+                              error={errors[field.name] && showRedBorder}
+                            />
+                          )
+                        ) : field.type === "time" ? (
+                          <CustomTimeInput
+                            value={values[field.name]}
+                            onChange={(val) => handleChange(field.name, val)}
+                            placeholder={field.placeholder || "Select Time"}
+                            disabled={field.disabled}
+                            error={errors[field.name] && showRedBorder}
+                          />
+                        ) : (
+                          <div className={`${styles.inputWrapper} ${errors[field.name] && showRedBorder ? styles.inputError : ""}`}>
+                            {Icon && <Icon className={styles.icon} />}
+                            <input
+                              type={field.type === "number" ? "number" : "text"}
+                              placeholder={field.placeholder || ""}
+                              value={values[field.name] || ""}
+                              disabled={field.disabled}
+                              onChange={(e) => handleChange(field.name, e.target.value)}
+                            />
+                          </div>
+                        )}
+                      </>
+                    )}
+
+                  {field.type === "select" && field.name === "attendees" && (
                     <AttendeesDropdown
                       field={field}
                       error={errors[field.name] && showRedBorder}
@@ -801,72 +771,104 @@ export default function DrawerForm({
                       toggle={() =>
                         setOpenDropdown(openDropdown === field.name ? null : field.name)
                       }
-                      onChange={(val) => handleChange(field.name, val)}
-                    />
-                  ) : (
-                    <CustomDropdown
-                      field={field}
-                      error={errors[field.name] && showRedBorder}
-                      value={values[field.name]}
-                      open={openDropdown === field.name}
-                      toggle={() =>
-                        setOpenDropdown(openDropdown === field.name ? null : field.name)
-                      }
                       onChange={(val) => {
                         handleChange(field.name, val);
-                        setOpenDropdown(null);
                       }}
                     />
-                  )
-                )}
+                  )}
 
-                {field.type === "select" && field.name !== "owner_id" && field.name !== "attendees" && (
-                  field.disabled ? (
-                    <div className={styles.inputWrapper}>
-                      <input
-                        type="text"
-                        value={
-                          field.options?.find(o => String(o.value) === String(values[field.name]))?.label ||
-                          values[`${field.name.replace('_id', '')}_name`] ||
-                          values[field.name] ||
-                          ""
+                  {field.type === "select" && field.name === "owner_id" && (
+                    field.disabled ? (
+                      <div className={styles.inputWrapper}>
+                        <input
+                          type="text"
+                          value={
+                            field.multiple
+                              ? (values[field.name] || [])
+                                .map(v => field.options?.find(o => String(o.value) === String(v))?.label)
+                                .filter(Boolean)
+                                .join(", ")
+                              : field.options?.find(o => String(o.value) === String(values[field.name]))?.label || ""
+                          }
+                          disabled
+                        />
+                      </div>
+                    ) : field.multiple ? (
+                      <AttendeesDropdown
+                        field={field}
+                        error={errors[field.name] && showRedBorder}
+                        value={values[field.name] || []}
+                        open={openDropdown === field.name}
+                        toggle={() =>
+                          setOpenDropdown(openDropdown === field.name ? null : field.name)
                         }
-                        disabled
+                        onChange={(val) => handleChange(field.name, val)}
                       />
-                    </div>
-                  ) : field.multiple ? (
-                    <AttendeesDropdown
-                      field={field}
-                      error={errors[field.name] && showRedBorder}
-                      value={values[field.name] || []}
-                      open={openDropdown === field.name}
-                      toggle={() =>
-                        setOpenDropdown(openDropdown === field.name ? null : field.name)
-                      }
-                      onChange={(val) => handleChange(field.name, val)}
-                    />
-                  ) : (
-                    <CustomDropdown
-                      field={field}
-                      error={errors[field.name] && showRedBorder}
-                      value={values[field.name]}
-                      open={openDropdown === field.name}
-                      toggle={() =>
-                        setOpenDropdown(openDropdown === field.name ? null : field.name)
-                      }
-                      onChange={(val) => {
-                        handleChange(field.name, val);
-                        setOpenDropdown(null);
-                      }}
-                    />
-                  )
-                )}
-                {errors[field.name] && <span className={styles.errorText}>{errors[field.name]}</span>}
-              </>
-            )}
-          </div>
-        );
-      })}
+                    ) : (
+                      <CustomDropdown
+                        field={field}
+                        error={errors[field.name] && showRedBorder}
+                        value={values[field.name]}
+                        open={openDropdown === field.name}
+                        toggle={() =>
+                          setOpenDropdown(openDropdown === field.name ? null : field.name)
+                        }
+                        onChange={(val) => {
+                          handleChange(field.name, val);
+                          setOpenDropdown(null);
+                        }}
+                      />
+                    )
+                  )}
+
+                  {field.type === "select" && field.name !== "owner_id" && field.name !== "attendees" && (
+                    field.disabled ? (
+                      <div className={styles.inputWrapper}>
+                        <input
+                          type="text"
+                          value={
+                            field.options?.find(o => String(o.value) === String(values[field.name]))?.label ||
+                            values[`${field.name.replace('_id', '')}_name`] ||
+                            values[field.name] ||
+                            ""
+                          }
+                          disabled
+                        />
+                      </div>
+                    ) : field.multiple ? (
+                      <AttendeesDropdown
+                        field={field}
+                        error={errors[field.name] && showRedBorder}
+                        value={values[field.name] || []}
+                        open={openDropdown === field.name}
+                        toggle={() =>
+                          setOpenDropdown(openDropdown === field.name ? null : field.name)
+                        }
+                        onChange={(val) => handleChange(field.name, val)}
+                      />
+                    ) : (
+                      <CustomDropdown
+                        field={field}
+                        error={errors[field.name] && showRedBorder}
+                        value={values[field.name]}
+                        open={openDropdown === field.name}
+                        toggle={() =>
+                          setOpenDropdown(openDropdown === field.name ? null : field.name)
+                        }
+                        onChange={(val) => {
+                          handleChange(field.name, val);
+                          setOpenDropdown(null);
+                        }}
+                      />
+                    )
+                  )}
+                  {errors[field.name] && <span className={styles.errorText}>{errors[field.name]}</span>}
+                </>
+              )}
+            </div>
+          );
+        })}
+      </div>
 
       <div className={styles.actions}>
         <button className={styles.cancelBtn} onClick={onClose}>Cancel</button>
