@@ -90,6 +90,23 @@ async function updateUser(id, data) {
 
 // DELETE USER
 async function deleteUser(id) {
+  const { Note, Email, Call, Task, Meeting, Attachment, Notification, Activity } = require("../models");
+
+  // Clean up foreign key constraints manually
+  const condition = { user_id: id };
+  try {
+    await Note.destroy({ where: condition });
+    await Email.destroy({ where: condition });
+    await Call.destroy({ where: condition });
+    await Task.destroy({ where: condition });
+    await Meeting.destroy({ where: condition });
+    await Attachment.destroy({ where: condition });
+    await Notification.destroy({ where: condition });
+    await Activity.destroy({ where: condition });
+  } catch (err) {
+    console.error("Error cleaning up user dependencies:", err);
+  }
+
   const deletedCount = await User.destroy({
     where: { id }
   });

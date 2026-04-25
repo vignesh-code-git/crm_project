@@ -721,7 +721,7 @@ export default function DrawerForm({
                       {field.type === "date" ? (
                         activityType?.toLowerCase() === "meeting" ? (
                           <CustomDateInput
-                            value={values[field.name]}
+                            selectedDate={values[field.name]}
                             onChange={(val) => handleChange(field.name, val)}
                             placeholder={field.placeholder || "Select Date"}
                             disabled={field.disabled}

@@ -117,6 +117,7 @@
 }
 
 @media (max-width: 1200px) {
+
   .dropdown::before,
   .dropdownTop::before,
   .arrowTop,

@@ -70,9 +70,9 @@ const CustomDateInput = ({ selectedDate, onChange, label, error, disabled, compa
 
       {open && typeof document !== "undefined" && createPortal(
         <>
-          <div 
-            className={isMobile ? styles.mobileOverlay : styles.desktopOverlay} 
-            onClick={() => setOpen(false)} 
+          <div
+            className={isMobile ? styles.mobileOverlay : styles.desktopOverlay}
+            onClick={() => setOpen(false)}
           />
           <div
             style={isMobile ? {
@@ -101,10 +101,10 @@ const CustomDateInput = ({ selectedDate, onChange, label, error, disabled, compa
                 ${compact ? styles.compactDropdown : ""}
               `}
               ref={dropdownRef}
-              style={{ 
-                position: 'relative', 
-                top: 'auto', 
-                left: 'auto', 
+              style={{
+                position: 'relative',
+                top: 'auto',
+                left: 'auto',
                 transform: 'none',
                 width: 'auto',
                 maxWidth: '95vw',
