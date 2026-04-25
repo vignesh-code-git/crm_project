@@ -151,12 +151,14 @@ exports.updateTicket = async (req, res) => {
     }
 
     const changedFields = [];
+    const changedValues = {};
     const fieldsToTrack = ['ticket_name', 'ticket_priority', 'ticket_status', 'ticket_category', 'ticket_description', 'due_date'];
     
     fieldsToTrack.forEach(field => {
       if (req.body[field] !== undefined && String(req.body[field]) !== String(previousData[field])) {
         const fieldLabel = field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
         changedFields.push(`**${fieldLabel}**: **${req.body[field]}**`);
+        changedValues[field] = req.body[field];
       }
     });
 
@@ -172,7 +174,8 @@ exports.updateTicket = async (req, res) => {
         metadata: {
           target_name: ticketName,
           actor_name: actorName,
-          is_edit: true
+          is_edit: true,
+          changed_values: changedValues
         },
         entity_type: "tickets",
         entity_id: data.id

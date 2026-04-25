@@ -129,12 +129,14 @@ exports.updateDeal = async (req, res) => {
     }
 
     const changedFields = [];
+    const changedValues = {};
     const fieldsToTrack = ['deal_name', 'deal_value', 'deal_stage', 'close_date', 'deal_description', 'deal_type', 'priority'];
     
     fieldsToTrack.forEach(field => {
       if (req.body[field] !== undefined && String(req.body[field]) !== String(previousData[field])) {
         const fieldLabel = field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
         changedFields.push(`**${fieldLabel}**: **${req.body[field]}**`);
+        changedValues[field] = req.body[field];
       }
     });
 
@@ -150,7 +152,8 @@ exports.updateDeal = async (req, res) => {
         metadata: {
           target_name: dealName,
           actor_name: actorName,
-          is_edit: true
+          is_edit: true,
+          changed_values: changedValues
         },
         entity_type: "deals",
         entity_id: data.id

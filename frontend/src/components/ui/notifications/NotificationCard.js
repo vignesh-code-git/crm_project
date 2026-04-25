@@ -140,20 +140,36 @@ export default function NotificationCard({ notification, onRead, onDelete, onClo
 
     // 2. If it's a table entity (Lead, Deal, Company, Ticket), show a grid of fields
     const fields = [];
-    if (entity_type === "leads") {
-      fields.push({ label: "Email", value: data.email });
-      fields.push({ label: "Phone", value: data.phone });
-      fields.push({ label: "Status", value: data.lead_status });
-    } else if (entity_type === "deals") {
-      fields.push({ label: "Amount", value: data.deal_value });
-      fields.push({ label: "Stage", value: data.deal_stage });
-      fields.push({ label: "Close Date", value: data.close_date });
-    } else if (entity_type === "companies") {
-      fields.push({ label: "Industry", value: data.industry });
-      fields.push({ label: "Website", value: data.website });
-    } else if (entity_type === "tickets") {
-      fields.push({ label: "Priority", value: data.ticket_priority });
-      fields.push({ label: "Status", value: data.ticket_status });
+
+    // 🔥 NEW: IF IT'S AN EDIT, ONLY SHOW EDITED FIELDS
+    if (metadata.is_edit && metadata.changed_values) {
+      const fieldNames = Object.keys(metadata.changed_values)
+        .map((k) => k.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()))
+        .join(", ");
+      
+      fields.push({ label: "Edited", value: fieldNames });
+
+      Object.entries(metadata.changed_values).forEach(([key, val]) => {
+        const label = key.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+        fields.push({ label, value: val });
+      });
+    } else {
+      // Standard Grid for Creates or Non-Edit Notifications
+      if (entity_type === "leads") {
+        fields.push({ label: "Email", value: data.email });
+        fields.push({ label: "Phone", value: data.phone });
+        fields.push({ label: "Status", value: data.lead_status || data.status });
+      } else if (entity_type === "deals") {
+        fields.push({ label: "Amount", value: data.deal_value });
+        fields.push({ label: "Stage", value: data.deal_stage });
+        fields.push({ label: "Close Date", value: data.close_date });
+      } else if (entity_type === "companies") {
+        fields.push({ label: "Industry", value: data.industry });
+        fields.push({ label: "Website", value: data.website });
+      } else if (entity_type === "tickets") {
+        fields.push({ label: "Priority", value: data.ticket_priority });
+        fields.push({ label: "Status", value: data.ticket_status });
+      }
     }
 
     if (fields.length > 0) {
