@@ -7,7 +7,7 @@ import NotificationPanel from "./NotificationPanel";
 import styles from "./notification.module.css";
 
 export default function NotificationBell() {
-  const { notifications, loading, markAsRead, markAllAsRead, deleteNotification } = useNotificationApi();
+  const { notifications, loading, hasMore, fetchMore, markAsRead, markAllAsRead, deleteNotification } = useNotificationApi();
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef(null);
 
@@ -42,6 +42,9 @@ export default function NotificationBell() {
           onMarkAsRead={markAsRead}
           onMarkAllAsRead={markAllAsRead}
           onDelete={deleteNotification}
+          onFetchMore={fetchMore}
+          hasMore={hasMore}
+          loading={loading}
         />
       )}
     </div>
