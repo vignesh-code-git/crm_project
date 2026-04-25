@@ -257,8 +257,8 @@ exports.bulkDeleteLeads = async (req, res) => {
           type: "error", // 🔥 Redish color
           title: "Bulk Action Result",
           message: isActingUser 
-            ? `You have been removed from Leads: **${unassignedNamesStr}**. The record(s) still exist for other owners.`
-            : `**${req.user.first_name}** performed a bulk action. ${result.deleted} lead(s) deleted, ${result.unassigned} unassigned.`,
+            ? `You have been removed from Leads: **${unassignedNamesStr}**. The records still exist for other owners.`
+            : `**${req.user.first_name}** performed a bulk action. ${result.deleted} lead(s) deleted, and was removed from: **${unassignedNamesStr}**.`,
           metadata: {
             actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
             entity_type: 'leads'
@@ -268,7 +268,7 @@ exports.bulkDeleteLeads = async (req, res) => {
 
       return res.json({
         action: 'mixed',
-        message: `You have been removed from Leads: ${result.unassignedNames?.join(", ") || "the selected leads"}. The record(s) still exist for other owners.`,
+        message: `You have been removed from Leads: ${result.unassignedNames?.join(", ") || "the selected leads"}. The records still exist for other owners.`,
         deleted: result.deleted,
         unassigned: result.unassigned
       });

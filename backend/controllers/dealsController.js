@@ -258,8 +258,8 @@ exports.bulkDeleteDeals = async (req, res) => {
           type: "error",
           title: "Bulk Action Result",
           message: isActingUser 
-            ? `You have been removed from Deals: **${unassignedNamesStr}**. The record(s) still exist for other owners.`
-            : `**${req.user.first_name}** performed a bulk action. ${result.deleted} deal(s) deleted, ${result.unassigned} unassigned.`,
+            ? `You have been removed from Deals: **${unassignedNamesStr}**. The records still exist for other owners.`
+            : `**${req.user.first_name}** performed a bulk action. ${result.deleted} deal(s) deleted, and was removed from: **${unassignedNamesStr}**.`,
           metadata: {
             actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
             entity_type: 'deals'
@@ -269,7 +269,7 @@ exports.bulkDeleteDeals = async (req, res) => {
 
       return res.json({ 
         action: 'mixed', 
-        message: `You have been removed from Deals: ${result.unassignedNames?.join(", ") || "the selected deals"}. The record(s) still exist for other owners.`,
+        message: `You have been removed from Deals: ${result.unassignedNames?.join(", ") || "the selected deals"}. The records still exist for other owners.`,
         deleted: result.deleted, 
         unassigned: result.unassigned 
       });
