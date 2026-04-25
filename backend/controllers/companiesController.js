@@ -104,20 +104,55 @@ exports.deleteCompany = async (req, res) => {
     const result = await repo.deleteCompany(id, req.user.id, isAdmin);
 
     if (result?.action === 'unassigned') {
-      return res.json({ message: `You have been removed from Company "${company.company_name}". The record still exists for other owners.` });
+      const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
+      const actingUserId = Number(req.user.id);
+      
+      if (Array.isArray(result.previousOwners)) {
+        const ownersToNotify = new Set(result.previousOwners.map(Number));
+        ownersToNotify.add(actingUserId);
+
+        for (const ownerId of ownersToNotify) {
+          const isActingUser = Number(ownerId) === actingUserId;
+          await notifRepo.createNotification({
+            user_id: ownerId,
+            type: "info",
+            title: isActingUser ? "Company Unassigned" : "Owner Removed",
+            message: isActingUser 
+              ? `You have been removed from Company **${company.company_name}**. The record still exists for other owners.`
+              : `**${actorName}** was removed from Company **${company.company_name}**.`,
+            metadata: { 
+              target_name: company.company_name, 
+              actor_name: actorName,
+              entity_type: 'companies',
+              entity_id: id
+            }
+          });
+        }
+      }
+      return res.json({ message: `You have been removed from Company "${company.company_name}". The record still exists for other owners.`, action: 'unassigned' });
     }
 
-    // 🔥 NOTIFICATION (only on full delete)
-    await notifRepo.createNotification({
-      user_id: req.user.id,
-      type: "error",
-      title: "Company Deleted",
-      message: `Company **${company.company_name}** has been deleted successfully by **${req.user.first_name}**.`,
-      metadata: { 
-        target_name: company.company_name,
-        actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim()
+    // 🔥 NOTIFICATION (Full delete)
+    if (Array.isArray(result.previousOwners)) {
+      const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
+      const actingUserId = Number(req.user.id);
+      const ownersToNotify = new Set(result.previousOwners.map(Number));
+      ownersToNotify.add(actingUserId);
+
+      for (const ownerId of ownersToNotify) {
+        await notifRepo.createNotification({
+          user_id: ownerId,
+          type: "error",
+          title: "Company Deleted",
+          message: `Company **${company.company_name}** has been deleted successfully by **${req.user.first_name}**.`,
+          metadata: { 
+            target_name: company.company_name, 
+            actor_name: actorName,
+            entity_type: 'companies'
+          }
+        });
       }
-    });
+    }
 
     res.json({ message: "Company deleted successfully" });
   } catch (err) {
@@ -135,7 +170,16 @@ exports.bulkDeleteCompanies = async (req, res) => {
     const isAdmin = req.user.role === "admin";
     const result = await repo.deleteCompaniesBulk(ids, req.user.id, isAdmin);
 
-    if (result?.unassigned > 0) {
+    if (result?.unassigned > 0 || result?.action === 'mixed') {
+      // 🔥 NOTIFICATION
+      await notifRepo.createNotification({
+        user_id: req.user.id,
+        type: "info",
+        title: "Bulk Action Result",
+        message: `${result.deleted} company(s) deleted. You were removed as owner from ${result.unassigned} company(s) that still have other owners.`,
+        metadata: { actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim() }
+      });
+
       return res.json({
         action: 'mixed',
         message: `${result.deleted} company(s) deleted. You were removed as owner from ${result.unassigned} company(s) that still have other owners.`,

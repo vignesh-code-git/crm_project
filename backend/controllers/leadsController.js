@@ -146,20 +146,63 @@ exports.deleteLead = async (req, res) => {
     const result = await service.deleteLead(id, req.user.id, isAdmin);
 
     if (result?.action === 'unassigned') {
-      return res.json({ message: `You have been removed from Lead "${leadName}". The record still exists for other owners.` });
+      const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
+      const actingUserId = Number(req.user.id);
+      
+      // Notify all previous owners
+      if (Array.isArray(result.previousOwners)) {
+        // Ensure we include the acting user if they were an owner
+        const ownersToNotify = new Set(result.previousOwners.map(Number));
+        ownersToNotify.add(actingUserId);
+
+        for (const ownerId of ownersToNotify) {
+          const isActingUser = Number(ownerId) === actingUserId;
+          
+          await notifRepo.createNotification({
+            user_id: ownerId,
+            type: "info",
+            title: isActingUser ? "Lead Unassigned" : "Owner Removed",
+            message: isActingUser 
+              ? `You have been removed from Lead **${leadName}**. The record still exists for other owners.`
+              : `**${actorName}** was removed from Lead **${leadName}**.`,
+            metadata: {
+              target_name: leadName,
+              actor_name: actorName,
+              is_unassignment: true,
+              entity_type: 'leads',
+              entity_id: id
+            }
+          });
+        }
+      }
+
+      return res.json({ 
+        message: `You have been removed from Lead "${leadName}". The record still exists for other owners.`,
+        action: 'unassigned'
+      });
     }
 
-    // 🔥 NOTIFICATION (only on full delete)
-    await notifRepo.createNotification({
-      user_id: req.user.id,
-      type: "error",
-      title: "Lead Deleted",
-      message: `Lead **${leadName}** has been deleted successfully.`,
-      metadata: {
-        target_name: leadName,
-        actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim()
+    // 🔥 NOTIFICATION (Notify all previous owners of the full delete)
+    if (Array.isArray(result.previousOwners)) {
+      const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
+      const actingUserId = Number(req.user.id);
+      const ownersToNotify = new Set(result.previousOwners.map(Number));
+      ownersToNotify.add(actingUserId);
+
+      for (const ownerId of ownersToNotify) {
+        await notifRepo.createNotification({
+          user_id: ownerId,
+          type: "error",
+          title: "Lead Deleted",
+          message: `Lead **${leadName}** has been deleted successfully by **${req.user.first_name}**.`,
+          metadata: {
+            target_name: leadName,
+            actor_name: actorName,
+            entity_type: 'leads'
+          }
+        });
       }
-    });
+    }
 
     res.json({ message: "Lead deleted successfully" });
   } catch (err) {
@@ -178,7 +221,19 @@ exports.bulkDeleteLeads = async (req, res) => {
     const isAdmin = req.user.role === "admin";
     const result = await service.deleteLeadsBulk(ids, req.user.id, isAdmin);
 
-    if (result?.unassigned > 0) {
+    if (result?.unassigned > 0 || result?.action === 'mixed') {
+      const actingUserId = Number(req.user.id);
+      // 🔥 NOTIFICATION (mixed bulk action)
+      await notifRepo.createNotification({
+        user_id: actingUserId,
+        type: "info",
+        title: "Bulk Action Result",
+        message: `${result.deleted} lead(s) deleted. You were removed as owner from ${result.unassigned} lead(s) that still have other owners.`,
+        metadata: {
+          actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
+          entity_type: 'leads'
+        }
+      });
       return res.json({
         action: 'mixed',
         message: `${result.deleted} lead(s) deleted. You were removed as owner from ${result.unassigned} lead(s) that still have other owners.`,
@@ -189,8 +244,9 @@ exports.bulkDeleteLeads = async (req, res) => {
 
     // 🔥 NOTIFICATION (only if actual deletes happened)
     if (result?.deleted > 0) {
+      const actingUserId = Number(req.user.id);
       await notifRepo.createNotification({
-        user_id: req.user.id,
+        user_id: actingUserId,
         type: "warning",
         message: `${result.deleted} leads have been deleted via bulk action by **${req.user.first_name}**.`,
         metadata: { actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim() }

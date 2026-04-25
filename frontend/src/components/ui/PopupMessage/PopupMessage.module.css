@@ -65,33 +65,40 @@
 }
 
 .iconWrapper.info {
-  background: rgba(59, 130, 246, 0.12);
-  color: #3b82f6;
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
 }
 
 .header h3 {
   flex: 1;
   font-size: 20px;
-  font-weight: 600;
-  color: #1f2937;
+  font-weight: 700;
+  color: #ef4444;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .closeBtn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
   background: none;
   border: none;
-  color: #9ca3af;
-  font-size: 20px;
+  color: #94a3b8;
+  font-size: 22px;
   cursor: pointer;
-  padding: 5px;
+  padding: 6px;
+  border-radius: 8px;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .closeBtn:hover {
-  color: #1f2937;
-  transform: scale(1.1);
+  background: #fee2e2;
+  color: #ef4444;
 }
 
 .content {
@@ -103,6 +110,8 @@
   font-size: 16px;
   line-height: 1.5;
   margin: 0;
+  color: #000000;
+  font-weight: 500;
 }
 
 .content p.error {
@@ -114,16 +123,13 @@
 }
 
 .content p.info {
-  color: #2563eb;
-  font-weight: 500;
+  color: #000000;
 }
 
 /* ================================
    🔵 INFO POPUP ACCENT (Blue)
 ================================ */
-.popupInfo {
-  border-top: 4px solid #3b82f6;
-}
+/* Removed top blue accent */
 
 /* ================================
    📱 MOBILE RESPONSIVE

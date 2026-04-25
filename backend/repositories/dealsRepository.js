@@ -160,12 +160,13 @@ async function deleteDeal(id, requestingUserId = null, isAdmin = false) {
       return { action: 'deleted' };
     }
     await Deal.update({ owner_id: remainingOwners, updated_at: new Date() }, { where: { id: toNull(id) } });
-    return { action: 'unassigned' };
+    return { action: 'unassigned', previousOwners: currentOwners, remainingOwners: remainingOwners };
   }
 
+  const prevOwners = [...currentOwners];
   await deletePolymorphicActivities('deals', id);
   await Deal.destroy({ where: { id: toNull(id) } });
-  return { action: 'deleted' };
+  return { action: 'deleted', previousOwners: prevOwners };
 }
 
 // CREATE BULK

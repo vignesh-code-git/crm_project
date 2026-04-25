@@ -178,7 +178,7 @@ async function deleteLead(id, requestingUserId = null, isAdmin = false) {
 
     // Remove self from owners
     await Lead.update({ owner_id: remainingOwners, updated_at: new Date() }, { where: { id: toNull(id) } });
-    return { action: 'unassigned' };
+    return { action: 'unassigned', previousOwners: currentOwners, remainingOwners: remainingOwners };
   }
 
   // Admin: full hard delete
@@ -189,9 +189,10 @@ async function deleteLead(id, requestingUserId = null, isAdmin = false) {
   if (Number(dealsCount[0].count) > 0) {
     throw new Error('Cannot delete Lead because it has associated Deals.');
   }
+  const prevOwners = [...currentOwners];
   await deletePolymorphicActivities('leads', id);
   await Lead.destroy({ where: { id: toNull(id) } });
-  return { action: 'deleted' };
+  return { action: 'deleted', previousOwners: prevOwners };
 }
 
 // CONVERT

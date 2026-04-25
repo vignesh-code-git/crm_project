@@ -147,24 +147,6 @@
   margin: 16px;
 }
 
-/* Type-specific left border accents for toasts */
-.toastCard.toastInfo {
-  border-left: 4px solid #3b82f6;
-  background: linear-gradient(135deg, #f0f6ff 0%, #ffffff 40%);
-}
-
-.toastCard.toastSuccess {
-  border-left: 4px solid #22c55e;
-}
-
-.toastCard.toastError {
-  border-left: 4px solid #ef4444;
-}
-
-.toastCard.toastWarning {
-  border-left: 4px solid #f59e0b;
-}
-
 @media (max-width: 540px) {
   .toastCard {
     width: calc(100% - 20px);

@@ -166,10 +166,14 @@ export default function LeadsPage() {
 
     if (result === true) {
       showToast({ entity, action: "delete" });
+      window.dispatchEvent(new Event("refetchNotifications"));
     } else if (result?.action === 'unassigned') {
-      showToast({
-        type: "info",
+      window.dispatchEvent(new Event("refetchNotifications"));
+      setPopup({
+        show: true,
+        title: "Deal Unassigned",
         message: result.message,
+        type: "info"
       });
     } else if (typeof result === "string") {
       setPopup({
@@ -209,6 +213,7 @@ export default function LeadsPage() {
 
       if (result === true) {
         showToast({ entity, action: "update" });
+        window.dispatchEvent(new Event("refetchNotifications"));
         handleCloseDrawer();
       } else if (typeof result === "string") {
         setPopup({
@@ -226,6 +231,7 @@ export default function LeadsPage() {
         rawDate: now.toISOString().split("T")[0],
       });
       showToast({ entity, action: "create" });
+      window.dispatchEvent(new Event("refetchNotifications"));
       handleCloseDrawer();
     }
   };
@@ -346,12 +352,16 @@ export default function LeadsPage() {
 
     if (result === true) {
       showToast({ entity, action: "delete" });
+      window.dispatchEvent(new Event("refetchNotifications"));
       setSelectedIds([]);
     } else if (result?.action === 'mixed') {
+      window.dispatchEvent(new Event("refetchNotifications"));
       setSelectedIds([]);
-      showToast({
-        type: "info",
+      setPopup({
+        show: true,
+        title: "Bulk Action Result",
         message: result.message,
+        type: "info"
       });
     } else {
       setPopup({

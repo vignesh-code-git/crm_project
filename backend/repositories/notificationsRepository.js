@@ -10,7 +10,7 @@ const toNull = (val) => {
 // GET BY USER
 async function getNotificationsByUserId(userId) {
   return await Notification.findAll({
-    where: { user_id: toNull(userId) },
+    where: { user_id: Number(userId) },
     order: [
       ["is_read", "ASC"],
       ["created_at", "DESC"]

@@ -174,12 +174,13 @@ async function deleteTicket(id, requestingUserId = null, isAdmin = false) {
       return { action: 'deleted' };
     }
     await Ticket.update({ owner_id: remainingOwners, updated_at: new Date() }, { where: { id: toNull(id) } });
-    return { action: 'unassigned' };
+    return { action: 'unassigned', previousOwners: currentOwners, remainingOwners: remainingOwners };
   }
 
+  const prevOwners = [...currentOwners];
   await deletePolymorphicActivities('tickets', id);
   await Ticket.destroy({ where: { id: toNull(id) } });
-  return { action: 'deleted' };
+  return { action: 'deleted', previousOwners: prevOwners };
 }
 
 // CREATE BULK
