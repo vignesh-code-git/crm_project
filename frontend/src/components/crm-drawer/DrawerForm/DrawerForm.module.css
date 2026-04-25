@@ -706,8 +706,9 @@
 
 .form_tickets {
   display: grid;
-  grid-template-columns: repeat(2, 180px);
+  grid-template-columns: repeat(2, 192px);
   gap: 16px 20px;
+  overflow-x: hidden;
 }
 
 .form_tickets>* {
@@ -721,17 +722,17 @@
 
 .form_tickets .field_description textarea {
   border: 1px solid #d1d5db;
-  width: 380px;
+  width: 404px;
   height: 100px;
   border-radius: 6px;
 }
 
 .form_tickets .field_ticket_status .dropdownHeader {
-  width: 180px;
+  width: 192px;
 }
 
 .form_tickets .field_source .dropdownHeader {
-  width: 180px;
+  width: 192px;
 }
 
 /* ===== DEALS ===== */
@@ -760,8 +761,9 @@
 
 .form_companies {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 192px);
   gap: 16px 20px;
+  overflow-x: hidden;
 }
 
 .form_companies>* {
