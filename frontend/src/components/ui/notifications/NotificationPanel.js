@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import NotificationCard from "./NotificationCard";
 import styles from "./notification.module.css";
 import { format, isToday, isYesterday, startOfDay } from "date-fns";
@@ -38,6 +39,27 @@ function groupNotifications(notifications) {
 
 export default function NotificationPanel({ notifications, onMarkAsRead, onMarkAllAsRead, onDelete, onFetchMore, hasMore, loading }) {
   const groups = groupNotifications(notifications);
+  const sentryRef = useRef(null);
+
+  // 🔄 INFINITE SCROLL OBSERVER
+  useEffect(() => {
+    if (!hasMore || loading) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          onFetchMore();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sentryRef.current) {
+      observer.observe(sentryRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasMore, loading, onFetchMore]);
 
   return (
     <div className={styles.panel}>
@@ -66,14 +88,10 @@ export default function NotificationPanel({ notifications, onMarkAsRead, onMarkA
         ))}
 
         {hasMore && (
-          <div className={styles.loadMoreWrapper}>
-            <button 
-              className={styles.loadMoreBtn} 
-              onClick={onFetchMore}
-              disabled={loading}
-            >
-              {loading ? "Loading..." : "View More"}
-            </button>
+          <div className={styles.loadMoreWrapper} ref={sentryRef}>
+            <div className={styles.loadMoreBtn}>
+              {loading ? "Loading..." : "Fetching more..."}
+            </div>
           </div>
         )}
 
@@ -83,4 +101,4 @@ export default function NotificationPanel({ notifications, onMarkAsRead, onMarkA
       </div>
     </div>
   );
-}
+}
