@@ -5,8 +5,8 @@ exports.getNotifications = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const data = await repo.getNotificationsByUserId(req.user.id, page, limit);
-    res.json(data);
+    const { data, total } = await repo.getNotificationsByUserId(req.user.id, page, limit);
+    res.json({ data, total });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

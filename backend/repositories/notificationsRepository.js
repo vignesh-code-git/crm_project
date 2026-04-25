@@ -10,7 +10,7 @@ const toNull = (val) => {
 // GET BY USER (with Pagination)
 async function getNotificationsByUserId(userId, page = 1, limit = 10) {
   const offset = (page - 1) * limit;
-  return await Notification.findAll({
+  const { count, rows } = await Notification.findAndCountAll({
     where: { user_id: Number(userId) },
     order: [
       ["is_read", "ASC"],
@@ -19,6 +19,7 @@ async function getNotificationsByUserId(userId, page = 1, limit = 10) {
     limit: Number(limit),
     offset: Number(offset)
   });
+  return { data: rows.map(r => r.toJSON()), total: count };
 }
 
 // CREATE

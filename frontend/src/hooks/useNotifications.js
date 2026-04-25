@@ -8,7 +8,8 @@ export default function useNotificationApi() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
+  const [total, setTotal] = useState(0);
 
   const fetchNotifications = useCallback(async (targetPage = 1) => {
     try {
@@ -17,22 +18,22 @@ export default function useNotificationApi() {
         credentials: "include",
       });
       const result = await res.json();
-      const data = Array.isArray(result) ? result : [];
-      
+      const data = Array.isArray(result.data) ? result.data : [];
+      const totalCount = result.total || 0;
+
+      setTotal(totalCount);
+
       setNotifications(prev => {
-        // If it's a poll (page 1), we merge into the top
-        // If it's a fetchMore (page > 1), we append to the bottom
         const combined = isInitial ? [...data, ...prev] : [...prev, ...data];
-        // Ensure uniqueness by ID
-        return combined.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
+        const unique = combined.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
+        // hasMore = total from DB > what we've loaded
+        setHasMore(totalCount > unique.length);
+        return unique;
       });
 
       if (!isInitial) {
         setPage(targetPage);
       }
-      
-      // If we got fewer than 10, there's definitely no more on the NEXT page
-      setHasMore(data.length === 10);
     } catch (err) {
       console.error("❌ FETCH NOTIFICATIONS ERROR:", err);
     } finally {
@@ -111,6 +112,7 @@ export default function useNotificationApi() {
     notifications,
     loading,
     hasMore,
+    total,
     fetchNotifications,
     fetchMore,
     markAsRead,

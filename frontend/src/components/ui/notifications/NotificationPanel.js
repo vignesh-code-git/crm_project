@@ -37,25 +37,37 @@ function groupNotifications(notifications) {
   return Array.from(groups.entries()).map(([label, items]) => ({ label, items }));
 }
 
-export default function NotificationPanel({ notifications, onMarkAsRead, onMarkAllAsRead, onDelete, onFetchMore, hasMore, loading }) {
-  const groups = groupNotifications(notifications);
+export default function NotificationPanel({ notifications, onMarkAsRead, onMarkAllAsRead, onDelete, onFetchMore, hasMore, loading, total }) {
   const listRef = useRef(null);
+
+  // Group notifications by date
+  const groups = notifications.reduce((acc, n) => {
+    const date = new Date(n.created_at || n.timestamp);
+    const dateStr = date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+    if (!acc[dateStr]) acc[dateStr] = [];
+    acc[dateStr].push(n);
+    return acc;
+  }, {});
 
   return (
     <div className={styles.panel}>
       <div className={styles.header}>
-        <span>Notifications</span>
+        <h3>Notifications</h3>
         <button className={styles.markAll} onClick={onMarkAllAsRead}>
           Mark all as read
         </button>
       </div>
 
       <div className={styles.list} ref={listRef}>
-        {groups.map((group, idx) => (
-          <div key={idx} className={styles.groupContainer}>
-            <div className={styles.groupTitle}>{group.label}</div>
+        {Object.entries(groups).map(([date, items]) => (
+          <div key={date} className={styles.group}>
+            <div className={styles.dateHeader}>{date}</div>
             <div className={styles.groupItems}>
-              {group.items.map((n) => (
+              {items.map((n) => (
                 <NotificationCard
                   key={n.id}
                   notification={n}
@@ -75,7 +87,7 @@ export default function NotificationPanel({ notifications, onMarkAsRead, onMarkA
       {notifications.length > 0 && (
         <div className={styles.bottomBar}>
           <span className={styles.resultCount}>
-            Showing {notifications.length} notification{notifications.length !== 1 ? "s" : ""}
+            Showing {notifications.length} of {total}
           </span>
           {hasMore ? (
             <button
@@ -86,7 +98,7 @@ export default function NotificationPanel({ notifications, onMarkAsRead, onMarkA
               {loading ? "Loading..." : "View More"}
             </button>
           ) : (
-            <span className={styles.allCaughtUp}>All caught up ✓</span>
+            <span className={styles.allCaughtUp}>All caught up</span>
           )}
         </div>
       )}
