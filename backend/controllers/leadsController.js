@@ -247,15 +247,7 @@ exports.bulkDeleteLeads = async (req, res) => {
     const isAdmin = req.user.role === "admin";
     const result = await service.deleteLeadsBulk(ids, req.user.id, isAdmin);
 
-    if (result?.unassigned > 0 || result?.action === 'mixed') {
-      const actingUserId = Number(req.user.id);
-
-      // Notify the acting user AND all Admins
-      const usersToNotify = new Set([actingUserId]);
-      try {
-        const adminIds = await usersRepo.getAdminIds();
-        adminIds.forEach(id => usersToNotify.add(Number(id)));
-      } catch (err) {
+    if (result?.unassigned > 0 || result?.deleted > 0) {
       const unassignedNamesStr = result.unassignedNames?.join(", ") || "the selected leads";
 
       // 1. Notification for DELETIONS
@@ -288,22 +280,11 @@ exports.bulkDeleteLeads = async (req, res) => {
         });
       }
 
-      return res.json({
-        action: 'mixed',
-        message: `You have been removed from Leads: ${result.unassignedNames?.join(", ") || "the selected leads"}. The records still exist for other owners.`,
-        deleted: result.deleted,
-        unassigned: result.unassigned
-      });
-    }
-
-    // 🔥 NOTIFICATION (only if actual deletes happened)
-    if (result?.deleted > 0) {
-      const actingUserId = Number(req.user.id);
-      await notifRepo.createNotification({
-        user_id: actingUserId,
-        type: "warning",
-        message: `${result.deleted} leads have been deleted via bulk action by **${req.user.first_name}**.`,
-        metadata: { actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim() }
+      return res.json({ 
+        action: 'mixed', 
+        message: `Bulk action completed. ${result.deleted} deleted, ${result.unassigned} unassigned.`,
+        deleted: result.deleted, 
+        unassigned: result.unassigned 
       });
     }
 
