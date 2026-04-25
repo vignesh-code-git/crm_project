@@ -269,6 +269,9 @@
   background: #ffffff;
   border-top: 1px solid #e5e7eb;
   flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
 }
 
 .cancelBtn {
@@ -420,6 +423,11 @@
   justify-content: space-between;
   padding: 8px 0;
   border-top: 1px solid #e5e7eb;
+  background: #ffffff;
+  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
 }
 
 .footerLeft {
