@@ -172,9 +172,13 @@ export default function NotificationCard({ notification, onRead, onDelete, onClo
     return <div className={styles.bodyText}>{bodyText || "No additional records found."}</div>;
   };
 
+  const typeClass = isToast
+    ? styles[`toast${type.charAt(0).toUpperCase() + type.slice(1)}`] || ""
+    : "";
+
   return (
     <div 
-      className={`${styles.card} ${isToast ? styles.toastCard : ""} ${!notification.is_read ? styles.unread : ""}`}
+      className={`${styles.card} ${isToast ? styles.toastCard : ""} ${typeClass} ${!notification.is_read ? styles.unread : ""}`}
       onClick={isToast ? undefined : handleClick}
     >
       {/* Absolute close button for toasts */}

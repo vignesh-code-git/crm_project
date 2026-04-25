@@ -17,7 +17,10 @@ export default function PopupMessage({
   return (
     <div className={styles.wrapper} onClick={onClose}>
       <div className={styles.overlay} />
-      <div className={styles.popup} onClick={(e) => e.stopPropagation()}>
+      <div
+        className={`${styles.popup} ${type === "info" ? styles.popupInfo : ""}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className={styles.header}>
           <div className={`${styles.iconWrapper} ${styles[type]}`}>
             <Icon />

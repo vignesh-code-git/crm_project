@@ -131,11 +131,9 @@ export default function TicketsPage() {
     if (result === true) {
       showToast({ entity, action: "delete" });
     } else if (result?.action === 'unassigned') {
-      setPopup({
-        show: true,
-        title: "Removed from Record",
+      showToast({
+        type: "info",
         message: result.message,
-        type: "info"
       });
     } else if (typeof result === "string") {
       setPopup({
@@ -308,11 +306,9 @@ export default function TicketsPage() {
       setSelectedIds([]);
     } else if (result?.action === 'mixed') {
       setSelectedIds([]);
-      setPopup({
-        show: true,
-        title: "Partial Action",
+      showToast({
+        type: "info",
         message: result.message,
-        type: "info"
       });
     } else {
       setPopup({
