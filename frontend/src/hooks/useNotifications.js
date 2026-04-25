@@ -19,24 +19,20 @@ export default function useNotificationApi() {
       const result = await res.json();
       const data = Array.isArray(result) ? result : [];
       
-      if (isInitial) {
-        setNotifications(prev => {
-          if (prev.length === 0) return data;
-          // Merge and keep unique by ID, maintaining the order (newest first)
-          const combined = [...data, ...prev];
-          const unique = combined.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
-          return unique;
-        });
-        setHasMore(data.length === 10 || notifications.length > 10);
-      } else {
-        setNotifications(prev => {
-          const combined = [...prev, ...data];
-          const unique = combined.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
-          return unique;
-        });
+      setNotifications(prev => {
+        // If it's a poll (page 1), we merge into the top
+        // If it's a fetchMore (page > 1), we append to the bottom
+        const combined = isInitial ? [...data, ...prev] : [...prev, ...data];
+        // Ensure uniqueness by ID
+        return combined.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
+      });
+
+      if (!isInitial) {
         setPage(targetPage);
-        setHasMore(data.length === 10);
       }
+      
+      // If we got fewer than 10, there's definitely no more on the NEXT page
+      setHasMore(data.length === 10);
     } catch (err) {
       console.error("❌ FETCH NOTIFICATIONS ERROR:", err);
     } finally {
@@ -44,12 +40,12 @@ export default function useNotificationApi() {
     }
   }, []);
 
-  const fetchMore = async () => {
+  const fetchMore = useCallback(async () => {
     if (!hasMore || loading) return;
     setLoading(true);
     const nextPage = page + 1;
     await fetchNotifications(nextPage);
-  };
+  }, [hasMore, loading, page, fetchNotifications]);
 
   const markAsRead = async (id) => {
     try {
