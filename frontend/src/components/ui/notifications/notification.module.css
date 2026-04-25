@@ -414,9 +414,9 @@
 }
 
 .dataGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   background: #f8fafc;
   padding: 16px;
   border-radius: 12px;
