@@ -297,6 +297,14 @@ export default function LeadsPage() {
     if (result === true) {
       showToast({ entity, action: "delete" });
       setSelectedIds([]);
+    } else if (result?.action === 'mixed') {
+      setSelectedIds([]);
+      setPopup({
+        show: true,
+        title: "Partial Action",
+        message: result.message,
+        type: "info"
+      });
     } else {
       setPopup({
         show: true,

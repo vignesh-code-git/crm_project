@@ -216,18 +216,25 @@ const fetchData = async () => {
       const res = await fetch(`${API}/bulk-delete`, {
         method: "POST",
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ids }),
       });
 
+      const rawText = await res.text().catch(() => "");
+      let data = {};
+      try { data = JSON.parse(rawText); } catch (e) {}
+
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
         return data.error || data.message || "Bulk delete failed";
       }
 
       fetchData();
+
+      // Return mixed action info for partial unassignment
+      if (data?.action === 'mixed') {
+        return { action: 'mixed', message: data.message };
+      }
+
       return true;
     } catch (err) {
       console.error("❌ BULK DELETE ERROR:", err);

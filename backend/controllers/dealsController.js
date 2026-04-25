@@ -186,8 +186,19 @@ exports.bulkDeleteDeals = async (req, res) => {
     if (!ids || !Array.isArray(ids)) {
       return res.status(400).json({ error: "IDs array is required" });
     }
-    await repo.deleteDealsBulk(ids);
-    res.json({ message: `${ids.length} deals deleted successfully` });
+    const isAdmin = req.user.role === "admin";
+    const result = await repo.deleteDealsBulk(ids, req.user.id, isAdmin);
+
+    if (result?.unassigned > 0) {
+      return res.json({
+        action: 'mixed',
+        message: `${result.deleted} deal(s) deleted. You were removed as owner from ${result.unassigned} deal(s) that still have other owners.`,
+        deleted: result.deleted,
+        unassigned: result.unassigned
+      });
+    }
+
+    res.json({ message: `${result?.deleted || ids.length} deals deleted successfully` });
   } catch (err) {
     console.error("BULK DELETE ERROR:", err);
     res.status(500).json({ error: err.message });

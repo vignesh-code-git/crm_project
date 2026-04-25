@@ -175,19 +175,29 @@ exports.bulkDeleteLeads = async (req, res) => {
     if (!ids || !Array.isArray(ids)) {
       return res.status(400).json({ error: "IDs array is required" });
     }
-    await service.deleteLeadsBulk(ids);
+    const isAdmin = req.user.role === "admin";
+    const result = await service.deleteLeadsBulk(ids, req.user.id, isAdmin);
 
-    // 🔥 NOTIFICATION
-    await notifRepo.createNotification({
-      user_id: req.user.id,
-      type: "warning",
-      message: `${ids.length} leads have been deleted via bulk action by **${req.user.first_name}**.`,
-      metadata: {
-        actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim()
-      }
-    });
+    if (result?.unassigned > 0) {
+      return res.json({
+        action: 'mixed',
+        message: `${result.deleted} lead(s) deleted. You were removed as owner from ${result.unassigned} lead(s) that still have other owners.`,
+        deleted: result.deleted,
+        unassigned: result.unassigned
+      });
+    }
 
-    res.json({ message: `${ids.length} leads deleted successfully` });
+    // 🔥 NOTIFICATION (only if actual deletes happened)
+    if (result?.deleted > 0) {
+      await notifRepo.createNotification({
+        user_id: req.user.id,
+        type: "warning",
+        message: `${result.deleted} leads have been deleted via bulk action by **${req.user.first_name}**.`,
+        metadata: { actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim() }
+      });
+    }
+
+    res.json({ message: `${result?.deleted || ids.length} leads deleted successfully` });
   } catch (err) {
     console.error("BULK DELETE ERROR:", err);
     res.status(500).json({ error: err.message });

@@ -179,11 +179,20 @@ async function createBulk(dataArray) {
   return await sequelize.query(sql, { replacements: { ids }, type: QueryTypes.SELECT });
 }
 
-// DELETE BULK
-async function deleteCompaniesBulk(ids) {
-  if (!Array.isArray(ids) || ids.length === 0) return;
-  await deletePolymorphicActivities('companies', ids);
-  await Company.destroy({ where: { id: ids } });
+// DELETE BULK (Option 1)
+async function deleteCompaniesBulk(ids, requestingUserId = null, isAdmin = false) {
+  if (!Array.isArray(ids) || ids.length === 0) return { deleted: 0, unassigned: 0 };
+
+  let deleted = 0;
+  let unassigned = 0;
+
+  for (const id of ids) {
+    const result = await deleteCompany(id, requestingUserId, isAdmin);
+    if (result?.action === 'deleted') deleted++;
+    else if (result?.action === 'unassigned') unassigned++;
+  }
+
+  return { deleted, unassigned };
 }
 
 module.exports = {

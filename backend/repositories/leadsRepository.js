@@ -250,11 +250,20 @@ async function createBulk(dataArray) {
   return createdLeads.map(l => l.toJSON());
 }
 
-// DELETE BULK
-async function deleteLeadsBulk(ids) {
-  if (!Array.isArray(ids) || ids.length === 0) return;
-  await deletePolymorphicActivities('leads', ids);
-  await Lead.destroy({ where: { id: ids } });
+// DELETE BULK (Option 1)
+async function deleteLeadsBulk(ids, requestingUserId = null, isAdmin = false) {
+  if (!Array.isArray(ids) || ids.length === 0) return { deleted: 0, unassigned: 0 };
+
+  let deleted = 0;
+  let unassigned = 0;
+
+  for (const id of ids) {
+    const result = await deleteLead(id, requestingUserId, isAdmin);
+    if (result?.action === 'deleted') deleted++;
+    else if (result?.action === 'unassigned') unassigned++;
+  }
+
+  return { deleted, unassigned };
 }
 
 module.exports = {

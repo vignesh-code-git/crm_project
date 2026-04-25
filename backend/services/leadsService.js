@@ -102,8 +102,8 @@ async function createBulk(dataArray) {
 // ==========================
 // DELETE BULK
 // ==========================
-async function deleteLeadsBulk(ids) {
-  return await repo.deleteLeadsBulk(ids);
+async function deleteLeadsBulk(ids, requestingUserId = null, isAdmin = false) {
+  return await repo.deleteLeadsBulk(ids, requestingUserId, isAdmin);
 }
 
 // ==========================
