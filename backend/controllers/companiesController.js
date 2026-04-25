@@ -22,7 +22,7 @@ exports.createCompany = async (req, res) => {
       type: "success",
       title: "Company Created",
       message: `Company **${data.company_name}** was created successfully by **${req.user.first_name}**.`,
-      metadata: { 
+      metadata: {
         target_name: data.company_name,
         actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim()
       },
@@ -80,7 +80,7 @@ exports.updateCompany = async (req, res) => {
       type: "info",
       title: "Company Updated",
       message: `Company **${company.company_name}** has been updated by **${req.user.first_name}**.`,
-      metadata: { 
+      metadata: {
         target_name: company.company_name,
         actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim()
       },
@@ -107,11 +107,11 @@ exports.deleteCompany = async (req, res) => {
     if (result?.action === 'unassigned') {
       const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
       const actingUserId = Number(req.user.id);
-      
+
       if (Array.isArray(result.previousOwners)) {
         const ownersToNotify = new Set(result.previousOwners.map(Number));
         ownersToNotify.add(actingUserId);
-        
+
         try {
           const adminIds = await usersRepo.getAdminIds();
           adminIds.forEach(id => ownersToNotify.add(Number(id)));
@@ -125,11 +125,11 @@ exports.deleteCompany = async (req, res) => {
             user_id: ownerId,
             type: "info",
             title: isActingUser ? "Company Unassigned" : "Owner Removed",
-            message: isActingUser 
+            message: isActingUser
               ? `You have been removed from Company **${company.company_name}**. The record still exists for other owners.`
               : `**${actorName}** was removed from Company **${company.company_name}**.`,
-            metadata: { 
-              target_name: company.company_name, 
+            metadata: {
+              target_name: company.company_name,
               actor_name: actorName,
               entity_type: 'companies',
               entity_id: id
@@ -160,8 +160,8 @@ exports.deleteCompany = async (req, res) => {
           type: "error",
           title: "Company Deleted",
           message: `Company **${company.company_name}** has been deleted successfully by **${req.user.first_name}**.`,
-          metadata: { 
-            target_name: company.company_name, 
+          metadata: {
+            target_name: company.company_name,
             actor_name: actorName,
             entity_type: 'companies'
           }
@@ -203,9 +203,9 @@ exports.bulkDeleteCompanies = async (req, res) => {
           user_id: userId,
           type: "error", // 🔥 Redish color
           title: "Bulk Action Result",
-          message: isActingUser 
+          message: isActingUser
             ? `You have been removed from Companies: **${unassignedNamesStr}**. The records still exist for other owners.`
-            : `**${req.user.first_name}** performed a bulk action. ${result.deleted} company(ies) were deleted, and was removed from: **${unassignedNamesStr}**.`,
+            : `**${req.user.first_name}** performed a bulk action. ${result.deleted > 0 ? `${result.deleted} companies were deleted, and ` : ""}was removed from: **${unassignedNamesStr}**.`,
           metadata: {
             actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
             entity_type: 'companies',
@@ -214,11 +214,11 @@ exports.bulkDeleteCompanies = async (req, res) => {
         });
       }
 
-      return res.json({ 
-        action: 'mixed', 
+      return res.json({
+        action: 'mixed',
         message: `You have been removed from Companies: ${result.unassignedNames?.join(", ") || "the selected companies"}. The records still exist for other owners.`,
-        deleted: result.deleted, 
-        unassigned: result.unassigned 
+        deleted: result.deleted,
+        unassigned: result.unassigned
       });
     }
 

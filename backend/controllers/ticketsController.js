@@ -187,7 +187,7 @@ exports.deleteTicket = async (req, res) => {
       if (Array.isArray(result.previousOwners)) {
         const ownersToNotify = new Set(result.previousOwners.map(Number));
         ownersToNotify.add(actingUserId);
-        
+
         try {
           const adminIds = await usersRepo.getAdminIds();
           adminIds.forEach(id => ownersToNotify.add(Number(id)));
@@ -201,11 +201,11 @@ exports.deleteTicket = async (req, res) => {
             user_id: ownerId,
             type: "info",
             title: isActingUser ? "Ticket Unassigned" : "Owner Removed",
-            message: isActingUser 
+            message: isActingUser
               ? `You have been removed from Ticket **${ticket.ticket_name}**. The record still exists for other owners.`
               : `**${actorName}** was removed from Ticket **${ticket.ticket_name}**.`,
-            metadata: { 
-              target_name: ticket.ticket_name, 
+            metadata: {
+              target_name: ticket.ticket_name,
               actor_name: actorName,
               entity_type: 'tickets',
               entity_id: id
@@ -222,7 +222,7 @@ exports.deleteTicket = async (req, res) => {
       const actingUserId = Number(req.user.id);
       const ownersToNotify = new Set(result.previousOwners.map(Number));
       ownersToNotify.add(actingUserId);
-      
+
       try {
         const adminIds = await usersRepo.getAdminIds();
         adminIds.forEach(id => ownersToNotify.add(Number(id)));
@@ -279,9 +279,9 @@ exports.bulkDeleteTickets = async (req, res) => {
           user_id: userId,
           type: "error", // 🔥 Redish color
           title: "Bulk Action Result",
-          message: isActingUser 
+          message: isActingUser
             ? `You have been removed from Tickets: **${unassignedNamesStr}**. The records still exist for other owners.`
-            : `**${req.user.first_name}** performed a bulk action. ${result.deleted} ticket(s) were deleted, and was removed from: **${unassignedNamesStr}**.`,
+            : `**${req.user.first_name}** performed a bulk action. ${result.deleted > 0 ? `${result.deleted} tickets were deleted, and ` : ""}was removed from: **${unassignedNamesStr}**.`,
           metadata: {
             actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
             entity_type: 'tickets',
@@ -290,11 +290,11 @@ exports.bulkDeleteTickets = async (req, res) => {
         });
       }
 
-      return res.json({ 
-        action: 'mixed', 
+      return res.json({
+        action: 'mixed',
         message: `You have been removed from Tickets: ${result.unassignedNames?.join(", ") || "the selected tickets"}. The records still exist for other owners.`,
-        deleted: result.deleted, 
-        unassigned: result.unassigned 
+        deleted: result.deleted,
+        unassigned: result.unassigned
       });
     }
 

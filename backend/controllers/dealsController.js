@@ -1,5 +1,5 @@
 const repo = require("../repositories/dealsRepository");
-const leadRepo = require("../repositories/leadsRepository"); 
+const leadRepo = require("../repositories/leadsRepository");
 const usersRepo = require("../repositories/usersRepository");
 const notifRepo = require("../repositories/notificationsRepository");
 const activityRepo = require("../repositories/activitiesRepository");
@@ -165,7 +165,7 @@ exports.deleteDeal = async (req, res) => {
       if (Array.isArray(result.previousOwners)) {
         const ownersToNotify = new Set(result.previousOwners.map(Number));
         ownersToNotify.add(actingUserId);
-        
+
         try {
           const adminIds = await usersRepo.getAdminIds();
           adminIds.forEach(id => ownersToNotify.add(Number(id)));
@@ -179,11 +179,11 @@ exports.deleteDeal = async (req, res) => {
             user_id: ownerId,
             type: "info",
             title: isActingUser ? "Deal Unassigned" : "Owner Removed",
-            message: isActingUser 
+            message: isActingUser
               ? `You have been removed from Deal **${deal.deal_name}**. The record still exists for other owners.`
               : `**${actorName}** was removed from Deal **${deal.deal_name}**.`,
-            metadata: { 
-              target_name: deal.deal_name, 
+            metadata: {
+              target_name: deal.deal_name,
               actor_name: actorName,
               entity_type: 'deals',
               entity_id: id
@@ -200,7 +200,7 @@ exports.deleteDeal = async (req, res) => {
       const actingUserId = Number(req.user.id);
       const ownersToNotify = new Set(result.previousOwners.map(Number));
       ownersToNotify.add(actingUserId);
-      
+
       try {
         const adminIds = await usersRepo.getAdminIds();
         adminIds.forEach(id => ownersToNotify.add(Number(id)));
@@ -257,9 +257,9 @@ exports.bulkDeleteDeals = async (req, res) => {
           user_id: userId,
           type: "error",
           title: "Bulk Action Result",
-          message: isActingUser 
+          message: isActingUser
             ? `You have been removed from Deals: **${unassignedNamesStr}**. The records still exist for other owners.`
-            : `**${req.user.first_name}** performed a bulk action. ${result.deleted} deal(s) were deleted, and was removed from: **${unassignedNamesStr}**.`,
+            : `**${req.user.first_name}** performed a bulk action. ${result.deleted > 0 ? `${result.deleted} deals were deleted, and ` : ""}was removed from: **${unassignedNamesStr}**.`,
           metadata: {
             actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
             entity_type: 'deals',
@@ -268,11 +268,11 @@ exports.bulkDeleteDeals = async (req, res) => {
         });
       }
 
-      return res.json({ 
-        action: 'mixed', 
+      return res.json({
+        action: 'mixed',
         message: `You have been removed from Deals: ${result.unassignedNames?.join(", ") || "the selected deals"}. The records still exist for other owners.`,
-        deleted: result.deleted, 
-        unassigned: result.unassigned 
+        deleted: result.deleted,
+        unassigned: result.unassigned
       });
     }
 

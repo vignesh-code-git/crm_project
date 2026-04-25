@@ -149,12 +149,12 @@ exports.deleteLead = async (req, res) => {
     if (result?.action === 'unassigned') {
       const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
       const actingUserId = Number(req.user.id);
-      
+
       // Notify all previous owners AND all Admins
       if (Array.isArray(result.previousOwners)) {
         const ownersToNotify = new Set(result.previousOwners.map(Number));
         ownersToNotify.add(actingUserId);
-        
+
         // Add all admins
         try {
           const adminIds = await usersRepo.getAdminIds();
@@ -165,12 +165,12 @@ exports.deleteLead = async (req, res) => {
 
         for (const ownerId of ownersToNotify) {
           const isActingUser = Number(ownerId) === actingUserId;
-          
+
           await notifRepo.createNotification({
             user_id: ownerId,
             type: "info",
             title: isActingUser ? "Lead Unassigned" : "Owner Removed",
-            message: isActingUser 
+            message: isActingUser
               ? `You have been removed from Lead **${leadName}**. The record still exists for other owners.`
               : `**${actorName}** was removed from Lead **${leadName}**.`,
             metadata: {
@@ -184,7 +184,7 @@ exports.deleteLead = async (req, res) => {
         }
       }
 
-      return res.json({ 
+      return res.json({
         message: `You have been removed from Lead "${leadName}". The record still exists for other owners.`,
         action: 'unassigned'
       });
@@ -196,7 +196,7 @@ exports.deleteLead = async (req, res) => {
       const actingUserId = Number(req.user.id);
       const ownersToNotify = new Set(result.previousOwners.map(Number));
       ownersToNotify.add(actingUserId);
-      
+
       try {
         const adminIds = await usersRepo.getAdminIds();
         adminIds.forEach(id => ownersToNotify.add(Number(id)));
@@ -238,7 +238,7 @@ exports.bulkDeleteLeads = async (req, res) => {
 
     if (result?.unassigned > 0 || result?.action === 'mixed') {
       const actingUserId = Number(req.user.id);
-      
+
       // Notify the acting user AND all Admins
       const usersToNotify = new Set([actingUserId]);
       try {
@@ -251,14 +251,14 @@ exports.bulkDeleteLeads = async (req, res) => {
       for (const userId of usersToNotify) {
         const isActingUser = Number(userId) === actingUserId;
         const unassignedNamesStr = result.unassignedNames?.join(", ") || "the selected leads";
-        
+
         await notifRepo.createNotification({
           user_id: userId,
           type: "error", // 🔥 Redish color
           title: "Bulk Action Result",
-          message: isActingUser 
+          message: isActingUser
             ? `You have been removed from Leads: **${unassignedNamesStr}**. The records still exist for other owners.`
-            : `**${req.user.first_name}** performed a bulk action. ${result.deleted} lead(s) were deleted, and was removed from: **${unassignedNamesStr}**.`,
+            : `**${req.user.first_name}** performed a bulk action. ${result.deleted > 0 ? `${result.deleted} leads were deleted, and ` : ""}was removed from: **${unassignedNamesStr}**.`,
           metadata: {
             actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
             entity_type: 'leads',
