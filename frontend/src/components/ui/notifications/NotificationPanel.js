@@ -67,22 +67,29 @@ export default function NotificationPanel({ notifications, onMarkAsRead, onMarkA
           </div>
         ))}
 
-        {hasMore && (
-          <div className={styles.loadMoreWrapper}>
-            <button 
-              className={styles.viewMoreBtn} 
+        {notifications.length === 0 && !loading && (
+          <div className={styles.empty}>No notifications</div>
+        )}
+      </div>
+
+      {notifications.length > 0 && (
+        <div className={styles.bottomBar}>
+          <span className={styles.resultCount}>
+            Showing {notifications.length} notification{notifications.length !== 1 ? "s" : ""}
+          </span>
+          {hasMore ? (
+            <button
+              className={styles.viewMoreBtn}
               onClick={onFetchMore}
               disabled={loading}
             >
               {loading ? "Loading..." : "View More"}
             </button>
-          </div>
-        )}
-
-        {notifications.length === 0 && !loading && (
-          <div className={styles.empty}>No notifications</div>
-        )}
-      </div>
+          ) : (
+            <span className={styles.allCaughtUp}>All caught up ✓</span>
+          )}
+        </div>
+      )}
     </div>
   );
 }
