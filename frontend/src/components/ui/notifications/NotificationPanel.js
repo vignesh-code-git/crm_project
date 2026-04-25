@@ -39,32 +39,7 @@ function groupNotifications(notifications) {
 
 export default function NotificationPanel({ notifications, onMarkAsRead, onMarkAllAsRead, onDelete, onFetchMore, hasMore, loading }) {
   const groups = groupNotifications(notifications);
-  const sentryRef = useRef(null);
   const listRef = useRef(null);
-
-  // 🔄 INFINITE SCROLL OBSERVER
-  useEffect(() => {
-    if (!hasMore || !listRef.current || !sentryRef.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !loading) {
-          console.log("🚀 Sentry reached, fetching more...");
-          onFetchMore();
-        }
-      },
-      { 
-        root: listRef.current,
-        rootMargin: '100px', // Fetch when 100px away from bottom
-      }
-    );
-
-    if (sentryRef.current) {
-      observer.observe(sentryRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [hasMore, loading, onFetchMore]);
 
   return (
     <div className={styles.panel}>
@@ -92,18 +67,17 @@ export default function NotificationPanel({ notifications, onMarkAsRead, onMarkA
           </div>
         ))}
 
-        <div 
-          ref={sentryRef} 
-          style={{ height: '20px', margin: '10px 0', opacity: hasMore ? 1 : 0 }}
-        >
-          {hasMore && (
-            <div className={styles.loadMoreWrapper}>
-              <div className={styles.loadMoreBtn}>
-                {loading ? "Loading..." : "Fetching more..."}
-              </div>
-            </div>
-          )}
-        </div>
+        {hasMore && (
+          <div className={styles.loadMoreWrapper}>
+            <button 
+              className={styles.viewMoreBtn} 
+              onClick={onFetchMore}
+              disabled={loading}
+            >
+              {loading ? "Loading..." : "View More"}
+            </button>
+          </div>
+        )}
 
         {notifications.length === 0 && !loading && (
           <div className={styles.empty}>No notifications</div>
