@@ -221,7 +221,7 @@ export default function NotificationCard({ notification, onRead, onDelete, onClo
       {/* MESSAGE SECTION */}
       <div className={styles.cardBody}>
         <div className={styles.bodyTop}>
-           <div className={`${styles.cardMessage} ${styles[type]}`}>
+           <div className={`${styles.cardMessage} ${styles[type]} ${metadata.is_unassignment ? styles.blackText : ""}`}>
              {formatMessage(message)}
            </div>
             <div className={styles.cardTime}>

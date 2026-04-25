@@ -306,6 +306,14 @@
   font-weight: 700;
 }
 
+.blackText {
+  color: #000000 !important;
+}
+
+.blackText strong {
+  color: #ef4444 !important;
+}
+
 .cardTime {
   font-size: 11px;
   color: #94a3b8;

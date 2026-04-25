@@ -261,7 +261,8 @@ exports.bulkDeleteLeads = async (req, res) => {
             : `**${req.user.first_name}** performed a bulk action. ${result.deleted} lead(s) deleted, and was removed from: **${unassignedNamesStr}**.`,
           metadata: {
             actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
-            entity_type: 'leads'
+            entity_type: 'leads',
+            is_unassignment: true
           }
         });
       }

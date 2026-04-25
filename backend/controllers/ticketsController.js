@@ -284,7 +284,8 @@ exports.bulkDeleteTickets = async (req, res) => {
             : `**${req.user.first_name}** performed a bulk action. ${result.deleted} ticket(s) deleted, and was removed from: **${unassignedNamesStr}**.`,
           metadata: {
             actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
-            entity_type: 'tickets'
+            entity_type: 'tickets',
+            is_unassignment: true
           }
         });
       }
