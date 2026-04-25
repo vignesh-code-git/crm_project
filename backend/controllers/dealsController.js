@@ -259,7 +259,7 @@ exports.bulkDeleteDeals = async (req, res) => {
           title: "Bulk Action Result",
           message: isActingUser 
             ? `You have been removed from Deals: **${unassignedNamesStr}**. The records still exist for other owners.`
-            : `**${req.user.first_name}** performed a bulk action. ${result.deleted} deal(s) deleted, and was removed from: **${unassignedNamesStr}**.`,
+            : `**${req.user.first_name}** performed a bulk action. ${result.deleted} deal(s) were deleted, and was removed from: **${unassignedNamesStr}**.`,
           metadata: {
             actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
             entity_type: 'deals',

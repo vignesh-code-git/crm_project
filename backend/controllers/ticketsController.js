@@ -281,7 +281,7 @@ exports.bulkDeleteTickets = async (req, res) => {
           title: "Bulk Action Result",
           message: isActingUser 
             ? `You have been removed from Tickets: **${unassignedNamesStr}**. The records still exist for other owners.`
-            : `**${req.user.first_name}** performed a bulk action. ${result.deleted} ticket(s) deleted, and was removed from: **${unassignedNamesStr}**.`,
+            : `**${req.user.first_name}** performed a bulk action. ${result.deleted} ticket(s) were deleted, and was removed from: **${unassignedNamesStr}**.`,
           metadata: {
             actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
             entity_type: 'tickets',
