@@ -475,11 +475,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
 }
 
 .viewMoreBtn:hover:not(:disabled) {
   background: #4338ca;
   border-color: #4338ca;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
 }
 
 .viewMoreBtn:disabled {
