@@ -112,6 +112,13 @@ export default function LeadsPage() {
 
     if (result === true) {
       showToast({ entity, action: "delete" });
+    } else if (result?.action === 'unassigned') {
+      setPopup({
+        show: true,
+        title: "Removed from Record",
+        message: result.message,
+        type: "info"
+      });
     } else if (typeof result === "string") {
       setPopup({
         show: true,

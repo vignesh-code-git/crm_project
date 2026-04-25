@@ -136,22 +136,23 @@ const fetchData = async () => {
         credentials: "include",
       });
 
+      const rawText = await res.text().catch(() => "");
+      let data = {};
+      try { data = JSON.parse(rawText); } catch (e) {}
+
       if (!res.ok) {
-        const rawText = await res.text().catch(() => "");
-        let data = {};
-        try {
-          data = JSON.parse(rawText);
-        } catch (e) {
-          console.log("❌ NON-JSON ERROR RESPONSE:", rawText);
-        }
-        
         console.log("❌ DELETE ERROR:", data);
-        // showError(data?.error || "Delete failed"); // ❌ REMOVED TOAST
-        return data?.error || data?.message || "Delete failed"; // 🔥 RETURN ERROR STRING
+        return data?.error || data?.message || "Delete failed";
       }
 
       fetchData();
-      return true; // 🔥 SUCCESS
+
+      // Return the action so callers can differentiate deleted vs unassigned
+      if (data?.action === 'unassigned' || (data?.message && data.message.includes("removed from"))) {
+        return { action: 'unassigned', message: data.message };
+      }
+
+      return true; // full deletion
     } catch (err) {
       console.error("❌ NETWORK ERROR:", err);
       return "Network error";
