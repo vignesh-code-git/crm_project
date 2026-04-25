@@ -155,34 +155,19 @@ exports.deleteCompany = async (req, res) => {
       return res.json({ message: `You have been removed from Company "${company.company_name}". The record still exists for other owners.`, action: 'unassigned' });
     }
 
-    // 🔥 NOTIFICATION (Full delete - Notify all previous owners AND Admins)
-    if (Array.isArray(result.previousOwners)) {
-      const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
-      const actingUserId = Number(req.user.id);
-      const ownersToNotify = new Set(result.previousOwners.map(Number));
-      ownersToNotify.add(actingUserId);
-
-      try {
-        const adminIds = await usersRepo.getAdminIds();
-        adminIds.forEach(id => ownersToNotify.add(Number(id)));
-      } catch (err) {
-        console.error("Failed to fetch admin IDs:", err);
+    // 🔥 NOTIFICATION (Broadcast to Actor + Admins)
+    const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
+    await notifRepo.broadcastNotification({
+      user_id: req.user.id,
+      type: "error",
+      title: "Company Deleted",
+      message: `Company **${company.company_name}** has been deleted successfully by **${req.user.first_name}**.`,
+      metadata: {
+        target_name: company.company_name,
+        actor_name: actorName,
+        entity_type: 'companies'
       }
-
-      for (const ownerId of ownersToNotify) {
-        await notifRepo.createNotification({
-          user_id: ownerId,
-          type: "error",
-          title: "Company Deleted",
-          message: `Company **${company.company_name}** has been deleted successfully by **${req.user.first_name}**.`,
-          metadata: {
-            target_name: company.company_name,
-            actor_name: actorName,
-            entity_type: 'companies'
-          }
-        });
-      }
-    }
+    });
 
     res.json({ message: "Company deleted successfully" });
   } catch (err) {
@@ -200,7 +185,7 @@ exports.bulkDeleteCompanies = async (req, res) => {
     const isAdmin = req.user.role === "admin";
     const result = await repo.deleteCompaniesBulk(ids, req.user.id, isAdmin);
 
-    if (result?.unassigned > 0 || result?.deleted > 0) {
+    if (result?.deleted > 0 || result?.unassigned > 0) {
       const unassignedNamesStr = result.unassignedNames?.join(", ") || "the selected companies";
 
       // 1. Notification for DELETIONS

@@ -217,34 +217,19 @@ exports.deleteTicket = async (req, res) => {
       return res.json({ message: `You have been removed from Ticket "${ticket.ticket_name}". The record still exists for other owners.`, action: 'unassigned' });
     }
 
-    // 🔥 NOTIFICATION (Full delete - Notify all previous owners AND Admins)
-    if (Array.isArray(result.previousOwners)) {
-      const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
-      const actingUserId = Number(req.user.id);
-      const ownersToNotify = new Set(result.previousOwners.map(Number));
-      ownersToNotify.add(actingUserId);
-
-      try {
-        const adminIds = await usersRepo.getAdminIds();
-        adminIds.forEach(id => ownersToNotify.add(Number(id)));
-      } catch (err) {
-        console.error("Failed to fetch admin IDs:", err);
+    // 🔥 NOTIFICATION (Broadcast to Actor + Admins)
+    const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
+    await notifRepo.broadcastNotification({
+      user_id: req.user.id,
+      type: "error",
+      title: "Ticket Deleted",
+      message: `Ticket **${ticket.ticket_name}** has been deleted successfully by **${req.user.first_name}**.`,
+      metadata: {
+        target_name: ticket.ticket_name,
+        actor_name: actorName,
+        entity_type: 'tickets'
       }
-
-      for (const ownerId of ownersToNotify) {
-        await notifRepo.createNotification({
-          user_id: ownerId,
-          type: "error",
-          title: "Ticket Deleted",
-          message: `Ticket **${ticket.ticket_name}** has been deleted successfully by **${req.user.first_name}**.`,
-          metadata: {
-            target_name: ticket.ticket_name,
-            actor_name: actorName,
-            entity_type: 'tickets'
-          }
-        });
-      }
-    }
+    });
 
     res.json({ message: "Ticket deleted successfully" });
   } catch (err) {
@@ -262,7 +247,7 @@ exports.bulkDeleteTickets = async (req, res) => {
     const isAdmin = req.user.role === "admin";
     const result = await repo.deleteTicketsBulk(ids, req.user.id, isAdmin);
 
-    if (result?.unassigned > 0 || result?.action === 'mixed') {
+    if (result?.deleted > 0 || result?.unassigned > 0) {
       const unassignedNamesStr = result.unassignedNames?.join(", ") || "the selected tickets";
 
       // 1. Notification for DELETIONS

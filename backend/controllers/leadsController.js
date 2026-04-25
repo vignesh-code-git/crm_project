@@ -204,34 +204,19 @@ exports.deleteLead = async (req, res) => {
       });
     }
 
-    // 🔥 NOTIFICATION (Notify all previous owners AND Admins of the full delete)
-    if (Array.isArray(result.previousOwners)) {
-      const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
-      const actingUserId = Number(req.user.id);
-      const ownersToNotify = new Set(result.previousOwners.map(Number));
-      ownersToNotify.add(actingUserId);
-
-      try {
-        const adminIds = await usersRepo.getAdminIds();
-        adminIds.forEach(id => ownersToNotify.add(Number(id)));
-      } catch (err) {
-        console.error("Failed to fetch admin IDs:", err);
+    // 🔥 NOTIFICATION (Broadcast to Actor + Admins)
+    const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
+    await notifRepo.broadcastNotification({
+      user_id: req.user.id,
+      type: "error",
+      title: "Lead Deleted",
+      message: `Lead **${leadName}** has been deleted successfully by **${req.user.first_name}**.`,
+      metadata: {
+        target_name: leadName,
+        actor_name: actorName,
+        entity_type: 'leads'
       }
-
-      for (const ownerId of ownersToNotify) {
-        await notifRepo.createNotification({
-          user_id: ownerId,
-          type: "error",
-          title: "Lead Deleted",
-          message: `Lead **${leadName}** has been deleted successfully by **${req.user.first_name}**.`,
-          metadata: {
-            target_name: leadName,
-            actor_name: actorName,
-            entity_type: 'leads'
-          }
-        });
-      }
-    }
+    });
 
     res.json({ message: "Lead deleted successfully" });
   } catch (err) {
@@ -250,7 +235,7 @@ exports.bulkDeleteLeads = async (req, res) => {
     const isAdmin = req.user.role === "admin";
     const result = await service.deleteLeadsBulk(ids, req.user.id, isAdmin);
 
-    if (result?.unassigned > 0 || result?.deleted > 0) {
+    if (result?.deleted > 0 || result?.unassigned > 0) {
       const unassignedNamesStr = result.unassignedNames?.join(", ") || "the selected leads";
 
       // 1. Notification for DELETIONS
