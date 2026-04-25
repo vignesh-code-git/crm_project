@@ -40,6 +40,7 @@ function groupNotifications(notifications) {
 export default function NotificationPanel({ notifications, onMarkAsRead, onMarkAllAsRead, onDelete, onFetchMore, hasMore, loading }) {
   const groups = groupNotifications(notifications);
   const sentryRef = useRef(null);
+  const listRef = useRef(null);
 
   // 🔄 INFINITE SCROLL OBSERVER
   useEffect(() => {
@@ -51,7 +52,10 @@ export default function NotificationPanel({ notifications, onMarkAsRead, onMarkA
           onFetchMore();
         }
       },
-      { threshold: 0.1 }
+      { 
+        root: listRef.current, // 🔥 Detect intersection within the scrollable list
+        threshold: 0.1 
+      }
     );
 
     if (sentryRef.current) {
@@ -70,7 +74,7 @@ export default function NotificationPanel({ notifications, onMarkAsRead, onMarkA
         </button>
       </div>
 
-      <div className={styles.list}>
+      <div className={styles.list} ref={listRef}>
         {groups.map((group, idx) => (
           <div key={idx} className={styles.groupContainer}>
             <div className={styles.groupTitle}>{group.label}</div>
