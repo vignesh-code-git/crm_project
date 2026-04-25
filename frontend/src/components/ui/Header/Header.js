@@ -251,7 +251,7 @@ export default function Header({ toggleSidebar }) {
         <div className={styles.hamburger} onClick={toggleSidebar}>
           <GiHamburgerMenu />
         </div>
-        <h2 className={styles.logo}>CRM</h2>
+        <h2 className={styles.logo} onClick={() => router.push("/")}>CRM</h2>
       </div>
 
       <div className={styles.right}>
