@@ -33,7 +33,7 @@ export default function ProfileViewModal({ isOpen, onClose, user }) {
         <div className={styles.content}>
           <div className={styles.avatarSection}>
             <div className={styles.avatar}>
-              {user?.first_name?.charAt(0)}{user?.last_name?.charAt(0)}
+              {user?.first_name?.charAt(0).toUpperCase()}{user?.last_name?.charAt(0).toUpperCase()}
             </div>
             <div className={styles.nameHeader}>
               <h4>{user?.first_name} {user?.last_name}</h4>

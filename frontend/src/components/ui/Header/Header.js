@@ -362,7 +362,7 @@ export default function Header({ toggleSidebar }) {
         {/* User Dropdown */}
         <div className={styles.userSection} ref={dropdownRef}>
           <div className={styles.avatar} onClick={() => setShowDropdown(!showDropdown)}>
-            {user?.first_name?.[0] || "U"}
+            {user?.first_name?.[0]?.toUpperCase() || "U"}
           </div>
 
           {showDropdown && (
