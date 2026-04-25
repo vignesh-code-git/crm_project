@@ -87,7 +87,10 @@ export default function NotificationPanel({ notifications, onMarkAsRead, onMarkA
       {notifications.length > 0 && (
         <div className={styles.bottomBar}>
           <span className={styles.resultCount}>
-            Showing {notifications.length} of {total}
+            {notifications.length === total 
+              ? `Showing all ${total} notifications`
+              : `Showing ${notifications.length} of ${total} notifications`
+            }
           </span>
           {hasMore ? (
             <button
