@@ -10,10 +10,10 @@ export default function useNotificationApi() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  const fetchNotifications = useCallback(async (isInitial = true) => {
+  const fetchNotifications = useCallback(async (targetPage = 1) => {
     try {
-      const currentPage = isInitial ? 1 : page;
-      const res = await fetch(`${API}?page=${currentPage}&limit=10`, {
+      const isInitial = targetPage === 1;
+      const res = await fetch(`${API}?page=${targetPage}&limit=10`, {
         credentials: "include",
       });
       const result = await res.json();
@@ -26,10 +26,10 @@ export default function useNotificationApi() {
       } else {
         setNotifications(prev => {
           const combined = [...prev, ...data];
-          // Simple unique check
           const unique = combined.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
           return unique;
         });
+        setPage(targetPage);
         setHasMore(data.length === 10);
       }
     } catch (err) {
@@ -37,13 +37,13 @@ export default function useNotificationApi() {
     } finally {
       setLoading(false);
     }
-  }, [page]);
+  }, []);
 
   const fetchMore = async () => {
     if (!hasMore || loading) return;
     setLoading(true);
-    setPage(prev => prev + 1);
-    await fetchNotifications(false);
+    const nextPage = page + 1;
+    await fetchNotifications(nextPage);
   };
 
   const markAsRead = async (id) => {
@@ -77,13 +77,13 @@ export default function useNotificationApi() {
   };
 
   useEffect(() => {
-    fetchNotifications(true);
+    fetchNotifications(1);
 
-    // 🔄 3-SECOND POLLING (Only for the first page to see new ones)
-    const pollInterval = setInterval(() => fetchNotifications(true), 10000); // 10s is enough for polling
+    // 🔄 10-SECOND POLLING (Only for the first page to see new ones)
+    const pollInterval = setInterval(() => fetchNotifications(1), 10000);
 
     // 🔔 DISPATCHER FOR INSTANT REFRESH ON ACTION
-    const handler = () => fetchNotifications(true);
+    const handler = () => fetchNotifications(1);
     window.addEventListener("refetchNotifications", handler);
 
     return () => {
