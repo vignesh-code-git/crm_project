@@ -100,9 +100,14 @@ exports.deleteCompany = async (req, res) => {
     const company = await repo.getCompanyById(id);
     if (!company) return res.status(404).json({ error: "Company not found" });
 
-    await repo.deleteCompany(id);
+    const isAdmin = req.user.role === "admin";
+    const result = await repo.deleteCompany(id, req.user.id, isAdmin);
 
-    // 🔥 NOTIFICATION
+    if (result?.action === 'unassigned') {
+      return res.json({ message: `You have been removed from Company "${company.company_name}". The record still exists for other owners.` });
+    }
+
+    // 🔥 NOTIFICATION (only on full delete)
     await notifRepo.createNotification({
       user_id: req.user.id,
       type: "error",

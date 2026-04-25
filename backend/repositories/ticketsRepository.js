@@ -158,10 +158,28 @@ async function updateTicket(id, data) {
   return ticket ? ticket.toJSON() : null;
 }
 
-// DELETE
-async function deleteTicket(id) {
+// DELETE (Option 1)
+async function deleteTicket(id, requestingUserId = null, isAdmin = false) {
+  const ticket = await Ticket.findByPk(toNull(id));
+  if (!ticket) return { action: 'not_found' };
+
+  const currentOwners = Array.isArray(ticket.owner_id) ? ticket.owner_id.map(Number) : [];
+
+  if (!isAdmin && requestingUserId) {
+    const userId = Number(requestingUserId);
+    const remainingOwners = currentOwners.filter(ownId => ownId !== userId);
+    if (remainingOwners.length === 0) {
+      await deletePolymorphicActivities('tickets', id);
+      await Ticket.destroy({ where: { id: toNull(id) } });
+      return { action: 'deleted' };
+    }
+    await Ticket.update({ owner_id: remainingOwners, updated_at: new Date() }, { where: { id: toNull(id) } });
+    return { action: 'unassigned' };
+  }
+
   await deletePolymorphicActivities('tickets', id);
   await Ticket.destroy({ where: { id: toNull(id) } });
+  return { action: 'deleted' };
 }
 
 // CREATE BULK

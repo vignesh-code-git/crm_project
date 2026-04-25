@@ -154,9 +154,14 @@ exports.deleteDeal = async (req, res) => {
     const deal = await repo.getDealById(id);
     if (!deal) return res.status(404).json({ error: "Deal not found" });
 
-    await repo.deleteDeal(id);
+    const isAdmin = req.user.role === "admin";
+    const result = await repo.deleteDeal(id, req.user.id, isAdmin);
 
-    // 🔥 NOTIFICATION
+    if (result?.action === 'unassigned') {
+      return res.json({ message: `You have been removed from Deal "${deal.deal_name}". The record still exists for other owners.` });
+    }
+
+    // 🔥 NOTIFICATION (only on full delete)
     await notifRepo.createNotification({
       user_id: req.user.id,
       type: "error",

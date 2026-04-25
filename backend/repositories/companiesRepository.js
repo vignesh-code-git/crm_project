@@ -115,10 +115,28 @@ async function updateCompany(id, data) {
   return company ? company.toJSON() : null;
 }
 
-// DELETE
-async function deleteCompany(id) {
+// DELETE (Option 1)
+async function deleteCompany(id, requestingUserId = null, isAdmin = false) {
+  const company = await Company.findByPk(toNull(id));
+  if (!company) return { action: 'not_found' };
+
+  const currentOwners = Array.isArray(company.owner_id) ? company.owner_id.map(Number) : [];
+
+  if (!isAdmin && requestingUserId) {
+    const userId = Number(requestingUserId);
+    const remainingOwners = currentOwners.filter(ownId => ownId !== userId);
+    if (remainingOwners.length === 0) {
+      await deletePolymorphicActivities('companies', id);
+      await Company.destroy({ where: { id: toNull(id) } });
+      return { action: 'deleted' };
+    }
+    await Company.update({ owner_id: remainingOwners, updated_at: new Date() }, { where: { id: toNull(id) } });
+    return { action: 'unassigned' };
+  }
+
   await deletePolymorphicActivities('companies', id);
   await Company.destroy({ where: { id: toNull(id) } });
+  return { action: 'deleted' };
 }
 
 // CREATE BULK

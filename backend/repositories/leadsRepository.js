@@ -151,8 +151,37 @@ async function updateLead(id, data) {
   return lead ? lead.toJSON() : null;
 }
 
-// DELETE
-async function deleteLead(id) {
+// DELETE (Option 1: Non-admin removes self from owners; Admin deletes fully)
+async function deleteLead(id, requestingUserId = null, isAdmin = false) {
+  const lead = await Lead.findByPk(toNull(id));
+  if (!lead) return { action: 'not_found' };
+
+  const currentOwners = Array.isArray(lead.owner_id) ? lead.owner_id.map(Number) : [];
+
+  if (!isAdmin && requestingUserId) {
+    const userId = Number(requestingUserId);
+    const remainingOwners = currentOwners.filter(ownId => ownId !== userId);
+
+    if (remainingOwners.length === 0) {
+      // Last owner — check deals then fully delete
+      const dealsCount = await sequelize.query(
+        'SELECT COUNT(*) FROM deals WHERE lead_id = :id',
+        { replacements: { id }, type: QueryTypes.SELECT }
+      );
+      if (Number(dealsCount[0].count) > 0) {
+        throw new Error('Cannot delete Lead because it has associated Deals.');
+      }
+      await deletePolymorphicActivities('leads', id);
+      await Lead.destroy({ where: { id: toNull(id) } });
+      return { action: 'deleted' };
+    }
+
+    // Remove self from owners
+    await Lead.update({ owner_id: remainingOwners, updated_at: new Date() }, { where: { id: toNull(id) } });
+    return { action: 'unassigned' };
+  }
+
+  // Admin: full hard delete
   const dealsCount = await sequelize.query(
     'SELECT COUNT(*) FROM deals WHERE lead_id = :id',
     { replacements: { id }, type: QueryTypes.SELECT }
@@ -160,9 +189,9 @@ async function deleteLead(id) {
   if (Number(dealsCount[0].count) > 0) {
     throw new Error('Cannot delete Lead because it has associated Deals.');
   }
-
   await deletePolymorphicActivities('leads', id);
   await Lead.destroy({ where: { id: toNull(id) } });
+  return { action: 'deleted' };
 }
 
 // CONVERT

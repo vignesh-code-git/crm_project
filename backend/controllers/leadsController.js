@@ -137,15 +137,19 @@ exports.updateLead = async (req, res) => {
 exports.deleteLead = async (req, res) => {
   try {
     const { id } = req.params;
-    // 🔥 Fetch lead before deletion to get the name for the notification
     const lead = await repo.getLeadById(id);
     if (!lead) return res.status(404).json({ error: "Lead not found" });
 
     const leadName = `${lead.first_name} ${lead.last_name || ""}`.trim();
+    const isAdmin = req.user.role === "admin";
 
-    await service.deleteLead(id);
+    const result = await service.deleteLead(id, req.user.id, isAdmin);
 
-    // 🔥 NOTIFICATION
+    if (result?.action === 'unassigned') {
+      return res.json({ message: `You have been removed from Lead "${leadName}". The record still exists for other owners.` });
+    }
+
+    // 🔥 NOTIFICATION (only on full delete)
     await notifRepo.createNotification({
       user_id: req.user.id,
       type: "error",

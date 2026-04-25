@@ -176,9 +176,14 @@ exports.deleteTicket = async (req, res) => {
     const ticket = await repo.getTicketById(id);
     if (!ticket) return res.status(404).json({ error: "Ticket not found" });
 
-    await repo.deleteTicket(id);
+    const isAdmin = req.user.role === "admin";
+    const result = await repo.deleteTicket(id, req.user.id, isAdmin);
 
-    // 🔥 NOTIFICATION
+    if (result?.action === 'unassigned') {
+      return res.json({ message: `You have been removed from Ticket "${ticket.ticket_name}". The record still exists for other owners.` });
+    }
+
+    // 🔥 NOTIFICATION (only on full delete)
     await notifRepo.createNotification({
       user_id: req.user.id,
       type: "error",

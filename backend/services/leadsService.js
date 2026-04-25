@@ -76,9 +76,8 @@ async function updateLead(id, data) {
 // ==========================
 // DELETE
 // ==========================
-async function deleteLead(id) {
-  await repo.deleteLead(id);
-  return { message: "Lead deleted" };
+async function deleteLead(id, requestingUserId = null, isAdmin = false) {
+  return await repo.deleteLead(id, requestingUserId, isAdmin);
 }
 
 // ==========================

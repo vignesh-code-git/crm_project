@@ -144,10 +144,28 @@ async function updateDeal(id, data) {
   return deal ? deal.toJSON() : null;
 }
 
-// DELETE
-async function deleteDeal(id) {
+// DELETE (Option 1)
+async function deleteDeal(id, requestingUserId = null, isAdmin = false) {
+  const deal = await Deal.findByPk(toNull(id));
+  if (!deal) return { action: 'not_found' };
+
+  const currentOwners = Array.isArray(deal.owner_id) ? deal.owner_id.map(Number) : [];
+
+  if (!isAdmin && requestingUserId) {
+    const userId = Number(requestingUserId);
+    const remainingOwners = currentOwners.filter(ownId => ownId !== userId);
+    if (remainingOwners.length === 0) {
+      await deletePolymorphicActivities('deals', id);
+      await Deal.destroy({ where: { id: toNull(id) } });
+      return { action: 'deleted' };
+    }
+    await Deal.update({ owner_id: remainingOwners, updated_at: new Date() }, { where: { id: toNull(id) } });
+    return { action: 'unassigned' };
+  }
+
   await deletePolymorphicActivities('deals', id);
   await Deal.destroy({ where: { id: toNull(id) } });
+  return { action: 'deleted' };
 }
 
 // CREATE BULK
