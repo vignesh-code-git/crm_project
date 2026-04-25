@@ -36,9 +36,8 @@ function groupNotifications(notifications) {
   return Array.from(groups.entries()).map(([label, items]) => ({ label, items }));
 }
 
-export default function NotificationPanel({ notifications, onMarkAsRead, onMarkAllAsRead, onDelete }) {
-  const latestNotifications = notifications.slice(0, 10);
-  const groups = groupNotifications(latestNotifications);
+export default function NotificationPanel({ notifications, onMarkAsRead, onMarkAllAsRead, onDelete, onFetchMore, hasMore, loading }) {
+  const groups = groupNotifications(notifications);
 
   return (
     <div className={styles.panel}>
@@ -66,7 +65,19 @@ export default function NotificationPanel({ notifications, onMarkAsRead, onMarkA
           </div>
         ))}
 
-        {notifications.length === 0 && (
+        {hasMore && (
+          <div className={styles.loadMoreWrapper}>
+            <button 
+              className={styles.loadMoreBtn} 
+              onClick={onFetchMore}
+              disabled={loading}
+            >
+              {loading ? "Loading..." : "View More"}
+            </button>
+          </div>
+        )}
+
+        {notifications.length === 0 && !loading && (
           <div className={styles.empty}>No notifications</div>
         )}
       </div>

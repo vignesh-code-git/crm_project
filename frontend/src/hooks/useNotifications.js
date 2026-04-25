@@ -7,23 +7,44 @@ const API = `${API_BASE_URL}/api/notifications`;
 export default function useNotificationApi() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
-  const fetchNotifications = useCallback(async () => {
+  const fetchNotifications = useCallback(async (isInitial = true) => {
     try {
-      const res = await fetch(API, {
+      const currentPage = isInitial ? 1 : page;
+      const res = await fetch(`${API}?page=${currentPage}&limit=10`, {
         credentials: "include",
       });
       const result = await res.json();
-      // Ensure we only update state if data has actually changed to prevent jitter
       const data = Array.isArray(result) ? result : [];
-      setNotifications(data);
+      
+      if (isInitial) {
+        setNotifications(data);
+        setPage(1);
+        setHasMore(data.length === 10);
+      } else {
+        setNotifications(prev => {
+          const combined = [...prev, ...data];
+          // Simple unique check
+          const unique = combined.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
+          return unique;
+        });
+        setHasMore(data.length === 10);
+      }
     } catch (err) {
       console.error("❌ FETCH NOTIFICATIONS ERROR:", err);
-      // Don't clear notifications on transient network errors
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page]);
+
+  const fetchMore = async () => {
+    if (!hasMore || loading) return;
+    setLoading(true);
+    setPage(prev => prev + 1);
+    await fetchNotifications(false);
+  };
 
   const markAsRead = async (id) => {
     try {
@@ -56,20 +77,20 @@ export default function useNotificationApi() {
   };
 
   useEffect(() => {
-    fetchNotifications();
+    fetchNotifications(true);
 
-    // 🔄 3-SECOND POLLING FOR REAL-TIME UPDATES
-    const pollInterval = setInterval(fetchNotifications, 3000);
+    // 🔄 3-SECOND POLLING (Only for the first page to see new ones)
+    const pollInterval = setInterval(() => fetchNotifications(true), 10000); // 10s is enough for polling
 
     // 🔔 DISPATCHER FOR INSTANT REFRESH ON ACTION
-    const handler = () => fetchNotifications();
+    const handler = () => fetchNotifications(true);
     window.addEventListener("refetchNotifications", handler);
 
     return () => {
       clearInterval(pollInterval);
       window.removeEventListener("refetchNotifications", handler);
     };
-  }, [fetchNotifications]);
+  }, []); // Only on mount
 
   const deleteNotification = async (id) => {
     try {
@@ -88,7 +109,9 @@ export default function useNotificationApi() {
   return {
     notifications,
     loading,
+    hasMore,
     fetchNotifications,
+    fetchMore,
     markAsRead,
     markAllAsRead,
     deleteNotification,

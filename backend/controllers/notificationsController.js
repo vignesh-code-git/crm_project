@@ -3,7 +3,8 @@ const repo = require("../repositories/notificationsRepository");
 // GET ALL FOR USER
 exports.getNotifications = async (req, res) => {
   try {
-    const data = await repo.getNotificationsByUserId(req.user.id);
+    const { page = 1, limit = 10 } = req.query;
+    const data = await repo.getNotificationsByUserId(req.user.id, page, limit);
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });

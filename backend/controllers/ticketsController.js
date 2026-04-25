@@ -109,62 +109,77 @@ exports.getTicketById = async (req, res) => {
 // UPDATE
 exports.updateTicket = async (req, res) => {
   try {
-    const { id } = req.params;
-    const oldTicket = await repo.getTicketById(id);
-    const ticket = await repo.updateTicket(id, req.body);
-    if (!ticket) return res.status(404).json({ error: "Ticket not found" });
+    const ticketId = req.params.id;
+    const previousData = await repo.getTicketById(ticketId);
+    const data = await repo.updateTicket(ticketId, req.body);
+    if (!data) return res.status(404).json({ error: "Ticket not found" });
 
     // 🔥 ACTIVITY LOGGING (Status Change)
-    if (req.body.ticket_status && oldTicket.ticket_status !== req.body.ticket_status) {
-      const statusText = `moved ticket to ${ticket.ticket_status.toLowerCase()}`;
+    if (req.body.ticket_status && previousData.ticket_status !== req.body.ticket_status) {
+      const statusText = `moved ticket to ${data.ticket_status.toLowerCase()}`;
 
       // Log for Ticket
       await activityRepo.createActivity({
         user_id: req.user.id,
         type: "status_change",
         action_text: statusText,
-        related_id: ticket.id,
+        related_id: data.id,
         related_type: "tickets",
         metadata: {
-          old_status: oldTicket.ticket_status,
-          new_status: ticket.ticket_status,
-          entity_name: ticket.ticket_name
+          old_status: previousData.ticket_status,
+          new_status: data.ticket_status,
+          entity_name: data.ticket_name
         }
       });
 
       // Log for Company
-      if (ticket.company_id) {
+      if (data.company_id) {
         await activityRepo.createActivity({
           user_id: req.user.id,
           type: "status_change",
-          action_text: `moved ${ticket.ticket_name} to ${ticket.ticket_status.toLowerCase()}`,
-          related_id: ticket.company_id,
+          action_text: `moved ${data.ticket_name} to ${data.ticket_status.toLowerCase()}`,
+          related_id: data.company_id,
           related_type: "companies",
           metadata: {
-            old_status: oldTicket.ticket_status,
-            new_status: ticket.ticket_status,
-            entity_name: ticket.ticket_name,
-            ticket_id: ticket.id
+            old_status: previousData.ticket_status,
+            new_status: data.ticket_status,
+            entity_name: data.ticket_name,
+            ticket_id: data.id
           }
         });
       }
     }
 
-    // 🔥 NOTIFICATION
-    await notifRepo.createNotification({
-      user_id: req.user.id,
-      type: "info",
-      title: "Ticket Updated",
-      message: `Ticket **${ticket.ticket_name}** has been updated by **${req.user.first_name}**.`,
-      metadata: {
-        target_name: ticket.ticket_name,
-        actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim()
-      },
-      entity_type: "tickets",
-      entity_id: ticket.id
+    const changedFields = [];
+    const fieldsToTrack = ['ticket_name', 'ticket_priority', 'ticket_status', 'ticket_category', 'ticket_description', 'due_date'];
+    
+    fieldsToTrack.forEach(field => {
+      if (req.body[field] !== undefined && String(req.body[field]) !== String(previousData[field])) {
+        const fieldLabel = field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        changedFields.push(`**${fieldLabel}**: **${req.body[field]}**`);
+      }
     });
 
-    res.json(ticket);
+    if (changedFields.length > 0) {
+      const ticketName = data.ticket_name;
+      const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
+
+      await notifRepo.broadcastNotification({
+        user_id: req.user.id,
+        type: "info",
+        title: "Ticket Edited",
+        message: `**${ticketName}** - Edited\n${changedFields.join("\n")}`,
+        metadata: {
+          target_name: ticketName,
+          actor_name: actorName,
+          is_edit: true
+        },
+        entity_type: "tickets",
+        entity_id: data.id
+      });
+    }
+
+    res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -182,37 +197,20 @@ exports.deleteTicket = async (req, res) => {
 
     if (result?.action === 'unassigned') {
       const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
-      const actingUserId = Number(req.user.id);
 
-      if (Array.isArray(result.previousOwners)) {
-        const ownersToNotify = new Set(result.previousOwners.map(Number));
-        ownersToNotify.add(actingUserId);
-
-        try {
-          const adminIds = await usersRepo.getAdminIds();
-          adminIds.forEach(id => ownersToNotify.add(Number(id)));
-        } catch (err) {
-          console.error("Failed to fetch admin IDs:", err);
+      await notifRepo.broadcastNotification({
+        user_id: req.user.id,
+        type: "info",
+        title: "Ticket Unassigned",
+        message: `**${actorName}** was removed from Ticket **${ticket.ticket_name}**.`,
+        metadata: {
+          target_name: ticket.ticket_name,
+          actor_name: actorName,
+          is_unassignment: true,
+          entity_type: 'tickets',
+          entity_id: id
         }
-
-        for (const ownerId of ownersToNotify) {
-          const isActingUser = Number(ownerId) === actingUserId;
-          await notifRepo.createNotification({
-            user_id: ownerId,
-            type: "info",
-            title: isActingUser ? "Ticket Unassigned" : "Owner Removed",
-            message: isActingUser
-              ? `You have been removed from Ticket **${ticket.ticket_name}**. The record still exists for other owners.`
-              : `**${actorName}** was removed from Ticket **${ticket.ticket_name}**.`,
-            metadata: {
-              target_name: ticket.ticket_name,
-              actor_name: actorName,
-              entity_type: 'tickets',
-              entity_id: id
-            }
-          });
-        }
-      }
+      });
       return res.json({ message: `You have been removed from Ticket "${ticket.ticket_name}". The record still exists for other owners.`, action: 'unassigned' });
     }
 
@@ -262,28 +260,32 @@ exports.bulkDeleteTickets = async (req, res) => {
     const result = await repo.deleteTicketsBulk(ids, req.user.id, isAdmin);
 
     if (result?.unassigned > 0 || result?.action === 'mixed') {
-      const actingUserId = Number(req.user.id);
-      const usersToNotify = new Set([actingUserId]);
-      try {
-        const adminIds = await usersRepo.getAdminIds();
-        adminIds.forEach(id => usersToNotify.add(Number(id)));
-      } catch (err) {
-        console.error("Failed to fetch admin IDs:", err);
+      const unassignedNamesStr = result.unassignedNames?.join(", ") || "the selected tickets";
+
+      // 1. Notification for DELETIONS
+      if (result.deleted > 0) {
+        await notifRepo.broadcastNotification({
+          user_id: req.user.id,
+          type: "error",
+          title: "Tickets Deleted",
+          message: `**${req.user.first_name}** deleted **${result.deleted}** tickets.`,
+          metadata: {
+            actor_name: `${req.user.first_name} ${req.user.last_name || ""}`.trim(),
+            entity_type: 'tickets',
+            count: result.deleted
+          }
+        });
       }
 
-      for (const userId of usersToNotify) {
-        const isActingUser = Number(userId) === actingUserId;
-        const unassignedNamesStr = result.unassignedNames?.join(", ") || "the selected tickets";
-
-        await notifRepo.createNotification({
-          user_id: userId,
-          type: "error", // 🔥 Redish color
-          title: "Bulk Action Result",
-          message: isActingUser
-            ? `You have been removed from Tickets: **${unassignedNamesStr}**. The records still exist for other owners.`
-            : `**${req.user.first_name}** performed a bulk action. ${result.deleted > 0 ? `${result.deleted} tickets were deleted, and ` : ""}was removed from: **${unassignedNamesStr}**.`,
+      // 2. Notification for UNASSIGNMENTS
+      if (result.unassigned > 0) {
+        await notifRepo.broadcastNotification({
+          user_id: req.user.id,
+          type: "error",
+          title: "Tickets Unassigned",
+          message: `**${req.user.first_name}** was removed from Tickets: **${unassignedNamesStr}**.`,
           metadata: {
-            actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
+            actor_name: `${req.user.first_name} ${req.user.last_name || ""}`.trim(),
             entity_type: 'tickets',
             is_unassignment: true
           }

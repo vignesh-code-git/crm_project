@@ -239,12 +239,12 @@ export default function NotificationCard({ notification, onRead, onDelete, onClo
         {expanded && (
           <div className={styles.expandedContent}>
             {loading ? (
-              <div className={styles.loadingSkeleton}>Fetching real values...</div>
+              <div className={styles.loadingSkeleton}>Loading...</div>
             ) : (
               <>
                 { (metadata.to || metadata.target_name || hydratedData?.company_name) && (
                   <div className={styles.metaRow}>
-                    <strong>Target:</strong> {metadata.to || metadata.target_name || hydratedData?.company_name || hydratedData?.first_name}
+                    <strong>{entity_type ? (entity_type === 'companies' ? 'Company' : entity_type.charAt(0).toUpperCase() + entity_type.slice(1, -1)) : 'Lead'}:</strong> {metadata.to || metadata.target_name || hydratedData?.company_name || hydratedData?.first_name}
                   </div>
                 )}
                 { (metadata.subject || hydratedData?.subject) && (

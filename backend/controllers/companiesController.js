@@ -70,26 +70,42 @@ exports.getCompanyById = async (req, res) => {
 // UPDATE
 exports.updateCompany = async (req, res) => {
   try {
-    const { id } = req.params;
-    const company = await repo.updateCompany(id, req.body);
-    if (!company) return res.status(404).json({ error: "Company not found" });
+    const companyId = req.params.id;
+    const previousData = await repo.getCompanyById(companyId);
+    const data = await service.updateCompany(companyId, req.body);
 
-    // 🔥 NOTIFICATION
-    await notifRepo.createNotification({
-      user_id: req.user.id,
-      type: "info",
-      title: "Company Updated",
-      message: `Company **${company.company_name}** has been updated by **${req.user.first_name}**.`,
-      metadata: {
-        target_name: company.company_name,
-        actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim()
-      },
-      entity_type: "companies",
-      entity_id: company.id
+    const changedFields = [];
+    const fieldsToTrack = ['company_name', 'email', 'phone', 'industry', 'website', 'address', 'city', 'country'];
+    
+    fieldsToTrack.forEach(field => {
+      if (req.body[field] !== undefined && String(req.body[field]) !== String(previousData[field])) {
+        const fieldLabel = field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        changedFields.push(`**${fieldLabel}**: **${req.body[field]}**`);
+      }
     });
 
-    res.json(company);
+    if (changedFields.length > 0) {
+      const companyName = data.company_name;
+      const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
+
+      await notifRepo.broadcastNotification({
+        user_id: req.user.id,
+        type: "info",
+        title: "Company Edited",
+        message: `**${companyName}** - Edited\n${changedFields.join("\n")}`,
+        metadata: {
+          target_name: companyName,
+          actor_name: actorName,
+          is_edit: true
+        },
+        entity_type: "companies",
+        entity_id: data.id
+      });
+    }
+
+    res.json(data);
   } catch (err) {
+    console.error("FETCH ONE ERROR:", err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -119,23 +135,19 @@ exports.deleteCompany = async (req, res) => {
           console.error("Failed to fetch admin IDs:", err);
         }
 
-        for (const ownerId of ownersToNotify) {
-          const isActingUser = Number(ownerId) === actingUserId;
-          await notifRepo.createNotification({
-            user_id: ownerId,
-            type: "info",
-            title: isActingUser ? "Company Unassigned" : "Owner Removed",
-            message: isActingUser
-              ? `You have been removed from Company **${company.company_name}**. The record still exists for other owners.`
-              : `**${actorName}** was removed from Company **${company.company_name}**.`,
-            metadata: {
-              target_name: company.company_name,
-              actor_name: actorName,
-              entity_type: 'companies',
-              entity_id: id
-            }
-          });
-        }
+        await notifRepo.broadcastNotification({
+          user_id: req.user.id,
+          type: "info",
+          title: "Company Unassigned",
+          message: `**${actorName}** was removed from Company **${company.company_name}**.`,
+          metadata: {
+            target_name: company.company_name,
+            actor_name: actorName,
+            is_unassignment: true,
+            entity_type: 'companies',
+            entity_id: id
+          }
+        });
       }
       return res.json({ message: `You have been removed from Company "${company.company_name}". The record still exists for other owners.`, action: 'unassigned' });
     }
@@ -185,29 +197,33 @@ exports.bulkDeleteCompanies = async (req, res) => {
     const isAdmin = req.user.role === "admin";
     const result = await repo.deleteCompaniesBulk(ids, req.user.id, isAdmin);
 
-    if (result?.unassigned > 0 || result?.action === 'mixed') {
-      const actingUserId = Number(req.user.id);
-      const usersToNotify = new Set([actingUserId]);
-      try {
-        const adminIds = await usersRepo.getAdminIds();
-        adminIds.forEach(id => usersToNotify.add(Number(id)));
-      } catch (err) {
-        console.error("Failed to fetch admin IDs:", err);
+    if (result?.unassigned > 0 || result?.deleted > 0) {
+      const unassignedNamesStr = result.unassignedNames?.join(", ") || "the selected companies";
+
+      // 1. Notification for DELETIONS
+      if (result.deleted > 0) {
+        await notifRepo.broadcastNotification({
+          user_id: req.user.id,
+          type: "error",
+          title: "Companies Deleted",
+          message: `**${req.user.first_name}** deleted **${result.deleted}** companies.`,
+          metadata: {
+            actor_name: `${req.user.first_name} ${req.user.last_name || ""}`.trim(),
+            entity_type: 'companies',
+            count: result.deleted
+          }
+        });
       }
 
-      for (const userId of usersToNotify) {
-        const isActingUser = Number(userId) === actingUserId;
-        const unassignedNamesStr = result.unassignedNames?.join(", ") || "the selected companies";
-
-        await notifRepo.createNotification({
-          user_id: userId,
-          type: "error", // 🔥 Redish color
-          title: "Bulk Action Result",
-          message: isActingUser
-            ? `You have been removed from Companies: **${unassignedNamesStr}**. The records still exist for other owners.`
-            : `**${req.user.first_name}** performed a bulk action. ${result.deleted > 0 ? `${result.deleted} companies were deleted, and ` : ""}was removed from: **${unassignedNamesStr}**.`,
+      // 2. Notification for UNASSIGNMENTS
+      if (result.unassigned > 0) {
+        await notifRepo.broadcastNotification({
+          user_id: req.user.id,
+          type: "error",
+          title: "Companies Unassigned",
+          message: `**${req.user.first_name}** was removed from Companies: **${unassignedNamesStr}**.`,
           metadata: {
-            actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
+            actor_name: `${req.user.first_name} ${req.user.last_name || ""}`.trim(),
             entity_type: 'companies',
             is_unassignment: true
           }

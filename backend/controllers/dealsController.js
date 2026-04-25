@@ -104,46 +104,62 @@ exports.getDealById = async (req, res) => {
 // UPDATE
 exports.updateDeal = async (req, res) => {
   try {
-    const { id } = req.params;
-    const oldDeal = await repo.getDealById(id);
-    const deal = await repo.updateDeal(id, req.body);
-    if (!deal) return res.status(404).json({ error: "Deal not found" });
+    const dealId = req.params.id;
+    const previousData = await repo.getDealById(dealId);
+    const data = await repo.updateDeal(dealId, req.body);
+    if (!data) return res.status(404).json({ error: "Deal not found" });
 
     // 🔥 ACTIVITY LOGGING (Status Change)
-    if (req.body.deal_stage && oldDeal.deal_stage !== req.body.deal_stage) {
-      const statusText = `moved deal to ${deal.deal_stage.toLowerCase()}`;
+    if (req.body.deal_stage && previousData.deal_stage !== req.body.deal_stage) {
+      const statusText = `moved deal to ${data.deal_stage.toLowerCase()}`;
 
       // Log for Deal
       await activityRepo.createActivity({
         user_id: req.user.id,
         type: "status_change",
         action_text: statusText,
-        related_id: deal.id,
+        related_id: data.id,
         related_type: "deals",
         metadata: {
-          old_status: oldDeal.deal_stage,
-          new_status: deal.deal_stage,
-          entity_name: deal.deal_name
+          old_status: previousData.deal_stage,
+          new_status: data.deal_stage,
+          entity_name: data.deal_name
         }
       });
     }
 
-    // 🔥 NOTIFICATION
-    await notifRepo.createNotification({
-      user_id: req.user.id,
-      type: "info",
-      title: "Deal Updated",
-      message: `Deal **${deal.deal_name}** has been updated by **${req.user.first_name}**.`,
-      metadata: {
-        target_name: deal.deal_name,
-        actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim()
-      },
-      entity_type: "deals",
-      entity_id: deal.id
+    const changedFields = [];
+    const fieldsToTrack = ['deal_name', 'deal_value', 'deal_stage', 'close_date', 'deal_description', 'deal_type', 'priority'];
+    
+    fieldsToTrack.forEach(field => {
+      if (req.body[field] !== undefined && String(req.body[field]) !== String(previousData[field])) {
+        const fieldLabel = field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        changedFields.push(`**${fieldLabel}**: **${req.body[field]}**`);
+      }
     });
 
-    res.json(deal);
+    if (changedFields.length > 0) {
+      const dealName = data.deal_name;
+      const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
+
+      await notifRepo.broadcastNotification({
+        user_id: req.user.id,
+        type: "info",
+        title: "Deal Edited",
+        message: `**${dealName}** - Edited\n${changedFields.join("\n")}`,
+        metadata: {
+          target_name: dealName,
+          actor_name: actorName,
+          is_edit: true
+        },
+        entity_type: "deals",
+        entity_id: data.id
+      });
+    }
+
+    res.json(data);
   } catch (err) {
+    console.error("UPDATE ERROR:", err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -160,37 +176,21 @@ exports.deleteDeal = async (req, res) => {
 
     if (result?.action === 'unassigned') {
       const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
-      const actingUserId = Number(req.user.id);
 
-      if (Array.isArray(result.previousOwners)) {
-        const ownersToNotify = new Set(result.previousOwners.map(Number));
-        ownersToNotify.add(actingUserId);
-
-        try {
-          const adminIds = await usersRepo.getAdminIds();
-          adminIds.forEach(id => ownersToNotify.add(Number(id)));
-        } catch (err) {
-          console.error("Failed to fetch admin IDs:", err);
+      await notifRepo.broadcastNotification({
+        user_id: req.user.id,
+        type: "info",
+        title: "Deal Unassigned",
+        message: `**${actorName}** was removed from Deal **${deal.deal_name}**.`,
+        metadata: {
+          target_name: deal.deal_name,
+          actor_name: actorName,
+          is_unassignment: true,
+          entity_type: 'deals',
+          entity_id: id
         }
-
-        for (const ownerId of ownersToNotify) {
-          const isActingUser = Number(ownerId) === actingUserId;
-          await notifRepo.createNotification({
-            user_id: ownerId,
-            type: "info",
-            title: isActingUser ? "Deal Unassigned" : "Owner Removed",
-            message: isActingUser
-              ? `You have been removed from Deal **${deal.deal_name}**. The record still exists for other owners.`
-              : `**${actorName}** was removed from Deal **${deal.deal_name}**.`,
-            metadata: {
-              target_name: deal.deal_name,
-              actor_name: actorName,
-              entity_type: 'deals',
-              entity_id: id
-            }
-          });
-        }
-      }
+      });
+      
       return res.json({ message: `You have been removed from Deal "${deal.deal_name}". The record still exists for other owners.`, action: 'unassigned' });
     }
 
@@ -240,28 +240,32 @@ exports.bulkDeleteDeals = async (req, res) => {
     const result = await repo.deleteDealsBulk(ids, req.user.id, isAdmin);
 
     if (result?.unassigned > 0 || result?.action === 'mixed') {
-      const actingUserId = Number(req.user.id);
-      const usersToNotify = new Set([actingUserId]);
-      try {
-        const adminIds = await usersRepo.getAdminIds();
-        adminIds.forEach(id => usersToNotify.add(Number(id)));
-      } catch (err) {
-        console.error("Failed to fetch admin IDs:", err);
+      const unassignedNamesStr = result.unassignedNames?.join(", ") || "the selected deals";
+
+      // 1. Notification for DELETIONS
+      if (result.deleted > 0) {
+        await notifRepo.broadcastNotification({
+          user_id: req.user.id,
+          type: "error",
+          title: "Deals Deleted",
+          message: `**${req.user.first_name}** deleted **${result.deleted}** deals.`,
+          metadata: {
+            actor_name: `${req.user.first_name} ${req.user.last_name || ""}`.trim(),
+            entity_type: 'deals',
+            count: result.deleted
+          }
+        });
       }
 
-      for (const userId of usersToNotify) {
-        const isActingUser = Number(userId) === actingUserId;
-        const unassignedNamesStr = result.unassignedNames?.join(", ") || "the selected deals";
-
-        await notifRepo.createNotification({
-          user_id: userId,
+      // 2. Notification for UNASSIGNMENTS
+      if (result.unassigned > 0) {
+        await notifRepo.broadcastNotification({
+          user_id: req.user.id,
           type: "error",
-          title: "Bulk Action Result",
-          message: isActingUser
-            ? `You have been removed from Deals: **${unassignedNamesStr}**. The records still exist for other owners.`
-            : `**${req.user.first_name}** performed a bulk action. ${result.deleted > 0 ? `${result.deleted} deals were deleted, and ` : ""}was removed from: **${unassignedNamesStr}**.`,
+          title: "Deals Unassigned",
+          message: `**${req.user.first_name}** was removed from Deals: **${unassignedNamesStr}**.`,
           metadata: {
-            actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
+            actor_name: `${req.user.first_name} ${req.user.last_name || ""}`.trim(),
             entity_type: 'deals',
             is_unassignment: true
           }

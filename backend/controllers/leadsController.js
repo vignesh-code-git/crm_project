@@ -110,22 +110,39 @@ exports.getQualifiedLeads = async (req, res) => {
 // UPDATE
 exports.updateLead = async (req, res) => {
   try {
-    console.log("UPDATE LEAD BODY:", req.body);
-    const data = await service.updateLead(req.params.id, req.body);
+    const leadId = req.params.id;
+    const previousData = await repo.getLeadById(leadId);
+    const data = await service.updateLead(leadId, req.body);
 
-    // 🔥 NOTIFICATION
-    await notifRepo.createNotification({
-      user_id: req.user.id,
-      type: "info",
-      title: "Lead Updated",
-      message: `Lead **${data.first_name} ${data.last_name || ""}** has been updated by **${req.user.first_name}**.`,
-      metadata: {
-        target_name: `${data.first_name} ${data.last_name || ""}`,
-        actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim()
-      },
-      entity_type: "leads",
-      entity_id: data.id
+    // Identify changed fields
+    const changedFields = [];
+    const fieldsToTrack = ['first_name', 'last_name', 'email', 'phone', 'status', 'lead_source', 'lifecycle_stage', 'job_title'];
+    
+    fieldsToTrack.forEach(field => {
+      if (req.body[field] !== undefined && String(req.body[field]) !== String(previousData[field])) {
+        const fieldLabel = field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        changedFields.push(`**${fieldLabel}**: **${req.body[field]}**`);
+      }
     });
+
+    if (changedFields.length > 0) {
+      const leadName = `${data.first_name} ${data.last_name || ""}`.trim();
+      const actorName = `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim();
+
+      await notifRepo.broadcastNotification({
+        user_id: req.user.id,
+        type: "info",
+        title: "Lead Edited",
+        message: `**${leadName}** - Edited\n${changedFields.join("\n")}`,
+        metadata: {
+          target_name: leadName,
+          actor_name: actorName,
+          is_edit: true
+        },
+        entity_type: "leads",
+        entity_id: data.id
+      });
+    }
 
     res.json(data);
   } catch (err) {
@@ -163,25 +180,19 @@ exports.deleteLead = async (req, res) => {
           console.error("Failed to fetch admin IDs:", err);
         }
 
-        for (const ownerId of ownersToNotify) {
-          const isActingUser = Number(ownerId) === actingUserId;
-
-          await notifRepo.createNotification({
-            user_id: ownerId,
-            type: "info",
-            title: isActingUser ? "Lead Unassigned" : "Owner Removed",
-            message: isActingUser
-              ? `You have been removed from Lead **${leadName}**. The record still exists for other owners.`
-              : `**${actorName}** was removed from Lead **${leadName}**.`,
-            metadata: {
-              target_name: leadName,
-              actor_name: actorName,
-              is_unassignment: true,
-              entity_type: 'leads',
-              entity_id: id
-            }
-          });
-        }
+        await notifRepo.broadcastNotification({
+          user_id: req.user.id,
+          type: "info",
+          title: "Lead Unassigned",
+          message: `**${actorName}** was removed from Lead **${leadName}**.`,
+          metadata: {
+            target_name: leadName,
+            actor_name: actorName,
+            is_unassignment: true,
+            entity_type: 'leads',
+            entity_id: id
+          }
+        });
       }
 
       return res.json({
@@ -245,22 +256,32 @@ exports.bulkDeleteLeads = async (req, res) => {
         const adminIds = await usersRepo.getAdminIds();
         adminIds.forEach(id => usersToNotify.add(Number(id)));
       } catch (err) {
-        console.error("Failed to fetch admin IDs:", err);
+      const unassignedNamesStr = result.unassignedNames?.join(", ") || "the selected leads";
+
+      // 1. Notification for DELETIONS
+      if (result.deleted > 0) {
+        await notifRepo.broadcastNotification({
+          user_id: req.user.id,
+          type: "error",
+          title: "Leads Deleted",
+          message: `**${req.user.first_name}** deleted **${result.deleted}** leads.`,
+          metadata: {
+            actor_name: `${req.user.first_name} ${req.user.last_name || ""}`.trim(),
+            entity_type: 'leads',
+            count: result.deleted
+          }
+        });
       }
 
-      for (const userId of usersToNotify) {
-        const isActingUser = Number(userId) === actingUserId;
-        const unassignedNamesStr = result.unassignedNames?.join(", ") || "the selected leads";
-
-        await notifRepo.createNotification({
-          user_id: userId,
-          type: "error", // 🔥 Redish color
-          title: "Bulk Action Result",
-          message: isActingUser
-            ? `You have been removed from Leads: **${unassignedNamesStr}**. The records still exist for other owners.`
-            : `**${req.user.first_name}** performed a bulk action. ${result.deleted > 0 ? `${result.deleted} leads were deleted, and ` : ""}was removed from: **${unassignedNamesStr}**.`,
+      // 2. Notification for UNASSIGNMENTS
+      if (result.unassigned > 0) {
+        await notifRepo.broadcastNotification({
+          user_id: req.user.id,
+          type: "error",
+          title: "Leads Unassigned",
+          message: `**${req.user.first_name}** was removed from Leads: **${unassignedNamesStr}**.`,
           metadata: {
-            actor_name: `${req.user.first_name || ""} ${req.user.last_name || ""}`.trim(),
+            actor_name: `${req.user.first_name} ${req.user.last_name || ""}`.trim(),
             entity_type: 'leads',
             is_unassignment: true
           }

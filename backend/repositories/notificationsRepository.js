@@ -7,14 +7,17 @@ const toNull = (val) => {
   return val;
 };
 
-// GET BY USER
-async function getNotificationsByUserId(userId) {
+// GET BY USER (with Pagination)
+async function getNotificationsByUserId(userId, page = 1, limit = 10) {
+  const offset = (page - 1) * limit;
   return await Notification.findAll({
     where: { user_id: Number(userId) },
     order: [
       ["is_read", "ASC"],
       ["created_at", "DESC"]
-    ]
+    ],
+    limit: Number(limit),
+    offset: Number(offset)
   });
 }
 
@@ -56,9 +59,32 @@ async function deleteNotification(id) {
   });
 }
 
+// BROADCAST TO USER AND ADMINS
+async function broadcastNotification(data) {
+  const { getAdminIds } = require("./usersRepository");
+  const recipients = new Set();
+  
+  if (data.user_id) recipients.add(Number(data.user_id));
+  
+  try {
+    const adminIds = await getAdminIds();
+    adminIds.forEach(id => recipients.add(Number(id)));
+  } catch (err) {
+    console.error("Broadcast: Failed to fetch admin IDs:", err);
+  }
+
+  const createdNotifs = [];
+  for (const userId of recipients) {
+    const notif = await createNotification({ ...data, user_id: userId });
+    createdNotifs.push(notif);
+  }
+  return createdNotifs;
+}
+
 module.exports = {
   getNotificationsByUserId,
   createNotification,
+  broadcastNotification,
   markAsRead,
   markAllAsRead,
   deleteNotification,
